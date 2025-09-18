@@ -35,42 +35,79 @@ module.exports = grammar({
 
   rules: {
     // Top-level rule that detects and routes to appropriate file type
-    source_file: $ => choice(
-      $.application_file,
-      $.function_file,
-      $.datawindow_file,
-      $.user_object_file,
-      $.window_file,
-      $.menu_file,
-      $.structure_file,
-      $.query_file,
+    source_file: $ => seq(
+      optional($.export_header),
+      choice(
+        // Datawindow files start with 'release N;'
+        seq($.release_statement, $.datawindow_content),
+        // All other files have global type declarations
+        seq(optional($.forward_section), $.file_content),
+      ),
+    ),
+
+    datawindow_content: $ => seq(
+      $.datawindow_definition,
+      repeat(choice(
+        $.datawindow_section,
+        $.table_definition,
+        $.control_definition,
+      )),
+    ),
+
+    file_content: $ => choice(
+      $.application_content,
+      $.function_content,
+      $.user_object_content,
+      $.window_content,
+      $.menu_content,
+      $.structure_content,
+      $.query_content,
     ),
 
     // ========================================
-    // FILE TYPE DEFINITIONS
+    // FILE TYPE CONTENT DEFINITIONS
     // ========================================
 
-    // Application File (.sra)
-    application_file: $ => seq(
-      optional($.export_header),
-      optional($.forward_section),
+    // Application Content
+    application_content: $ => seq(
+      $.application_type_declaration,
       repeat(choice(
-        $.global_type_declaration,
         $.structure_definition,
         $.global_variables_section,
+        $.type_variables_section,
+        $.instance_declaration,
+        $.forward_prototypes_section,
+        $.event_implementation,
+        $.function_implementation,
+        $.on_event_block,
+        $.type_implementation,
       )),
-      repeat($.type_implementation),
     ),
 
-    // Function File (.srf)
-    function_file: $ => seq(
-      optional($.export_header),
-      $.function_global_type,
-      optional($.forward_prototypes_section),
-      repeat($.function_implementation),
+    application_type_declaration: $ => seq(
+      caseInsensitive('global'),
+      caseInsensitive('type'),
+      $.identifier,
+      caseInsensitive('from'),
+      caseInsensitive('application'),
+      repeat(choice(
+        $.property_assignment,
+        $.event_declaration,
+      )),
+      caseInsensitive('end'),
+      caseInsensitive('type'),
     ),
 
-    function_global_type: $ => seq(
+    // Function Content
+    function_content: $ => seq(
+      $.function_type_declaration,
+      repeat(choice(
+        $.forward_prototypes_section,
+        $.function_implementation,
+      )),
+    ),
+
+    function_type_declaration: $ => seq(
       caseInsensitive('global'),
       caseInsensitive('type'),
       $.identifier,
@@ -80,18 +117,79 @@ module.exports = grammar({
       caseInsensitive('type'),
     ),
 
-    // Datawindow File (.srd)
-    datawindow_file: $ => seq(
-      optional($.export_header),
-      $.release_statement,
-      $.datawindow_definition,
+    // Structure Content
+    structure_content: $ => $.structure_definition,
+
+    // Window Content
+    window_content: $ => seq(
+      $.window_type_declaration,
+      repeat($.type_member),
+    ),
+
+    window_type_declaration: $ => seq(
+      caseInsensitive('global'),
+      caseInsensitive('type'),
+      $.identifier,
+      caseInsensitive('from'),
+      caseInsensitive('window'),
       repeat(choice(
-        $.datawindow_section,
-        $.table_definition,
-        $.control_definition,
+        $.property_assignment,
+        $.event_declaration,
+      )),
+      caseInsensitive('end'),
+      caseInsensitive('type'),
+    ),
+
+    // Menu Content
+    menu_content: $ => seq(
+      $.menu_type_declaration,
+      repeat($.menu_member),
+    ),
+
+    menu_type_declaration: $ => seq(
+      caseInsensitive('global'),
+      caseInsensitive('type'),
+      $.identifier,
+      caseInsensitive('from'),
+      caseInsensitive('menu'),
+      repeat($.menu_item),
+      caseInsensitive('end'),
+      caseInsensitive('type'),
+    ),
+
+    // User Object Content
+    user_object_content: $ => seq(
+      $.user_object_type_declaration,
+      repeat(choice(
+        $.shared_variables_section,
+        $.type_member,
       )),
     ),
 
+    user_object_type_declaration: $ => seq(
+      caseInsensitive('global'),
+      caseInsensitive('type'),
+      $.identifier,
+      caseInsensitive('from'),
+      $.user_object_base_type,
+      repeat(choice(
+        $.property_assignment,
+        $.event_declaration,
+      )),
+      caseInsensitive('end'),
+      caseInsensitive('type'),
+    ),
+
+    user_object_base_type: $ => choice(
+      caseInsensitive('datawindow'),
+      caseInsensitive('userobject'),
+      $.identifier, // Custom user object types
+    ),
+
+    // Query Content - placeholder
+    query_content: $ => $.identifier,
+
+    // Datawindow Definitions
     release_statement: $ => seq(
       caseInsensitive('release'),
       $.number,
@@ -143,7 +241,7 @@ module.exports = grammar({
     table_definition: $ => seq(
       caseInsensitive('table'),
       '(',
-      repeat($.column_definition),
+      repeat1($.column_definition),
       ')',
     ),
 
@@ -174,66 +272,6 @@ module.exports = grammar({
       ')',
     ),
 
-    // User Object File (.sru)
-    user_object_file: $ => seq(
-      optional($.export_header),
-      optional($.forward_section),
-      optional($.shared_variables_section),
-      $.user_object_type_declaration,
-      repeat($.type_member),
-    ),
-
-    user_object_type_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      $.base_type,
-      repeat($.property_assignment),
-      repeat($.event_declaration),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
-    ),
-
-    // Window File (.srw)
-    window_file: $ => seq(
-      optional($.export_header),
-      optional($.forward_section),
-      $.window_type_declaration,
-      repeat($.type_member),
-    ),
-
-    window_type_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      caseInsensitive('window'),
-      repeat($.property_assignment),
-      repeat($.event_declaration),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
-    ),
-
-    // Menu File (.srm)
-    menu_file: $ => seq(
-      optional($.export_header),
-      optional($.forward_section),
-      $.menu_type_declaration,
-      repeat($.menu_member),
-    ),
-
-    menu_type_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      caseInsensitive('menu'),
-      repeat($.menu_item),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
-    ),
-
     menu_item: $ => seq(
       $.identifier,
       $.identifier,
@@ -243,18 +281,6 @@ module.exports = grammar({
       $.variables_section,
       $.function_prototype,
       $.function_implementation,
-    ),
-
-    // Structure File (.srs)
-    structure_file: $ => seq(
-      optional($.export_header),
-      $.structure_definition,
-    ),
-
-    // Query File (.srq) - placeholder
-    query_file: $ => seq(
-      optional($.export_header),
-      // Query-specific content would go here
     ),
 
     // ========================================
@@ -280,33 +306,42 @@ module.exports = grammar({
     // Forward Declarations
     forward_section: $ => seq(
       caseInsensitive('forward'),
-      repeat(choice(
+      repeat1(choice(
         $.type_forward_declaration,
-        $.function_forward_declaration,
+        $.global_variable_declaration,
       )),
       caseInsensitive('end'),
       caseInsensitive('forward'),
     ),
 
     type_forward_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      $.base_type,
-      caseInsensitive('end'),
-      caseInsensitive('type'),
+      choice(
+        seq(
+          caseInsensitive('global'),
+          caseInsensitive('type'),
+          $.identifier,
+          caseInsensitive('from'),
+          $.base_type,
+          caseInsensitive('end'),
+          caseInsensitive('type'),
+        ),
+        seq(
+          caseInsensitive('type'),
+          $.identifier,
+          caseInsensitive('from'),
+          $.base_type,
+          caseInsensitive('within'),
+          $.identifier,
+          caseInsensitive('end'),
+          caseInsensitive('type'),
+        ),
+      ),
     ),
 
-    function_forward_declaration: $ => seq(
-      caseInsensitive('type'),
+    global_variable_declaration: $ => seq(
+      caseInsensitive('global'),
+      $.data_type,
       $.identifier,
-      caseInsensitive('from'),
-      $.base_type,
-      caseInsensitive('within'),
-      $.identifier,
-      caseInsensitive('end'),
-      caseInsensitive('type'),
     ),
 
     // Global Types
@@ -327,6 +362,12 @@ module.exports = grammar({
       caseInsensitive('menu'),
       caseInsensitive('structure'),
       caseInsensitive('function_object'),
+      caseInsensitive('datawindow'),
+      caseInsensitive('transaction'),
+      caseInsensitive('dynamicdescriptionarea'),
+      caseInsensitive('dynamicstagingarea'),
+      caseInsensitive('error'),
+      caseInsensitive('message'),
       $.identifier, // For custom types
     ),
 
@@ -337,7 +378,7 @@ module.exports = grammar({
       $.identifier,
       caseInsensitive('from'),
       caseInsensitive('structure'),
-      repeat($.structure_field),
+      repeat1($.structure_field),
       caseInsensitive('end'),
       caseInsensitive('type'),
     ),
@@ -352,7 +393,7 @@ module.exports = grammar({
     global_variables_section: $ => seq(
       caseInsensitive('global'),
       caseInsensitive('variables'),
-      repeat($.variable_declaration),
+      repeat1($.variable_declaration),
       caseInsensitive('end'),
       caseInsensitive('variables'),
     ),
@@ -360,7 +401,7 @@ module.exports = grammar({
     shared_variables_section: $ => seq(
       caseInsensitive('shared'),
       caseInsensitive('variables'),
-      repeat($.variable_declaration),
+      repeat1($.variable_declaration),
       caseInsensitive('end'),
       caseInsensitive('variables'),
     ),
@@ -368,10 +409,42 @@ module.exports = grammar({
     variables_section: $ => seq(
       caseInsensitive('type'),
       caseInsensitive('variables'),
-      repeat($.variable_declaration),
+      repeat1($.variable_declaration),
       caseInsensitive('end'),
       caseInsensitive('variables'),
     ),
+
+    type_variables_section: $ => seq(
+      caseInsensitive('type'),
+      caseInsensitive('variables'),
+      repeat1($.variable_declaration),
+      caseInsensitive('end'),
+      caseInsensitive('variables'),
+    ),
+
+    instance_declaration: $ => prec(2, seq(
+      caseInsensitive('global'),
+      $.identifier,
+      $.identifier,
+    )),
+
+    event_implementation: $ => seq(
+      caseInsensitive('event'),
+      $.identifier,
+      optional($.parameter_list),
+      ';',
+      repeat($.statement),
+      caseInsensitive('end'),
+      caseInsensitive('event'),
+    ),
+
+    on_event_block: $ => prec(2, seq(
+      caseInsensitive('on'),
+      $.member_expression,
+      repeat($.statement),
+      caseInsensitive('end'),
+      caseInsensitive('on'),
+    )),
 
     variable_declaration: $ => seq(
       optional($.access_modifier),
@@ -391,7 +464,7 @@ module.exports = grammar({
     forward_prototypes_section: $ => seq(
       caseInsensitive('forward'),
       caseInsensitive('prototypes'),
-      repeat($.function_prototype),
+      repeat1($.function_prototype),
       caseInsensitive('end'),
       caseInsensitive('prototypes'),
     ),
@@ -409,7 +482,7 @@ module.exports = grammar({
     function_implementation: $ => seq(
       $.function_prototype,
       ';',
-      optional($.function_body),
+      repeat($.statement),
       choice(
         caseInsensitive('end function'),
         caseInsensitive('end subroutine'),
@@ -463,8 +536,10 @@ module.exports = grammar({
     property_assignment: $ => seq(
       $.identifier,
       '=',
-      $.expression,
+      $.property_value,
     ),
+
+    property_value: $ => $.expression,
 
     property_list: $ => commaSep1($.property_assignment),
 
@@ -474,7 +549,6 @@ module.exports = grammar({
 
     statement: $ => choice(
       $.assignment_statement,
-      $.function_call_statement,
       $.return_statement,
       $.if_statement,
       $.choose_statement,
@@ -488,14 +562,10 @@ module.exports = grammar({
       $.expression,
     )),
 
-    function_call_statement: $ => seq(
-      $.function_call,
-    ),
-
-    return_statement: $ => seq(
+    return_statement: $ => prec.left(seq(
       caseInsensitive('return'),
       optional($.expression),
-    ),
+    )),
 
     if_statement: $ => seq(
       caseInsensitive('if'),
@@ -639,11 +709,11 @@ module.exports = grammar({
       $.null_literal,
     ),
 
-    lvalue: $ => choice(
+    lvalue: $ => prec(1, choice(
       $.identifier,
       $.member_expression,
       $.array_access,
-    ),
+    )),
 
     // ========================================
     // BASIC TYPES AND LITERALS
