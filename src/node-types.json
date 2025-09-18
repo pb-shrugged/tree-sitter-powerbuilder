@@ -149,6 +149,12 @@
       }
     },
     {
+      "type": "block_comment",
+      "named": true,
+      "extra": true,
+      "fields": {}
+    },
+    {
       "type": "boolean_literal",
       "named": true,
       "fields": {}
@@ -239,12 +245,6 @@
           }
         ]
       }
-    },
-    {
-      "type": "comment",
-      "named": true,
-      "extra": true,
-      "fields": {}
     },
     {
       "type": "control_definition",
@@ -344,6 +344,25 @@
           },
           {
             "type": "summary_section",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "datawindow_syntax_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "datawindow_content",
+            "named": true
+          },
+          {
+            "type": "release_statement",
             "named": true
           }
         ]
@@ -470,7 +489,18 @@
     {
       "type": "export_comments_line",
       "named": true,
-      "fields": {}
+      "fields": {
+        "comment": {
+          "multiple": false,
+          "required": true,
+          "types": [
+            {
+              "type": "rest_of_line",
+              "named": true
+            }
+          ]
+        }
+      }
     },
     {
       "type": "export_header",
@@ -494,7 +524,18 @@
     {
       "type": "export_header_line",
       "named": true,
-      "fields": {}
+      "fields": {
+        "file": {
+          "multiple": false,
+          "required": true,
+          "types": [
+            {
+              "type": "file",
+              "named": true
+            }
+          ]
+        }
+      }
     },
     {
       "type": "expression",
@@ -548,6 +589,32 @@
             "named": true
           }
         ]
+      }
+    },
+    {
+      "type": "file",
+      "named": true,
+      "fields": {
+        "extension": {
+          "multiple": false,
+          "required": true,
+          "types": [
+            {
+              "type": "identifier",
+              "named": true
+            }
+          ]
+        },
+        "name": {
+          "multiple": false,
+          "required": true,
+          "types": [
+            {
+              "type": "identifier",
+              "named": true
+            }
+          ]
+        }
       }
     },
     {
@@ -651,11 +718,11 @@
         "required": true,
         "types": [
           {
-            "type": "global_variable_declaration",
+            "type": "global_type_forward_declaration",
             "named": true
           },
           {
-            "type": "type_forward_declaration",
+            "type": "global_variable_declaration",
             "named": true
           }
         ]
@@ -765,6 +832,25 @@
       }
     },
     {
+      "type": "global_type_forward_declaration",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "base_type",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
       "type": "global_variable_declaration",
       "named": true,
       "fields": {},
@@ -854,6 +940,12 @@
           }
         ]
       }
+    },
+    {
+      "type": "line_comment",
+      "named": true,
+      "extra": true,
+      "fields": {}
     },
     {
       "type": "loop_statement",
@@ -1079,6 +1171,25 @@
       }
     },
     {
+      "type": "powerscript_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "file_content",
+            "named": true
+          },
+          {
+            "type": "forward_section",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
       "type": "primary_expression",
       "named": true,
       "fields": {},
@@ -1228,7 +1339,7 @@
         "required": true,
         "types": [
           {
-            "type": "datawindow_content",
+            "type": "datawindow_syntax_file",
             "named": true
           },
           {
@@ -1236,15 +1347,7 @@
             "named": true
           },
           {
-            "type": "file_content",
-            "named": true
-          },
-          {
-            "type": "forward_section",
-            "named": true
-          },
-          {
-            "type": "release_statement",
+            "type": "powerscript_file",
             "named": true
           }
         ]
@@ -1387,25 +1490,6 @@
         "types": [
           {
             "type": "property_list",
-            "named": true
-          }
-        ]
-      }
-    },
-    {
-      "type": "type_forward_declaration",
-      "named": true,
-      "fields": {},
-      "children": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "base_type",
-            "named": true
-          },
-          {
-            "type": "identifier",
             "named": true
           }
         ]
@@ -1654,10 +1738,6 @@
           }
         ]
       }
-    },
-    {
-      "type": "!",
-      "named": false
     },
     {
       "type": "\"",
@@ -1971,6 +2051,10 @@
     {
       "type": "release",
       "named": false
+    },
+    {
+      "type": "rest_of_line",
+      "named": true
     },
     {
       "type": "return",

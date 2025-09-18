@@ -28,7 +28,8 @@ module.exports = grammar({
   name: 'powerbuilder',
 
   extras: $ => [
-    $.comment,
+    $.line_comment,
+    $.block_comment,
     /\s/,
     $.line_continuation,
   ],
@@ -38,12 +39,12 @@ module.exports = grammar({
     source_file: $ => seq(
       optional($.export_header),
       choice(
-        // Datawindow files start with 'release N;'
-        seq($.release_statement, $.datawindow_content),
-        // All other files have global type declarations
-        seq(optional($.forward_section), $.file_content),
+        $.datawindow_syntax_file,
+        $.powerscript_file,
       ),
     ),
+
+    datawindow_syntax_file: $ => seq($.release_statement, $.datawindow_content),
 
     datawindow_content: $ => seq(
       $.datawindow_definition,
@@ -53,6 +54,8 @@ module.exports = grammar({
         $.control_definition,
       )),
     ),
+
+    powerscript_file: $ => seq(optional($.forward_section), $.file_content),
 
     file_content: $ => choice(
       $.application_content,
@@ -295,26 +298,34 @@ module.exports = grammar({
 
     export_header_line: $ => seq(
       /HA\$PBExportHeader\$/,
-      /[^\\n]+/,
+      field('file', $.file),
+    ),
+
+    file: $ => seq(
+      field('name', $.identifier),
+      '.',
+      field('extension', $.identifier),
     ),
 
     export_comments_line: $ => seq(
       /\$PBExportComments\$/,
-      /[^\\n]*/,
+      field('comment', $.rest_of_line),
     ),
+
+    rest_of_line: _ => /[^\r\n]*/,
 
     // Forward Declarations
     forward_section: $ => seq(
       caseInsensitive('forward'),
       repeat1(choice(
-        $.type_forward_declaration,
+        $.global_type_forward_declaration,
         $.global_variable_declaration,
       )),
       caseInsensitive('end'),
       caseInsensitive('forward'),
     ),
 
-    type_forward_declaration: $ => seq(
+    global_type_forward_declaration: $ => seq(
       choice(
         seq(
           caseInsensitive('global'),
@@ -758,18 +769,88 @@ module.exports = grammar({
       caseInsensitive('false'),
     ),
 
-    null_literal: $ => choice(
-      caseInsensitive('null'),
-      '!',
-    ),
+    null_literal: _ => caseInsensitive('null'),
 
     // Comments
-    comment: $ => choice(
-      seq('//', /.*/),
-      seq('/*', /[^*]*\*+([^/*][^*]*\*+)*/, '/'),
-    ),
+    line_comment: _ => seq('//', /.*/),
+
+    block_comment: _ => seq('/*', /[^*]*\*+([^/*][^*]*\*+)*/, '/'),
 
     line_continuation: $ => '&',
+
+    // Keyword
+    _forward_keyword: _ => caseInsensitive('forward'),
+
+    _end_keyword: _ => caseInsensitive('end'),
+
+    _global_keyword: _ => caseInsensitive('global'),
+
+    _type_keyword: _ => caseInsensitive('type'),
+
+    _from_keyword: _ => caseInsensitive('from'),
+
+    _release_keyword: _ => caseInsensitive('release'),
+
+    _within_keyword: _ => caseInsensitive('within'),
+
+    _variables_keyword: _ => caseInsensitive('variables'),
+
+    _shared_keyword: _ => caseInsensitive('shared'),
+
+    _event_keyword: _ => caseInsensitive('event'),
+
+    _on_keyword: _ => caseInsensitive('on'),
+
+    _public_keyword: _ => caseInsensitive('public'),
+
+    _private_keyword: _ => caseInsensitive('private'),
+
+    _protected_keyword: _ => caseInsensitive('protected'),
+
+    _prototypes_keyword: _ => caseInsensitive('prototypes'),
+
+    _function_keyword: _ => caseInsensitive('function'),
+
+    _subroutine_keyword: _ => caseInsensitive('subroutine'),
+
+    _ref_keyword: _ => caseInsensitive('ref'),
+
+    _readonly_keyword: _ => caseInsensitive('readonly'),
+
+    _return_keyword: _ => caseInsensitive('return'),
+
+    _if_keyword: _ => caseInsensitive('if'),
+
+    _then_keyword: _ => caseInsensitive('then'),
+
+    _elseif_keyword: _ => caseInsensitive('elseif'),
+
+    _else_keyword: _ => caseInsensitive('else'),
+
+    _choose_keyword: _ => caseInsensitive('choose'),
+
+    _case_keyword: _ => caseInsensitive('case'),
+
+    _do_keyword: _ => caseInsensitive('do'),
+
+    _loop_keyword: _ => caseInsensitive('loop'),
+
+    _while_keyword: _ => caseInsensitive('while'),
+
+    _for_keyword: _ => caseInsensitive('for'),
+
+    _to_keyword: _ => caseInsensitive('to'),
+
+    _step_keyword: _ => caseInsensitive('step'),
+
+    _next_keyword: _ => caseInsensitive('next'),
+
+    _or_keyword: _ => caseInsensitive('or'),
+
+    _and_keyword: _ => caseInsensitive('and'),
+
+    _not_keyword: _ => caseInsensitive('not'),
+
   },
 });
 
