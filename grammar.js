@@ -35,35 +35,55 @@ module.exports = grammar({
   ],
 
   rules: {
-    // Top-level rule that detects and routes to appropriate file type
-    source_file: $ => seq(
-      optional($.export_header),
-      choice(
-        $.datawindow_syntax_file,
-        $.powerscript_file,
-      ),
+
+    source_file: $ => choice(
+      $.datawindow_file,
+      $.application_file,
+      $.function_file,
+      $.structure_file,
+      $.user_object_file,
+      $.window_file,
+      $.menu_file,
+      $.query_file,
     ),
 
-    datawindow_syntax_file: $ => seq($.release_statement, $.datawindow_content),
-
-    datawindow_content: $ => seq(
-      $.datawindow_definition,
-      repeat(choice(
-        $.datawindow_section,
-        $.table_definition,
-        $.control_definition,
-      )),
+    datawindow_file: $ => seq(
+      $.datawindow_header_file,
+      $.datawindow_content,
     ),
 
-    powerscript_file: $ => seq(optional($.forward_section), $.file_content),
-
-    file_content: $ => choice(
+    application_file: $ => seq(
+      $.application_header_file,
       $.application_content,
+    ),
+
+    function_file: $ => seq(
+      $.function_header_file,
       $.function_content,
-      $.user_object_content,
-      $.window_content,
-      $.menu_content,
+    ),
+
+    structure_file: $ => seq(
+      $.structure_header_file,
       $.structure_content,
+    ),
+
+    user_object_file: $ => seq(
+      $.user_object_header_file,
+      $.user_object_content,
+    ),
+
+    window_file: $ => seq(
+      $.window_header_file,
+      $.window_content,
+    ),
+
+    menu_file: $ => seq(
+      $.menu_header_file,
+      $.menu_content,
+    ),
+
+    query_file: $ => seq(
+      $.query_header_file,
       $.query_content,
     ),
 
@@ -72,36 +92,38 @@ module.exports = grammar({
     // ========================================
 
     // Application Content
-    application_content: $ => seq(
-      $.application_type_declaration,
-      repeat(choice(
-        $.structure_definition,
-        $.global_variables_section,
-        $.type_variables_section,
-        $.instance_declaration,
-        $.forward_prototypes_section,
-        $.event_implementation,
-        $.function_implementation,
-        $.on_event_block,
-        $.type_implementation,
-      )),
+    application_file_extension: _ => 'sra',
+
+    application_header_file: $ => seq(
+      $.export_header_name,
+      $.application_file_extension,
+      /[\r?\n]/,
+      optional($.export_comments),
     ),
 
-    application_type_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      caseInsensitive('application'),
-      repeat(choice(
-        $.property_assignment,
-        $.event_declaration,
-      )),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
+    application_content: $ => seq(
+      $.forward_section,
+      optional($.structure_definition),
+      optional($.global_variables_section),
+      optional($.type_variables_section),
+      optional($.instance_declaration),
+      optional($.forward_prototypes_section),
+      optional($.event_implementation),
+      optional($.function_implementation),
+      optional($.on_event_block),
+      optional($.type_implementation),
     ),
 
     // Function Content
+    function_file_extension: $ => 'srf',
+
+    function_header_file: $ => seq(
+      $.export_header_name,
+      $.function_file_extension,
+      /[\r?\n]/,
+      optional($.export_comments),
+    ),
+
     function_content: $ => seq(
       $.function_type_declaration,
       repeat(choice(
@@ -121,9 +143,27 @@ module.exports = grammar({
     ),
 
     // Structure Content
+    structure_file_extension: _ => 'srs',
+
+    structure_header_file: $ => seq(
+      $.export_header_name,
+      $.structure_file_extension,
+      /[\r?\n]/,
+      optional($.export_comments),
+    ),
+
     structure_content: $ => $.structure_definition,
 
     // Window Content
+    window_file_extension: _ => 'srw',
+
+    window_header_file: $ => seq(
+      $.export_header_name,
+      $.window_file_extension,
+      /[\r?\n]/,
+      optional($.export_comments),
+    ),
+
     window_content: $ => seq(
       $.window_type_declaration,
       repeat($.type_member),
@@ -144,6 +184,15 @@ module.exports = grammar({
     ),
 
     // Menu Content
+    menu_file_extension: _ => 'srm',
+
+    menu_header_file: $ => seq(
+      $.export_header_name,
+      $.menu_file_extension,
+      /[\r?\n]/,
+      optional($.export_comments),
+    ),
+
     menu_content: $ => seq(
       $.menu_type_declaration,
       repeat($.menu_member),
@@ -161,6 +210,15 @@ module.exports = grammar({
     ),
 
     // User Object Content
+    user_object_file_extension: _ => 'sru',
+
+    user_object_header_file: $ => seq(
+      $.export_header_name,
+      $.user_object_file_extension,
+      /[\r?\n]/,
+      optional($.export_comments),
+    ),
+
     user_object_content: $ => seq(
       $.user_object_type_declaration,
       repeat(choice(
@@ -190,90 +248,16 @@ module.exports = grammar({
     ),
 
     // Query Content - placeholder
+    query_file_extension: _ => 'srq',
+
+    query_header_file: $ => seq(
+      $.export_header_name,
+      $.query_file_extension,
+      /[\r?\n]/,
+      optional($.export_comments),
+    ),
+
     query_content: $ => $.identifier,
-
-    // Datawindow Definitions
-    release_statement: $ => seq(
-      caseInsensitive('release'),
-      $.number,
-      ';',
-    ),
-
-    datawindow_definition: $ => seq(
-      caseInsensitive('datawindow'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    datawindow_section: $ => choice(
-      $.header_section,
-      $.detail_section,
-      $.footer_section,
-      $.summary_section,
-    ),
-
-    header_section: $ => seq(
-      caseInsensitive('header'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    detail_section: $ => seq(
-      caseInsensitive('detail'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    footer_section: $ => seq(
-      caseInsensitive('footer'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    summary_section: $ => seq(
-      caseInsensitive('summary'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    table_definition: $ => seq(
-      caseInsensitive('table'),
-      '(',
-      repeat1($.column_definition),
-      ')',
-    ),
-
-    column_definition: $ => seq(
-      caseInsensitive('column'),
-      '=',
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    control_definition: $ => choice(
-      $.column_control,
-      $.text_control,
-    ),
-
-    column_control: $ => seq(
-      caseInsensitive('column'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    text_control: $ => seq(
-      caseInsensitive('text'),
-      '(',
-      $.property_list,
-      ')',
-    ),
 
     menu_item: $ => seq(
       $.identifier,
@@ -291,23 +275,13 @@ module.exports = grammar({
     // ========================================
 
     // Export Headers
-    export_header: $ => seq(
-      $.export_header_line,
-      optional($.export_comments_line),
-    ),
-
-    export_header_line: $ => seq(
+    export_header_name: $ => seq(
       /HA\$PBExportHeader\$/,
-      field('file', $.file),
+      field('file_name', $.identifier),
+      /\./,
     ),
 
-    file: $ => seq(
-      field('name', $.identifier),
-      '.',
-      field('extension', $.identifier),
-    ),
-
-    export_comments_line: $ => seq(
+    export_comments: $ => seq(
       /\$PBExportComments\$/,
       field('comment', $.rest_of_line),
     ),
@@ -316,54 +290,39 @@ module.exports = grammar({
 
     // Forward Declarations
     forward_section: $ => seq(
-      caseInsensitive('forward'),
-      repeat1(choice(
-        $.global_type_forward_declaration,
-        $.global_variable_declaration,
-      )),
-      caseInsensitive('end'),
-      caseInsensitive('forward'),
+      $.forward_keyword,
+      $.global_type_declaration,
+      repeat($.inner_object_type_declaration),
+      repeat($.global_variable_declaration), // Only in application files
+      $.end_keyword,
+      $.forward_keyword,
     ),
 
-    global_type_forward_declaration: $ => seq(
-      choice(
-        seq(
-          caseInsensitive('global'),
-          caseInsensitive('type'),
-          $.identifier,
-          caseInsensitive('from'),
-          $.base_type,
-          caseInsensitive('end'),
-          caseInsensitive('type'),
-        ),
-        seq(
-          caseInsensitive('type'),
-          $.identifier,
-          caseInsensitive('from'),
-          $.base_type,
-          caseInsensitive('within'),
-          $.identifier,
-          caseInsensitive('end'),
-          caseInsensitive('type'),
-        ),
-      ),
+    global_type_declaration: $ => seq(
+      $.global_keyword,
+      $.type_keyword,
+      field('type_name', $.identifier),
+      $.from_keyword,
+      $.base_type,
+      $.end_keyword,
+      $.type_keyword,
+    ),
+
+    inner_object_type_declaration: $ => seq(
+      $.type_keyword,
+      field('type_name', $.identifier),
+      $.from_keyword,
+      $.base_type,
+      $.within_keyword,
+      $.identifier,
+      $.end_keyword,
+      $.type_keyword,
     ),
 
     global_variable_declaration: $ => seq(
-      caseInsensitive('global'),
+      $.global_keyword,
       $.data_type,
-      $.identifier,
-    ),
-
-    // Global Types
-    global_type_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      $.base_type,
-      caseInsensitive('end'),
-      caseInsensitive('type'),
+      field('var_name', $.identifier),
     ),
 
     base_type: $ => choice(
@@ -778,78 +737,181 @@ module.exports = grammar({
 
     line_continuation: $ => '&',
 
+    // Datawindow Content
+    datawindow_file_extension: _ => 'srd',
+
+    datawindow_header_file: $ => seq(
+      $.export_header_name,
+      $.datawindow_file_extension,
+      /[\r?\n]/,
+      optional($.export_comments),
+    ),
+
+    datawindow_content: $ => seq(
+      $.release_statement,
+      $.datawindow_definition,
+      repeat(choice(
+        $.datawindow_section,
+        $.table_definition,
+        $.control_definition,
+      )),
+    ),
+
+    // Datawindow Definitions
+    release_statement: $ => seq(
+      caseInsensitive('release'),
+      $.number,
+      ';',
+    ),
+
+    datawindow_definition: $ => seq(
+      caseInsensitive('datawindow'),
+      '(',
+      $.property_list,
+      ')',
+    ),
+
+    datawindow_section: $ => choice(
+      $.header_section,
+      $.detail_section,
+      $.footer_section,
+      $.summary_section,
+    ),
+
+    header_section: $ => seq(
+      caseInsensitive('header'),
+      '(',
+      $.property_list,
+      ')',
+    ),
+
+    detail_section: $ => seq(
+      caseInsensitive('detail'),
+      '(',
+      $.property_list,
+      ')',
+    ),
+
+    footer_section: $ => seq(
+      caseInsensitive('footer'),
+      '(',
+      $.property_list,
+      ')',
+    ),
+
+    summary_section: $ => seq(
+      caseInsensitive('summary'),
+      '(',
+      $.property_list,
+      ')',
+    ),
+
+    table_definition: $ => seq(
+      caseInsensitive('table'),
+      '(',
+      repeat1($.column_definition),
+      ')',
+    ),
+
+    column_definition: $ => seq(
+      caseInsensitive('column'),
+      '=',
+      '(',
+      $.property_list,
+      ')',
+    ),
+
+    control_definition: $ => choice(
+      $.column_control,
+      $.text_control,
+    ),
+
+    column_control: $ => seq(
+      caseInsensitive('column'),
+      '(',
+      $.property_list,
+      ')',
+    ),
+
+    text_control: $ => seq(
+      caseInsensitive('text'),
+      '(',
+      $.property_list,
+      ')',
+    ),
+
     // Keyword
-    _forward_keyword: _ => caseInsensitive('forward'),
+    forward_keyword: _ => caseInsensitive('forward'),
 
-    _end_keyword: _ => caseInsensitive('end'),
+    end_keyword: _ => caseInsensitive('end'),
 
-    _global_keyword: _ => caseInsensitive('global'),
+    global_keyword: _ => caseInsensitive('global'),
 
-    _type_keyword: _ => caseInsensitive('type'),
+    type_keyword: _ => caseInsensitive('type'),
 
-    _from_keyword: _ => caseInsensitive('from'),
+    from_keyword: _ => caseInsensitive('from'),
 
-    _release_keyword: _ => caseInsensitive('release'),
+    release_keyword: _ => caseInsensitive('release'),
 
-    _within_keyword: _ => caseInsensitive('within'),
+    within_keyword: _ => caseInsensitive('within'),
 
-    _variables_keyword: _ => caseInsensitive('variables'),
+    variables_keyword: _ => caseInsensitive('variables'),
 
-    _shared_keyword: _ => caseInsensitive('shared'),
+    shared_keyword: _ => caseInsensitive('shared'),
 
-    _event_keyword: _ => caseInsensitive('event'),
+    event_keyword: _ => caseInsensitive('event'),
 
-    _on_keyword: _ => caseInsensitive('on'),
+    on_keyword: _ => caseInsensitive('on'),
 
-    _public_keyword: _ => caseInsensitive('public'),
+    public_keyword: _ => caseInsensitive('public'),
 
-    _private_keyword: _ => caseInsensitive('private'),
+    private_keyword: _ => caseInsensitive('private'),
 
-    _protected_keyword: _ => caseInsensitive('protected'),
+    protected_keyword: _ => caseInsensitive('protected'),
 
-    _prototypes_keyword: _ => caseInsensitive('prototypes'),
+    prototypes_keyword: _ => caseInsensitive('prototypes'),
 
-    _function_keyword: _ => caseInsensitive('function'),
+    function_keyword: _ => caseInsensitive('function'),
 
-    _subroutine_keyword: _ => caseInsensitive('subroutine'),
+    subroutine_keyword: _ => caseInsensitive('subroutine'),
 
-    _ref_keyword: _ => caseInsensitive('ref'),
+    ref_keyword: _ => caseInsensitive('ref'),
 
-    _readonly_keyword: _ => caseInsensitive('readonly'),
+    readonly_keyword: _ => caseInsensitive('readonly'),
 
-    _return_keyword: _ => caseInsensitive('return'),
+    return_keyword: _ => caseInsensitive('return'),
 
-    _if_keyword: _ => caseInsensitive('if'),
+    if_keyword: _ => caseInsensitive('if'),
 
-    _then_keyword: _ => caseInsensitive('then'),
+    then_keyword: _ => caseInsensitive('then'),
 
-    _elseif_keyword: _ => caseInsensitive('elseif'),
+    elseif_keyword: _ => caseInsensitive('elseif'),
 
-    _else_keyword: _ => caseInsensitive('else'),
+    else_keyword: _ => caseInsensitive('else'),
 
-    _choose_keyword: _ => caseInsensitive('choose'),
+    choose_keyword: _ => caseInsensitive('choose'),
 
-    _case_keyword: _ => caseInsensitive('case'),
+    case_keyword: _ => caseInsensitive('case'),
 
-    _do_keyword: _ => caseInsensitive('do'),
+    do_keyword: _ => caseInsensitive('do'),
 
-    _loop_keyword: _ => caseInsensitive('loop'),
+    loop_keyword: _ => caseInsensitive('loop'),
 
-    _while_keyword: _ => caseInsensitive('while'),
+    while_keyword: _ => caseInsensitive('while'),
 
-    _for_keyword: _ => caseInsensitive('for'),
+    for_keyword: _ => caseInsensitive('for'),
 
-    _to_keyword: _ => caseInsensitive('to'),
+    to_keyword: _ => caseInsensitive('to'),
 
-    _step_keyword: _ => caseInsensitive('step'),
+    step_keyword: _ => caseInsensitive('step'),
 
-    _next_keyword: _ => caseInsensitive('next'),
+    next_keyword: _ => caseInsensitive('next'),
 
-    _or_keyword: _ => caseInsensitive('or'),
+    or_keyword: _ => caseInsensitive('or'),
 
-    _and_keyword: _ => caseInsensitive('and'),
+    and_keyword: _ => caseInsensitive('and'),
 
-    _not_keyword: _ => caseInsensitive('not'),
+    not_keyword: _ => caseInsensitive('not'),
 
   },
 });

@@ -14,15 +14,15 @@
         "required": true,
         "types": [
           {
-            "type": "application_type_declaration",
-            "named": true
-          },
-          {
             "type": "event_implementation",
             "named": true
           },
           {
             "type": "forward_prototypes_section",
+            "named": true
+          },
+          {
+            "type": "forward_section",
             "named": true
           },
           {
@@ -57,7 +57,7 @@
       }
     },
     {
-      "type": "application_type_declaration",
+      "type": "application_file",
       "named": true,
       "fields": {},
       "children": {
@@ -65,15 +65,34 @@
         "required": true,
         "types": [
           {
-            "type": "event_declaration",
+            "type": "application_content",
             "named": true
           },
           {
-            "type": "identifier",
+            "type": "application_header_file",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "application_header_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "application_file_extension",
             "named": true
           },
           {
-            "type": "property_assignment",
+            "type": "export_comments",
+            "named": true
+          },
+          {
+            "type": "export_header_name",
             "named": true
           }
         ]
@@ -301,6 +320,10 @@
             "named": true
           },
           {
+            "type": "release_statement",
+            "named": true
+          },
+          {
             "type": "table_definition",
             "named": true
           }
@@ -317,6 +340,48 @@
         "types": [
           {
             "type": "property_list",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "datawindow_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "datawindow_content",
+            "named": true
+          },
+          {
+            "type": "datawindow_header_file",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "datawindow_header_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "datawindow_file_extension",
+            "named": true
+          },
+          {
+            "type": "export_comments",
+            "named": true
+          },
+          {
+            "type": "export_header_name",
             "named": true
           }
         ]
@@ -344,25 +409,6 @@
           },
           {
             "type": "summary_section",
-            "named": true
-          }
-        ]
-      }
-    },
-    {
-      "type": "datawindow_syntax_file",
-      "named": true,
-      "fields": {},
-      "children": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "datawindow_content",
-            "named": true
-          },
-          {
-            "type": "release_statement",
             "named": true
           }
         ]
@@ -437,6 +483,11 @@
       }
     },
     {
+      "type": "end_keyword",
+      "named": true,
+      "fields": {}
+    },
+    {
       "type": "event_declaration",
       "named": true,
       "fields": {},
@@ -487,7 +538,7 @@
       }
     },
     {
-      "type": "export_comments_line",
+      "type": "export_comments",
       "named": true,
       "fields": {
         "comment": {
@@ -503,34 +554,15 @@
       }
     },
     {
-      "type": "export_header",
-      "named": true,
-      "fields": {},
-      "children": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "export_comments_line",
-            "named": true
-          },
-          {
-            "type": "export_header_line",
-            "named": true
-          }
-        ]
-      }
-    },
-    {
-      "type": "export_header_line",
+      "type": "export_header_name",
       "named": true,
       "fields": {
-        "file": {
+        "file_name": {
           "multiple": false,
           "required": true,
           "types": [
             {
-              "type": "file",
+              "type": "identifier",
               "named": true
             }
           ]
@@ -592,71 +624,6 @@
       }
     },
     {
-      "type": "file",
-      "named": true,
-      "fields": {
-        "extension": {
-          "multiple": false,
-          "required": true,
-          "types": [
-            {
-              "type": "identifier",
-              "named": true
-            }
-          ]
-        },
-        "name": {
-          "multiple": false,
-          "required": true,
-          "types": [
-            {
-              "type": "identifier",
-              "named": true
-            }
-          ]
-        }
-      }
-    },
-    {
-      "type": "file_content",
-      "named": true,
-      "fields": {},
-      "children": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "application_content",
-            "named": true
-          },
-          {
-            "type": "function_content",
-            "named": true
-          },
-          {
-            "type": "menu_content",
-            "named": true
-          },
-          {
-            "type": "query_content",
-            "named": true
-          },
-          {
-            "type": "structure_content",
-            "named": true
-          },
-          {
-            "type": "user_object_content",
-            "named": true
-          },
-          {
-            "type": "window_content",
-            "named": true
-          }
-        ]
-      }
-    },
-    {
       "type": "footer_section",
       "named": true,
       "fields": {},
@@ -695,6 +662,11 @@
       }
     },
     {
+      "type": "forward_keyword",
+      "named": true,
+      "fields": {}
+    },
+    {
       "type": "forward_prototypes_section",
       "named": true,
       "fields": {},
@@ -718,15 +690,32 @@
         "required": true,
         "types": [
           {
-            "type": "global_type_forward_declaration",
+            "type": "end_keyword",
+            "named": true
+          },
+          {
+            "type": "forward_keyword",
+            "named": true
+          },
+          {
+            "type": "global_type_declaration",
             "named": true
           },
           {
             "type": "global_variable_declaration",
             "named": true
+          },
+          {
+            "type": "inner_object_type_declaration",
+            "named": true
           }
         ]
       }
+    },
+    {
+      "type": "from_keyword",
+      "named": true,
+      "fields": {}
     },
     {
       "type": "function_call",
@@ -765,6 +754,48 @@
           },
           {
             "type": "function_type_declaration",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "function_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "function_content",
+            "named": true
+          },
+          {
+            "type": "function_header_file",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "function_header_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "export_comments",
+            "named": true
+          },
+          {
+            "type": "export_header_name",
+            "named": true
+          },
+          {
+            "type": "function_file_extension",
             "named": true
           }
         ]
@@ -832,9 +863,25 @@
       }
     },
     {
-      "type": "global_type_forward_declaration",
+      "type": "global_keyword",
       "named": true,
-      "fields": {},
+      "fields": {}
+    },
+    {
+      "type": "global_type_declaration",
+      "named": true,
+      "fields": {
+        "type_name": {
+          "multiple": false,
+          "required": true,
+          "types": [
+            {
+              "type": "identifier",
+              "named": true
+            }
+          ]
+        }
+      },
       "children": {
         "multiple": true,
         "required": true,
@@ -844,7 +891,19 @@
             "named": true
           },
           {
-            "type": "identifier",
+            "type": "end_keyword",
+            "named": true
+          },
+          {
+            "type": "from_keyword",
+            "named": true
+          },
+          {
+            "type": "global_keyword",
+            "named": true
+          },
+          {
+            "type": "type_keyword",
             "named": true
           }
         ]
@@ -853,7 +912,18 @@
     {
       "type": "global_variable_declaration",
       "named": true,
-      "fields": {},
+      "fields": {
+        "var_name": {
+          "multiple": false,
+          "required": true,
+          "types": [
+            {
+              "type": "identifier",
+              "named": true
+            }
+          ]
+        }
+      },
       "children": {
         "multiple": true,
         "required": true,
@@ -863,7 +933,7 @@
             "named": true
           },
           {
-            "type": "identifier",
+            "type": "global_keyword",
             "named": true
           }
         ]
@@ -921,6 +991,52 @@
           },
           {
             "type": "statement",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "inner_object_type_declaration",
+      "named": true,
+      "fields": {
+        "type_name": {
+          "multiple": false,
+          "required": true,
+          "types": [
+            {
+              "type": "identifier",
+              "named": true
+            }
+          ]
+        }
+      },
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "base_type",
+            "named": true
+          },
+          {
+            "type": "end_keyword",
+            "named": true
+          },
+          {
+            "type": "from_keyword",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "type_keyword",
+            "named": true
+          },
+          {
+            "type": "within_keyword",
             "named": true
           }
         ]
@@ -1026,6 +1142,48 @@
           },
           {
             "type": "menu_type_declaration",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "menu_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "menu_content",
+            "named": true
+          },
+          {
+            "type": "menu_header_file",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "menu_header_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "export_comments",
+            "named": true
+          },
+          {
+            "type": "export_header_name",
+            "named": true
+          },
+          {
+            "type": "menu_file_extension",
             "named": true
           }
         ]
@@ -1171,25 +1329,6 @@
       }
     },
     {
-      "type": "powerscript_file",
-      "named": true,
-      "fields": {},
-      "children": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "file_content",
-            "named": true
-          },
-          {
-            "type": "forward_section",
-            "named": true
-          }
-        ]
-      }
-    },
-    {
       "type": "primary_expression",
       "named": true,
       "fields": {},
@@ -1285,6 +1424,48 @@
       }
     },
     {
+      "type": "query_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "query_content",
+            "named": true
+          },
+          {
+            "type": "query_header_file",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "query_header_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "export_comments",
+            "named": true
+          },
+          {
+            "type": "export_header_name",
+            "named": true
+          },
+          {
+            "type": "query_file_extension",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
       "type": "release_statement",
       "named": true,
       "fields": {},
@@ -1335,19 +1516,39 @@
       "root": true,
       "fields": {},
       "children": {
-        "multiple": true,
+        "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "datawindow_syntax_file",
+            "type": "application_file",
             "named": true
           },
           {
-            "type": "export_header",
+            "type": "datawindow_file",
             "named": true
           },
           {
-            "type": "powerscript_file",
+            "type": "function_file",
+            "named": true
+          },
+          {
+            "type": "menu_file",
+            "named": true
+          },
+          {
+            "type": "query_file",
+            "named": true
+          },
+          {
+            "type": "structure_file",
+            "named": true
+          },
+          {
+            "type": "user_object_file",
+            "named": true
+          },
+          {
+            "type": "window_file",
             "named": true
           }
         ]
@@ -1451,6 +1652,48 @@
       }
     },
     {
+      "type": "structure_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "structure_content",
+            "named": true
+          },
+          {
+            "type": "structure_header_file",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "structure_header_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "export_comments",
+            "named": true
+          },
+          {
+            "type": "export_header_name",
+            "named": true
+          },
+          {
+            "type": "structure_file_extension",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
       "type": "summary_section",
       "named": true,
       "fields": {},
@@ -1509,6 +1752,11 @@
           }
         ]
       }
+    },
+    {
+      "type": "type_keyword",
+      "named": true,
+      "fields": {}
     },
     {
       "type": "type_member",
@@ -1600,6 +1848,48 @@
           },
           {
             "type": "user_object_type_declaration",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "user_object_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "user_object_content",
+            "named": true
+          },
+          {
+            "type": "user_object_header_file",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "user_object_header_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "export_comments",
+            "named": true
+          },
+          {
+            "type": "export_header_name",
+            "named": true
+          },
+          {
+            "type": "user_object_file_extension",
             "named": true
           }
         ]
@@ -1717,6 +2007,48 @@
       }
     },
     {
+      "type": "window_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "window_content",
+            "named": true
+          },
+          {
+            "type": "window_header_file",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
+      "type": "window_header_file",
+      "named": true,
+      "fields": {},
+      "children": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "export_comments",
+            "named": true
+          },
+          {
+            "type": "export_header_name",
+            "named": true
+          },
+          {
+            "type": "window_file_extension",
+            "named": true
+          }
+        ]
+      }
+    },
+    {
       "type": "window_type_declaration",
       "named": true,
       "fields": {},
@@ -1738,6 +2070,11 @@
           }
         ]
       }
+    },
+    {
+      "type": "within_keyword",
+      "named": true,
+      "fields": {}
     },
     {
       "type": "\"",
@@ -1840,6 +2177,10 @@
       "named": false
     },
     {
+      "type": "application_file_extension",
+      "named": true
+    },
+    {
       "type": "blob",
       "named": false
     },
@@ -1862,6 +2203,10 @@
     {
       "type": "datawindow",
       "named": false
+    },
+    {
+      "type": "datawindow_file_extension",
+      "named": true
     },
     {
       "type": "date",
@@ -1952,6 +2297,10 @@
       "named": false
     },
     {
+      "type": "function_file_extension",
+      "named": true
+    },
+    {
       "type": "function_object",
       "named": false
     },
@@ -1991,6 +2340,10 @@
     {
       "type": "menu",
       "named": false
+    },
+    {
+      "type": "menu_file_extension",
+      "named": true
     },
     {
       "type": "message",
@@ -2037,6 +2390,10 @@
       "named": false
     },
     {
+      "type": "query_file_extension",
+      "named": true
+    },
+    {
       "type": "readonly",
       "named": false
     },
@@ -2075,6 +2432,10 @@
     {
       "type": "structure",
       "named": false
+    },
+    {
+      "type": "structure_file_extension",
+      "named": true
     },
     {
       "type": "subroutine",
@@ -2117,6 +2478,10 @@
       "named": false
     },
     {
+      "type": "user_object_file_extension",
+      "named": true
+    },
+    {
       "type": "userobject",
       "named": false
     },
@@ -2131,6 +2496,10 @@
     {
       "type": "window",
       "named": false
+    },
+    {
+      "type": "window_file_extension",
+      "named": true
     },
     {
       "type": "within",
