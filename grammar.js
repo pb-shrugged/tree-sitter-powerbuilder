@@ -53,8 +53,8 @@ module.exports = grammar({
     ),
 
     application_file: $ => seq(
-      $.application_header_file,
-      $.application_content,
+      field('header', $.application_header_file),
+      field('content', $.application_content),
     ),
 
     function_file: $ => seq(
@@ -103,10 +103,10 @@ module.exports = grammar({
 
     application_content: $ => seq(
       $.forward_section,
-      optional($.structure_definition),
+      repeat($.structure_definition),
+      optional($.shared_variables_section),
       optional($.global_variables_section),
-      optional($.type_variables_section),
-      optional($.instance_declaration),
+      $.global_type_definition,
       optional($.forward_prototypes_section),
       optional($.event_implementation),
       optional($.function_implementation),
@@ -152,7 +152,10 @@ module.exports = grammar({
       optional($.export_comments),
     ),
 
-    structure_content: $ => $.structure_definition,
+    structure_content: $ => seq(
+      $.global_keyword,
+      $.structure_definition,
+    ),
 
     // Window Content
     window_file_extension: _ => 'srw',
@@ -290,12 +293,18 @@ module.exports = grammar({
 
     // Forward Declarations
     forward_section: $ => seq(
-      $.forward_keyword,
+      field('init', $.forward_keyword),
+      field(
+        'body',
+        $.forward_section_body,
+      ),
+      field('end', $.end_forward_keyword),
+    ),
+
+    forward_section_body: $ => seq(
       $.global_type_declaration,
       repeat($.inner_object_type_declaration),
       repeat($.global_variable_declaration), // Only in application files
-      $.end_keyword,
-      $.forward_keyword,
     ),
 
     global_type_declaration: $ => seq(
@@ -304,8 +313,7 @@ module.exports = grammar({
       field('type_name', $.identifier),
       $.from_keyword,
       $.base_type,
-      $.end_keyword,
-      $.type_keyword,
+      $.end_type_keyword,
     ),
 
     inner_object_type_declaration: $ => seq(
@@ -315,8 +323,7 @@ module.exports = grammar({
       $.base_type,
       $.within_keyword,
       $.identifier,
-      $.end_keyword,
-      $.type_keyword,
+      $.end_type_keyword,
     ),
 
     global_variable_declaration: $ => seq(
@@ -343,38 +350,48 @@ module.exports = grammar({
 
     // Structure Definitions
     structure_definition: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      caseInsensitive('structure'),
-      repeat1($.structure_field),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
+      field(
+        'init',
+        $.structure_definition_init,
+      ),
+      field('body', $.structure_definition_body),
+      field('end', $.end_type_keyword),
     ),
+
+    structure_definition_init: $ => seq(
+      $.type_keyword,
+      $.identifier,
+      $.from_keyword,
+      $.structure_keyword,
+    ),
+
+    structure_definition_body: $ => repeat1($.structure_field),
 
     structure_field: $ => seq(
       $.data_type,
+      $.structure_field_separator,
       $.identifier,
       optional($.array_suffix),
     ),
 
+    structure_field_separator: $ => /\t\t/,
+
     // Variables Sections
     global_variables_section: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('variables'),
-      repeat1($.variable_declaration),
-      caseInsensitive('end'),
-      caseInsensitive('variables'),
+      field('init', $.global_variables_keyword),
+      field('body', $.global_variables_section_body),
+      field('end', $.end_variables_keyword),
     ),
 
+    global_variables_section_body: $ => repeat1($.variable_declaration),
+
     shared_variables_section: $ => seq(
-      caseInsensitive('shared'),
-      caseInsensitive('variables'),
-      repeat1($.variable_declaration),
-      caseInsensitive('end'),
-      caseInsensitive('variables'),
+      field('init', $.shared_variables_keyword),
+      field('body', $.shared_variables_section_body),
+      field('end', $.end_variables_keyword),
     ),
+
+    shared_variables_section_body: $ => repeat1($.variable_declaration),
 
     variables_section: $ => seq(
       caseInsensitive('type'),
@@ -385,18 +402,29 @@ module.exports = grammar({
     ),
 
     type_variables_section: $ => seq(
-      caseInsensitive('type'),
-      caseInsensitive('variables'),
-      repeat1($.variable_declaration),
-      caseInsensitive('end'),
-      caseInsensitive('variables'),
+      field('init', $.type_variables_keyword),
+      field('body', $.type_variables_section_body),
+      field('end', $.end_variables_keyword),
     ),
 
-    instance_declaration: $ => prec(2, seq(
-      caseInsensitive('global'),
-      $.identifier,
-      $.identifier,
-    )),
+    type_variables_section_body: $ => repeat1($.variable_declaration),
+
+    global_type_definition: $ => seq(
+      field('init', $.global_type_definition_init),
+      field('body', $.global_type_definition_body),
+    ),
+
+    global_type_definition_init: $ => seq(
+      $.global_keyword,
+      $.type_keyword,
+      field('type_name', $.identifier),
+      $.from_keyword,
+      $.base_type,
+    ),
+
+    global_type_definition_body: $ => seq(
+      'TODO',
+    ),
 
     event_implementation: $ => seq(
       caseInsensitive('event'),
@@ -419,10 +447,17 @@ module.exports = grammar({
     variable_declaration: $ => seq(
       optional($.access_modifier),
       $.data_type,
+      optional($.variable_precision),
+      $.variable_declaration_list,
+    ),
+
+    variable_declaration_list: $ => commaSep1(seq(
       $.identifier,
       optional($.array_suffix),
       optional(seq('=', $.expression)),
-    ),
+    )),
+
+    variable_precision: $ => /\{\d\}/,
 
     access_modifier: $ => choice(
       caseInsensitive('public'),
@@ -690,26 +725,35 @@ module.exports = grammar({
     // ========================================
 
     data_type: $ => choice(
-      caseInsensitive('string'),
-      caseInsensitive('integer'),
-      caseInsensitive('long'),
-      caseInsensitive('boolean'),
-      caseInsensitive('decimal'),
-      caseInsensitive('real'),
-      caseInsensitive('double'),
-      caseInsensitive('date'),
-      caseInsensitive('time'),
-      caseInsensitive('datetime'),
       caseInsensitive('blob'),
+      caseInsensitive('boolean'),
+      caseInsensitive('byte'),
+      caseInsensitive('char'),
+      caseInsensitive('character'),
+      caseInsensitive('date'),
+      caseInsensitive('datetime'),
+      caseInsensitive('decimal'),
+      caseInsensitive('dec'),
+      caseInsensitive('double'),
+      caseInsensitive('integer'),
+      caseInsensitive('int'),
+      caseInsensitive('longlong'),
+      caseInsensitive('long'),
+      caseInsensitive('real'),
+      caseInsensitive('string'),
+      caseInsensitive('time'),
+      caseInsensitive('unsignedinteger'),
+      caseInsensitive('unsignedint'),
+      caseInsensitive('uint'),
+      caseInsensitive('unsignedlong'),
+      caseInsensitive('ulong'),
       caseInsensitive('any'),
-      caseInsensitive('powerobject'),
-      caseInsensitive('datawindow'),
       $.identifier, // Custom types
     ),
 
     array_suffix: $ => seq('[', ']'),
 
-    identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
+    identifier: $ => /[a-zA-Z_][a-zA-Z0-9_\-$#%]*/,
 
     number: $ => choice(
       /\d+/,
@@ -857,7 +901,7 @@ module.exports = grammar({
 
     variables_keyword: _ => caseInsensitive('variables'),
 
-    shared_keyword: _ => caseInsensitive('shared'),
+    shared_variables_keyword: _ => token(caseInsensitive('shared variables')),
 
     event_keyword: _ => caseInsensitive('event'),
 
@@ -912,6 +956,20 @@ module.exports = grammar({
     and_keyword: _ => caseInsensitive('and'),
 
     not_keyword: _ => caseInsensitive('not'),
+
+    end_type_keyword: _ => token(caseInsensitive('end type')),
+
+    end_variables_keyword: _ => token(caseInsensitive('end variables')),
+
+    end_forward_keyword: _ => token(caseInsensitive('end forward')),
+
+    global_variables_keyword: _ => token(caseInsensitive('global variables')),
+
+    type_variables_keyword: _ => token(caseInsensitive('type variables')),
+
+    structure_keyword: _ => caseInsensitive('structure'),
+
+    tab_char: _ => /\t/,
 
   },
 });

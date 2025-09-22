@@ -45,11 +45,11 @@
   },
   "scripts": {
     "install": "node-gyp-build",
-    "prestart": "tree-sitter build --wasm",
-    "start": "tree-sitter playground -q",
-    "generate": "tree-sitter generate && tree-sitter playground -q",
+    "start": "npm run ts:generate && npm run ts:run",
+    "ts:generate": "tree-sitter generate",
+    "ts:run": "tree-sitter build --wasm && tree-sitter playground -q",
+    "ts:test": "tree-sitter test",
     "test": "node --test bindings/node/*_test.js",
-    "test:ts": "tree-sitter test",
     "lint": "eslint grammar.js",
     "lint:fix": "eslint grammar.js --fix"
   }
