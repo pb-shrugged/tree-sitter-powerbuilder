@@ -108,10 +108,10 @@ module.exports = grammar({
       optional($.global_variables_section),
       $.global_type_definition,
       optional($.forward_prototypes_section),
-      optional($.event_implementation),
-      optional($.function_implementation),
-      optional($.on_event_block),
-      optional($.type_implementation),
+      repeat($.event_implementation),
+      repeat($.function_implementation),
+      repeat($.on_event_block),
+      repeat($.type_implementation),
     ),
 
     // Function Content
@@ -236,18 +236,44 @@ module.exports = grammar({
       $.identifier,
       caseInsensitive('from'),
       $.user_object_base_type,
+      optional($.autoinstantiate_modifier),
       repeat(choice(
         $.property_assignment,
         $.event_declaration,
+        $.nested_object_declaration,
       )),
       caseInsensitive('end'),
       caseInsensitive('type'),
+      optional($.global_instance_declaration),
     ),
 
     user_object_base_type: $ => choice(
       caseInsensitive('datawindow'),
+      caseInsensitive('datastore'),
       caseInsensitive('userobject'),
+      caseInsensitive('nonvisualobject'),
       $.identifier, // Custom user object types
+    ),
+
+    autoinstantiate_modifier: $ => caseInsensitive('autoinstantiate'),
+
+    global_instance_declaration: $ => seq(
+      caseInsensitive('global'),
+      $.identifier,
+      $.identifier,
+    ),
+
+    nested_object_declaration: $ => seq(
+      $.identifier,
+      $.identifier,
+      optional($.descriptor_clause),
+    ),
+
+    descriptor_clause: $ => seq(
+      caseInsensitive('descriptor'),
+      $.string_literal,
+      '=',
+      $.string_literal,
     ),
 
     // Query Content - placeholder
@@ -336,15 +362,18 @@ module.exports = grammar({
       caseInsensitive('application'),
       caseInsensitive('window'),
       caseInsensitive('userobject'),
+      caseInsensitive('nonvisualobject'),
       caseInsensitive('menu'),
       caseInsensitive('structure'),
       caseInsensitive('function_object'),
       caseInsensitive('datawindow'),
+      caseInsensitive('datastore'),
       caseInsensitive('transaction'),
       caseInsensitive('dynamicdescriptionarea'),
       caseInsensitive('dynamicstagingarea'),
       caseInsensitive('error'),
       caseInsensitive('message'),
+      caseInsensitive('exception'),
       $.identifier, // For custom types
     ),
 
@@ -396,9 +425,15 @@ module.exports = grammar({
     variables_section: $ => seq(
       caseInsensitive('type'),
       caseInsensitive('variables'),
+      optional($.access_section),
       repeat1($.variable_declaration),
       caseInsensitive('end'),
       caseInsensitive('variables'),
+    ),
+
+    access_section: $ => seq(
+      $.access_modifier,
+      ':',
     ),
 
     type_variables_section: $ => seq(
@@ -409,10 +444,15 @@ module.exports = grammar({
 
     type_variables_section_body: $ => repeat1($.variable_declaration),
 
-    global_type_definition: $ => seq(
+    global_type_definition: $ => prec.right(seq(
       field('init', $.global_type_definition_init),
-      field('body', $.global_type_definition_body),
-    ),
+      field('body', seq(
+        repeat($.property_assignment),
+        repeat($.event_declaration),
+        repeat($.inner_object_var_declaration),
+      )),
+      field('end', $.end_type_keyword),
+    )),
 
     global_type_definition_init: $ => seq(
       $.global_keyword,
@@ -422,19 +462,19 @@ module.exports = grammar({
       $.base_type,
     ),
 
-    global_type_definition_body: $ => seq(
-      'TODO',
-    ),
+    inner_object_var_declaration: $ => $.variable_declaration,
 
-    event_implementation: $ => seq(
-      caseInsensitive('event'),
+    event_implementation: $ => prec(3, seq(
+      $.event_keyword,
+      optional(seq($.type_keyword, $.data_type)),
       $.identifier,
       optional($.parameter_list),
+      optional($.throws_clause),
       ';',
       repeat($.statement),
       caseInsensitive('end'),
       caseInsensitive('event'),
-    ),
+    )),
 
     on_event_block: $ => prec(2, seq(
       caseInsensitive('on'),
@@ -460,12 +500,12 @@ module.exports = grammar({
     variable_precision: $ => /\{\d\}/,
 
     access_modifier: $ => choice(
-      caseInsensitive('public'),
-      caseInsensitive('private'),
-      caseInsensitive('protected'),
+      $.public_keyword,
+      $.private_keyword,
+      $.protected_keyword,
     ),
 
-    // Function Definitions
+    // Function Definitions with Throws Support
     forward_prototypes_section: $ => seq(
       caseInsensitive('forward'),
       caseInsensitive('prototypes'),
@@ -482,6 +522,12 @@ module.exports = grammar({
       ),
       $.identifier,
       $.parameter_list,
+      optional($.throws_clause),
+    ),
+
+    throws_clause: $ => seq(
+      caseInsensitive('throws'),
+      commaSep1($.identifier),
     ),
 
     function_implementation: $ => seq(
@@ -504,22 +550,23 @@ module.exports = grammar({
 
     parameter: $ => seq(
       optional(choice(
-        caseInsensitive('ref'),
-        caseInsensitive('readonly'),
+        $.ref_keyword,
+        $.readonly_keyword,
       )),
       $.data_type,
       $.identifier,
       optional($.array_suffix),
     ),
 
-    // Event Definitions
-    event_declaration: $ => seq(
-      caseInsensitive('event'),
-      optional(seq(caseInsensitive('type'), $.data_type)),
+    // Event Definitions with Throws Support
+    event_declaration: $ => prec(1, seq(
+      $.event_keyword,
+      optional(seq($.type_keyword, $.data_type)),
       $.identifier,
       optional($.parameter_list),
+      optional($.throws_clause),
       optional($.event_id),
-    ),
+    )),
 
     event_id: $ => /pbm_[a-zA-Z_][a-zA-Z0-9_]*/,
 
@@ -529,6 +576,26 @@ module.exports = grammar({
       $.event_declaration,
       $.function_implementation,
       $.variables_section,
+      $.on_event_block,
+      $.event_implementation,
+      $.nested_type_declaration,
+    ),
+
+    nested_type_declaration: $ => seq(
+      caseInsensitive('type'),
+      $.identifier,
+      caseInsensitive('from'),
+      $.base_type,
+      caseInsensitive('within'),
+      $.identifier,
+      optional($.descriptor_clause),
+      repeat(choice(
+        $.property_assignment,
+        $.event_declaration,
+        $.variables_section,
+      )),
+      caseInsensitive('end'),
+      caseInsensitive('type'),
     ),
 
     type_implementation: $ => seq(
@@ -559,6 +626,9 @@ module.exports = grammar({
       $.choose_statement,
       $.loop_statement,
       $.expression_statement,
+      $.throw_statement,
+      $.try_catch_statement,
+      $.call_statement,
     ),
 
     assignment_statement: $ => prec(PREC.ASSIGNMENT, seq(
@@ -571,6 +641,57 @@ module.exports = grammar({
       caseInsensitive('return'),
       optional($.expression),
     )),
+
+    throw_statement: $ => seq(
+      caseInsensitive('throw'),
+      $.expression,
+    ),
+
+    try_catch_statement: $ => seq(
+      caseInsensitive('try'),
+      repeat($.statement),
+      repeat($.catch_clause),
+      optional($.finally_clause),
+      caseInsensitive('end'),
+      caseInsensitive('try'),
+    ),
+
+    catch_clause: $ => seq(
+      caseInsensitive('catch'),
+      '(',
+      $.data_type,
+      $.identifier,
+      ')',
+      repeat($.statement),
+    ),
+
+    finally_clause: $ => seq(
+      caseInsensitive('finally'),
+      repeat($.statement),
+    ),
+
+    call_statement: $ => choice(
+      $.super_call,
+      $.trigger_event_call,
+    ),
+
+    super_call: $ => prec.right(seq(
+      caseInsensitive('call'),
+      caseInsensitive('super'),
+      '::',
+      $.identifier,
+      optional($.argument_list),
+    )),
+
+    trigger_event_call: $ => seq(
+      caseInsensitive('triggerevent'),
+      '(',
+      $.expression,
+      ',',
+      $.string_literal,
+      optional(seq(',', commaSep($.expression))),
+      ')',
+    ),
 
     if_statement: $ => seq(
       caseInsensitive('if'),
@@ -662,7 +783,21 @@ module.exports = grammar({
       $.function_call,
       $.array_access,
       $.parenthesized_expression,
+      $.create_expression,
+      $.destroy_expression,
       $.primary_expression,
+    ),
+
+    create_expression: $ => seq(
+      caseInsensitive('create'),
+      $.identifier,
+    ),
+
+    destroy_expression: $ => seq(
+      caseInsensitive('destroy'),
+      '(',
+      $.expression,
+      ')',
     ),
 
     binary_expression: $ => choice(
@@ -682,16 +817,20 @@ module.exports = grammar({
 
     member_expression: $ => prec(PREC.MEMBER, seq(
       $.expression,
-      '.',
+      choice('.', '::'),
       $.identifier,
     )),
 
     function_call: $ => prec(PREC.CALL, seq(
       $.identifier,
+      $.argument_list,
+    )),
+
+    argument_list: $ => seq(
       '(',
       commaSep($.expression),
       ')',
-    )),
+    ),
 
     array_access: $ => prec(PREC.POSTFIX, seq(
       $.expression,
@@ -712,7 +851,10 @@ module.exports = grammar({
       $.string_literal,
       $.boolean_literal,
       $.null_literal,
+      $.this_literal,
     ),
+
+    this_literal: $ => caseInsensitive('this'),
 
     lvalue: $ => prec(1, choice(
       $.identifier,
@@ -748,6 +890,7 @@ module.exports = grammar({
       caseInsensitive('unsignedlong'),
       caseInsensitive('ulong'),
       caseInsensitive('any'),
+      caseInsensitive('exception'),
       $.identifier, // Custom types
     ),
 
@@ -884,91 +1027,49 @@ module.exports = grammar({
       ')',
     ),
 
-    // Keyword
+    // Keywords
     forward_keyword: _ => caseInsensitive('forward'),
-
     end_keyword: _ => caseInsensitive('end'),
-
     global_keyword: _ => caseInsensitive('global'),
-
     type_keyword: _ => caseInsensitive('type'),
-
     from_keyword: _ => caseInsensitive('from'),
-
     release_keyword: _ => caseInsensitive('release'),
-
     within_keyword: _ => caseInsensitive('within'),
-
     variables_keyword: _ => caseInsensitive('variables'),
-
     shared_variables_keyword: _ => token(caseInsensitive('shared variables')),
-
     event_keyword: _ => caseInsensitive('event'),
-
     on_keyword: _ => caseInsensitive('on'),
-
     public_keyword: _ => caseInsensitive('public'),
-
     private_keyword: _ => caseInsensitive('private'),
-
     protected_keyword: _ => caseInsensitive('protected'),
-
     prototypes_keyword: _ => caseInsensitive('prototypes'),
-
     function_keyword: _ => caseInsensitive('function'),
-
     subroutine_keyword: _ => caseInsensitive('subroutine'),
-
     ref_keyword: _ => caseInsensitive('ref'),
-
     readonly_keyword: _ => caseInsensitive('readonly'),
-
     return_keyword: _ => caseInsensitive('return'),
-
     if_keyword: _ => caseInsensitive('if'),
-
     then_keyword: _ => caseInsensitive('then'),
-
     elseif_keyword: _ => caseInsensitive('elseif'),
-
     else_keyword: _ => caseInsensitive('else'),
-
     choose_keyword: _ => caseInsensitive('choose'),
-
     case_keyword: _ => caseInsensitive('case'),
-
     do_keyword: _ => caseInsensitive('do'),
-
     loop_keyword: _ => caseInsensitive('loop'),
-
     while_keyword: _ => caseInsensitive('while'),
-
     for_keyword: _ => caseInsensitive('for'),
-
     to_keyword: _ => caseInsensitive('to'),
-
     step_keyword: _ => caseInsensitive('step'),
-
     next_keyword: _ => caseInsensitive('next'),
-
     or_keyword: _ => caseInsensitive('or'),
-
     and_keyword: _ => caseInsensitive('and'),
-
     not_keyword: _ => caseInsensitive('not'),
-
     end_type_keyword: _ => token(caseInsensitive('end type')),
-
     end_variables_keyword: _ => token(caseInsensitive('end variables')),
-
     end_forward_keyword: _ => token(caseInsensitive('end forward')),
-
     global_variables_keyword: _ => token(caseInsensitive('global variables')),
-
     type_variables_keyword: _ => token(caseInsensitive('type variables')),
-
     structure_keyword: _ => caseInsensitive('structure'),
-
     tab_char: _ => /\t/,
 
   },
