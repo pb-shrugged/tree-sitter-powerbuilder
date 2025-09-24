@@ -66,6 +66,10 @@
           "named": true
         },
         {
+          "type": "global_var_declaration",
+          "named": true
+        },
+        {
           "type": "global_variables_section",
           "named": true
         },
@@ -83,6 +87,10 @@
         },
         {
           "type": "type_implementation",
+          "named": true
+        },
+        {
+          "type": "type_variables_section",
           "named": true
         }
       ]
@@ -401,6 +409,21 @@
     }
   },
   {
+    "type": "custom_data_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "data_type",
     "named": true,
     "fields": {},
@@ -409,7 +432,7 @@
       "required": false,
       "types": [
         {
-          "type": "identifier",
+          "type": "custom_data_type",
           "named": true
         }
       ]
@@ -1168,10 +1191,6 @@
           {
             "type": "inner_object_var_declaration",
             "named": true
-          },
-          {
-            "type": "property_assignment",
-            "named": true
           }
         ]
       },
@@ -1230,6 +1249,21 @@
         },
         {
           "type": "type_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "global_var_declaration",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "type_implementation",
           "named": true
         }
       ]
@@ -1909,16 +1943,6 @@
     }
   },
   {
-    "type": "readonly_keyword",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "ref_keyword",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "release_statement",
     "named": true,
     "fields": {},
@@ -2416,6 +2440,10 @@
       "required": true,
       "types": [
         {
+          "type": "data_type",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         }
@@ -2461,6 +2489,61 @@
         },
         {
           "type": "variables_section",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_variables_section",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type_variables_section_body",
+            "named": true
+          }
+        ]
+      },
+      "end": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "end_variables_keyword",
+            "named": true
+          }
+        ]
+      },
+      "init": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_variables_keyword",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "type_variables_section_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "access_section",
+          "named": true
+        },
+        {
+          "type": "variable_declaration",
           "named": true
         }
       ]
@@ -3179,16 +3262,16 @@
     "named": true
   },
   {
-    "type": "readonly",
-    "named": false
+    "type": "readonly_keyword",
+    "named": true
   },
   {
     "type": "real",
     "named": false
   },
   {
-    "type": "ref",
-    "named": false
+    "type": "ref_keyword",
+    "named": true
   },
   {
     "type": "release",
@@ -3289,6 +3372,10 @@
   {
     "type": "type",
     "named": false
+  },
+  {
+    "type": "type_variables_keyword",
+    "named": true
   },
   {
     "type": "uint",

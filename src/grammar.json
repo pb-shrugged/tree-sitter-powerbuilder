@@ -227,6 +227,22 @@
           "name": "global_type_definition"
         },
         {
+          "type": "SYMBOL",
+          "name": "global_var_declaration"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "type_variables_section"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "CHOICE",
           "members": [
             {
@@ -1588,17 +1604,21 @@
       ]
     },
     "access_section": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "access_modifier"
-        },
-        {
-          "type": "STRING",
-          "value": ":"
-        }
-      ]
+      "type": "PREC",
+      "value": 200,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "access_modifier"
+          },
+          {
+            "type": "STRING",
+            "value": ":"
+          }
+        ]
+      }
     },
     "type_variables_section": {
       "type": "SEQ",
@@ -1615,8 +1635,16 @@
           "type": "FIELD",
           "name": "body",
           "content": {
-            "type": "SYMBOL",
-            "name": "type_variables_section_body"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "type_variables_section_body"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         },
         {
@@ -1630,10 +1658,23 @@
       ]
     },
     "type_variables_section_body": {
-      "type": "REPEAT1",
+      "type": "PREC",
+      "value": 1,
       "content": {
-        "type": "SYMBOL",
-        "name": "variable_declaration"
+        "type": "REPEAT1",
+        "content": {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "access_section"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "variable_declaration"
+            }
+          ]
+        }
       }
     },
     "global_type_definition": {
@@ -1654,30 +1695,20 @@
             "type": "FIELD",
             "name": "body",
             "content": {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "REPEAT",
-                  "content": {
-                    "type": "SYMBOL",
-                    "name": "property_assignment"
-                  }
-                },
-                {
-                  "type": "REPEAT",
-                  "content": {
+              "type": "REPEAT",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
                     "type": "SYMBOL",
                     "name": "event_declaration"
-                  }
-                },
-                {
-                  "type": "REPEAT",
-                  "content": {
+                  },
+                  {
                     "type": "SYMBOL",
                     "name": "inner_object_var_declaration"
                   }
-                }
-              ]
+                ]
+              }
             }
           },
           {
@@ -1719,6 +1750,10 @@
           "name": "base_type"
         }
       ]
+    },
+    "global_var_declaration": {
+      "type": "SYMBOL",
+      "name": "type_implementation"
     },
     "inner_object_var_declaration": {
       "type": "SYMBOL",
@@ -2538,7 +2573,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "identifier"
+          "name": "data_type"
         },
         {
           "type": "SYMBOL",
@@ -4184,7 +4219,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "identifier"
+          "name": "custom_data_type"
         }
       ]
     },
@@ -4204,6 +4239,14 @@
     "identifier": {
       "type": "PATTERN",
       "value": "[a-zA-Z_][a-zA-Z0-9_\\-$#%]*"
+    },
+    "custom_data_type": {
+      "type": "PREC",
+      "value": -5,
+      "content": {
+        "type": "SYMBOL",
+        "name": "identifier"
+      }
     },
     "number": {
       "type": "CHOICE",
@@ -4875,22 +4918,36 @@
       "value": "subroutine"
     },
     "ref_keyword": {
-      "type": "ALIAS",
+      "type": "TOKEN",
       "content": {
-        "type": "PATTERN",
-        "value": "[rR][eE][fF]"
-      },
-      "named": false,
-      "value": "ref"
+        "type": "PREC",
+        "value": 100,
+        "content": {
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "[rR][eE][fF]"
+          },
+          "named": false,
+          "value": "ref"
+        }
+      }
     },
     "readonly_keyword": {
-      "type": "ALIAS",
+      "type": "TOKEN",
       "content": {
-        "type": "PATTERN",
-        "value": "[rR][eE][aA][dD][oO][nN][lL][yY]"
-      },
-      "named": false,
-      "value": "readonly"
+        "type": "PREC",
+        "value": 100,
+        "content": {
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "[rR][eE][aA][dD][oO][nN][lL][yY]"
+          },
+          "named": false,
+          "value": "readonly"
+        }
+      }
     },
     "return_keyword": {
       "type": "ALIAS",

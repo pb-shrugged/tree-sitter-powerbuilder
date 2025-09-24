@@ -22,6 +22,7 @@ const PREC = {
   CALL: 11,
   POSTFIX: 12,
   PRIMARY: 13,
+  VALUE_BY: 14,
 };
 
 module.exports = grammar({
@@ -107,6 +108,8 @@ module.exports = grammar({
       optional($.shared_variables_section),
       optional($.global_variables_section),
       $.global_type_definition,
+      $.global_var_declaration,
+      optional($.type_variables_section), // ← TORNOU OPCIONAL
       optional($.forward_prototypes_section),
       repeat($.event_implementation),
       repeat($.function_implementation),
@@ -431,26 +434,28 @@ module.exports = grammar({
       caseInsensitive('variables'),
     ),
 
-    access_section: $ => seq(
+    access_section: $ => prec(200, seq(
       $.access_modifier,
       ':',
-    ),
+    )),
 
     type_variables_section: $ => seq(
       field('init', $.type_variables_keyword),
-      field('body', $.type_variables_section_body),
+      field('body', optional($.type_variables_section_body)),
       field('end', $.end_variables_keyword),
     ),
 
-    type_variables_section_body: $ => repeat1($.variable_declaration),
+    type_variables_section_body: $ => repeat1(choice(
+      $.access_section,
+      $.variable_declaration,
+    )),
 
     global_type_definition: $ => prec.right(seq(
       field('init', $.global_type_definition_init),
-      field('body', seq(
-        repeat($.property_assignment),
-        repeat($.event_declaration),
-        repeat($.inner_object_var_declaration),
-      )),
+      field('body', repeat(choice(
+        $.event_declaration,
+        $.inner_object_var_declaration,
+      ))),
       field('end', $.end_type_keyword),
     )),
 
@@ -461,6 +466,8 @@ module.exports = grammar({
       $.from_keyword,
       $.base_type,
     ),
+
+    global_var_declaration: $ => $.type_implementation,
 
     inner_object_var_declaration: $ => $.variable_declaration,
 
@@ -600,7 +607,7 @@ module.exports = grammar({
 
     type_implementation: $ => seq(
       caseInsensitive('global'),
-      $.identifier,
+      $.data_type,
       $.identifier,
     ),
 
@@ -891,12 +898,15 @@ module.exports = grammar({
       caseInsensitive('ulong'),
       caseInsensitive('any'),
       caseInsensitive('exception'),
-      $.identifier, // Custom types
+      $.custom_data_type, // Custom types (excluding parameter keywords)
     ),
 
     array_suffix: $ => seq('[', ']'),
 
     identifier: $ => /[a-zA-Z_][a-zA-Z0-9_\-$#%]*/,
+
+    // Custom data type identifier with lowest precedence
+    custom_data_type: $ => prec(-5, $.identifier),
 
     number: $ => choice(
       /\d+/,
@@ -1045,8 +1055,8 @@ module.exports = grammar({
     prototypes_keyword: _ => caseInsensitive('prototypes'),
     function_keyword: _ => caseInsensitive('function'),
     subroutine_keyword: _ => caseInsensitive('subroutine'),
-    ref_keyword: _ => caseInsensitive('ref'),
-    readonly_keyword: _ => caseInsensitive('readonly'),
+    ref_keyword: $ => token(prec(100, caseInsensitive('ref'))),
+    readonly_keyword: $ => token(prec(100, caseInsensitive('readonly'))),
     return_keyword: _ => caseInsensitive('return'),
     if_keyword: _ => caseInsensitive('if'),
     then_keyword: _ => caseInsensitive('then'),
