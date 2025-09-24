@@ -23,6 +23,8 @@ const PREC = {
   POSTFIX: 12,
   PRIMARY: 13,
   VALUE_BY: 14,
+  ACCESS_MODIFIER: 15,
+  VARIABLE_DECL_ACCESS: 16,
 };
 
 module.exports = grammar({
@@ -109,7 +111,7 @@ module.exports = grammar({
       optional($.global_variables_section),
       $.global_type_definition,
       $.global_var_declaration,
-      optional($.type_variables_section), // ← TORNOU OPCIONAL
+      optional($.type_variables_section),
       optional($.forward_prototypes_section),
       repeat($.event_implementation),
       repeat($.function_implementation),
@@ -244,6 +246,7 @@ module.exports = grammar({
         $.property_assignment,
         $.event_declaration,
         $.nested_object_declaration,
+        $.type_variables_section,
       )),
       caseInsensitive('end'),
       caseInsensitive('type'),
@@ -297,7 +300,7 @@ module.exports = grammar({
     ),
 
     menu_member: $ => choice(
-      $.variables_section,
+      $.type_variables_section,
       $.function_prototype,
       $.function_implementation,
     ),
@@ -425,16 +428,7 @@ module.exports = grammar({
 
     shared_variables_section_body: $ => repeat1($.variable_declaration),
 
-    variables_section: $ => seq(
-      caseInsensitive('type'),
-      caseInsensitive('variables'),
-      optional($.access_section),
-      repeat1($.variable_declaration),
-      caseInsensitive('end'),
-      caseInsensitive('variables'),
-    ),
-
-    access_section: $ => prec(200, seq(
+    access_section: $ => prec(PREC.ACCESS_MODIFIER, seq(
       $.access_modifier,
       ':',
     )),
@@ -446,8 +440,11 @@ module.exports = grammar({
     ),
 
     type_variables_section_body: $ => repeat1(choice(
-      $.access_section,
-      $.variable_declaration,
+      prec(PREC.VARIABLE_DECL_ACCESS, $.variable_declaration_with_access),
+      seq(
+        $.access_section,
+        repeat1($.variable_declaration_no_access),
+      ),
     )),
 
     global_type_definition: $ => prec.right(seq(
@@ -498,6 +495,21 @@ module.exports = grammar({
       $.variable_declaration_list,
     ),
 
+    // Declaração sem modificador de acesso (dentro de seções Private:, Protected:, etc.)
+    variable_declaration_no_access: $ => seq(
+      $.data_type,
+      optional($.variable_precision),
+      $.variable_declaration_list,
+    ),
+
+    // Declaração com modificador de acesso inline
+    variable_declaration_with_access: $ => prec(PREC.VARIABLE_DECL_ACCESS, seq(
+      $.access_modifier,
+      $.data_type,
+      optional($.variable_precision),
+      $.variable_declaration_list,
+    )),
+
     variable_declaration_list: $ => commaSep1(seq(
       $.identifier,
       optional($.array_suffix),
@@ -506,11 +518,11 @@ module.exports = grammar({
 
     variable_precision: $ => /\{\d\}/,
 
-    access_modifier: $ => choice(
+    access_modifier: $ => prec(PREC.ACCESS_MODIFIER, choice(
       $.public_keyword,
       $.private_keyword,
       $.protected_keyword,
-    ),
+    )),
 
     // Function Definitions with Throws Support
     forward_prototypes_section: $ => seq(
@@ -582,7 +594,7 @@ module.exports = grammar({
       $.property_assignment,
       $.event_declaration,
       $.function_implementation,
-      $.variables_section,
+      $.type_variables_section,
       $.on_event_block,
       $.event_implementation,
       $.nested_type_declaration,
@@ -599,7 +611,7 @@ module.exports = grammar({
       repeat(choice(
         $.property_assignment,
         $.event_declaration,
-        $.variables_section,
+        $.type_variables_section,
       )),
       caseInsensitive('end'),
       caseInsensitive('type'),
@@ -898,15 +910,15 @@ module.exports = grammar({
       caseInsensitive('ulong'),
       caseInsensitive('any'),
       caseInsensitive('exception'),
-      $.custom_data_type, // Custom types (excluding parameter keywords)
+      $.custom_data_type,
     ),
 
     array_suffix: $ => seq('[', ']'),
 
     identifier: $ => /[a-zA-Z_][a-zA-Z0-9_\-$#%]*/,
 
-    // Custom data type identifier with lowest precedence
-    custom_data_type: $ => prec(-5, $.identifier),
+    // Custom data type
+    custom_data_type: $ => prec(-10, $.identifier),
 
     number: $ => choice(
       /\d+/,
@@ -1049,9 +1061,11 @@ module.exports = grammar({
     shared_variables_keyword: _ => token(caseInsensitive('shared variables')),
     event_keyword: _ => caseInsensitive('event'),
     on_keyword: _ => caseInsensitive('on'),
-    public_keyword: _ => caseInsensitive('public'),
-    private_keyword: _ => caseInsensitive('private'),
-    protected_keyword: _ => caseInsensitive('protected'),
+
+    public_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('public'))),
+    private_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('private'))),
+    protected_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('protected'))),
+
     prototypes_keyword: _ => caseInsensitive('prototypes'),
     function_keyword: _ => caseInsensitive('function'),
     subroutine_keyword: _ => caseInsensitive('subroutine'),
