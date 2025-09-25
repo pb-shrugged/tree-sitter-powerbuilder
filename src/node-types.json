@@ -78,6 +78,10 @@
           "named": true
         },
         {
+          "type": "second_event_implementation_section",
+          "named": true
+        },
+        {
           "type": "shared_variables_section",
           "named": true
         },
@@ -747,11 +751,6 @@
         }
       ]
     }
-  },
-  {
-    "type": "event_keyword",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "export_comments",
@@ -2007,6 +2006,21 @@
     }
   },
   {
+    "type": "second_event_implementation_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "event_implementation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "shared_variables_section",
     "named": true,
     "fields": {
@@ -3220,11 +3234,11 @@
     "named": false
   },
   {
-    "type": "event",
-    "named": false
+    "type": "event_id",
+    "named": true
   },
   {
-    "type": "event_id",
+    "type": "event_keyword",
     "named": true
   },
   {

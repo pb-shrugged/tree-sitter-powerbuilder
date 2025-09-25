@@ -260,49 +260,52 @@
           ]
         },
         {
-          "type": "PREC_LEFT",
-          "value": 0,
-          "content": {
-            "type": "SEQ",
-            "members": [
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "event_implementation_section"
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "function_implementation_section"
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              },
-              {
-                "type": "CHOICE",
-                "members": [
-                  {
-                    "type": "SYMBOL",
-                    "name": "on_event_block_section"
-                  },
-                  {
-                    "type": "BLANK"
-                  }
-                ]
-              }
-            ]
-          }
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "event_implementation_section"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "function_implementation_section"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "on_event_block_section"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "second_event_implementation_section"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -1771,6 +1774,17 @@
       }
     },
     "event_implementation_section": {
+      "type": "PREC",
+      "value": 200,
+      "content": {
+        "type": "REPEAT1",
+        "content": {
+          "type": "SYMBOL",
+          "name": "event_implementation"
+        }
+      }
+    },
+    "second_event_implementation_section": {
       "type": "REPEAT1",
       "content": {
         "type": "SYMBOL",
@@ -4919,13 +4933,20 @@
       }
     },
     "event_keyword": {
-      "type": "ALIAS",
+      "type": "TOKEN",
       "content": {
-        "type": "PATTERN",
-        "value": "[eE][vV][eE][nN][tT]"
-      },
-      "named": false,
-      "value": "event"
+        "type": "PREC",
+        "value": 100,
+        "content": {
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "[eE][vV][eE][nN][tT]"
+          },
+          "named": false,
+          "value": "event"
+        }
+      }
     },
     "on_keyword": {
       "type": "ALIAS",

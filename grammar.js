@@ -113,11 +113,10 @@ module.exports = grammar({
       $.global_var_declaration,
       optional($.type_variables_section),
       optional($.forward_prototypes_section),
-      prec.left(seq(
-        optional($.event_implementation_section),
-        optional($.function_implementation_section),
-        optional($.on_event_block_section),
-      )),
+      optional($.event_implementation_section),
+      optional($.function_implementation_section),
+      optional($.on_event_block_section),
+      optional($.second_event_implementation_section),
       optional($.type_implementation_section),
     ),
 
@@ -479,7 +478,9 @@ module.exports = grammar({
 
     type_implementation_section: $ => repeat1($.type_implementation),
 
-    event_implementation_section: $ => repeat1($.event_implementation),
+    event_implementation_section: $ => prec(200, repeat1($.event_implementation)),
+
+    second_event_implementation_section: $ => repeat1($.event_implementation),
 
     event_implementation: $ => prec(3, seq(
       $.event_keyword,
@@ -1073,7 +1074,7 @@ module.exports = grammar({
     within_keyword: _ => caseInsensitive('within'),
     variables_keyword: _ => caseInsensitive('variables'),
     shared_variables_keyword: _ => token(caseInsensitive('shared variables')),
-    event_keyword: _ => caseInsensitive('event'),
+    event_keyword: _ => token(prec(100, caseInsensitive('event'))),
     on_keyword: _ => caseInsensitive('on'),
 
     public_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('public'))),
