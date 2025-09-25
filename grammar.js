@@ -106,17 +106,19 @@ module.exports = grammar({
 
     application_content: $ => seq(
       $.forward_section,
-      repeat($.structure_definition),
+      optional($.structure_definition_section),
       optional($.shared_variables_section),
       optional($.global_variables_section),
       $.global_type_definition,
       $.global_var_declaration,
       optional($.type_variables_section),
       optional($.forward_prototypes_section),
-      repeat($.event_implementation),
-      repeat($.function_implementation),
-      repeat($.on_event_block),
-      repeat($.type_implementation),
+      prec.left(seq(
+        optional($.event_implementation_section),
+        optional($.function_implementation_section),
+        optional($.on_event_block_section),
+      )),
+      optional($.type_implementation_section),
     ),
 
     // Function Content
@@ -384,6 +386,10 @@ module.exports = grammar({
     ),
 
     // Structure Definitions
+    structure_definition_section: $ => repeat1(
+      $.structure_definition,
+    ),
+
     structure_definition: $ => seq(
       field(
         'init',
@@ -464,9 +470,16 @@ module.exports = grammar({
       $.base_type,
     ),
 
+
     global_var_declaration: $ => $.type_implementation,
 
     inner_object_var_declaration: $ => $.variable_declaration,
+
+    function_implementation_section: $ => repeat1($.function_implementation),
+
+    type_implementation_section: $ => repeat1($.type_implementation),
+
+    event_implementation_section: $ => repeat1($.event_implementation),
 
     event_implementation: $ => prec(3, seq(
       $.event_keyword,
@@ -476,9 +489,10 @@ module.exports = grammar({
       optional($.throws_clause),
       ';',
       repeat($.statement),
-      caseInsensitive('end'),
-      caseInsensitive('event'),
+      $.end_event_keyword,
     )),
+
+    on_event_block_section: $ => repeat1($.on_event_block),
 
     on_event_block: $ => prec(2, seq(
       caseInsensitive('on'),
@@ -1093,6 +1107,7 @@ module.exports = grammar({
     end_forward_keyword: _ => token(caseInsensitive('end forward')),
     global_variables_keyword: _ => token(caseInsensitive('global variables')),
     type_variables_keyword: _ => token(caseInsensitive('type variables')),
+    end_event_keyword: _ => token(caseInsensitive('end event')),
     structure_keyword: _ => caseInsensitive('structure'),
     tab_char: _ => /\t/,
 

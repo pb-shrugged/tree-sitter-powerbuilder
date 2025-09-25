@@ -46,7 +46,7 @@
       "required": true,
       "types": [
         {
-          "type": "event_implementation",
+          "type": "event_implementation_section",
           "named": true
         },
         {
@@ -58,7 +58,7 @@
           "named": true
         },
         {
-          "type": "function_implementation",
+          "type": "function_implementation_section",
           "named": true
         },
         {
@@ -74,7 +74,7 @@
           "named": true
         },
         {
-          "type": "on_event_block",
+          "type": "on_event_block_section",
           "named": true
         },
         {
@@ -82,11 +82,11 @@
           "named": true
         },
         {
-          "type": "structure_definition",
+          "type": "structure_definition_section",
           "named": true
         },
         {
-          "type": "type_implementation",
+          "type": "type_implementation_section",
           "named": true
         },
         {
@@ -703,6 +703,10 @@
           "named": true
         },
         {
+          "type": "end_event_keyword",
+          "named": true
+        },
+        {
           "type": "event_keyword",
           "named": true
         },
@@ -724,6 +728,21 @@
         },
         {
           "type": "type_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "event_implementation_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "event_implementation",
           "named": true
         }
       ]
@@ -1063,6 +1082,21 @@
         },
         {
           "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "function_implementation_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "function_implementation",
           "named": true
         }
       ]
@@ -1726,6 +1760,21 @@
     }
   },
   {
+    "type": "on_event_block_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "on_event_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "parameter",
     "named": true,
     "fields": {},
@@ -2202,6 +2251,21 @@
     }
   },
   {
+    "type": "structure_definition_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "structure_definition",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "structure_field",
     "named": true,
     "fields": {},
@@ -2430,6 +2494,21 @@
         },
         {
           "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "type_implementation_section",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "type_implementation",
           "named": true
         }
       ]
@@ -3119,6 +3198,10 @@
   {
     "type": "end subroutine",
     "named": false
+  },
+  {
+    "type": "end_event_keyword",
+    "named": true
   },
   {
     "type": "end_forward_keyword",

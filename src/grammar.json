@@ -192,11 +192,16 @@
           "name": "forward_section"
         },
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "structure_definition"
-          }
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "structure_definition_section"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -255,32 +260,61 @@
           ]
         },
         {
-          "type": "REPEAT",
+          "type": "PREC_LEFT",
+          "value": 0,
           "content": {
-            "type": "SYMBOL",
-            "name": "event_implementation"
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "event_implementation_section"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "function_implementation_section"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "on_event_block_section"
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              }
+            ]
           }
         },
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "function_implementation"
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "on_event_block"
-          }
-        },
-        {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "type_implementation"
-          }
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "type_implementation_section"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
@@ -1385,6 +1419,13 @@
         }
       ]
     },
+    "structure_definition_section": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "structure_definition"
+      }
+    },
     "structure_definition": {
       "type": "SEQ",
       "members": [
@@ -1715,6 +1756,27 @@
       "type": "SYMBOL",
       "name": "variable_declaration"
     },
+    "function_implementation_section": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "function_implementation"
+      }
+    },
+    "type_implementation_section": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "type_implementation"
+      }
+    },
+    "event_implementation_section": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "event_implementation"
+      }
+    },
     "event_implementation": {
       "type": "PREC",
       "value": 3,
@@ -1786,24 +1848,17 @@
             }
           },
           {
-            "type": "ALIAS",
-            "content": {
-              "type": "PATTERN",
-              "value": "[eE][nN][dD]"
-            },
-            "named": false,
-            "value": "end"
-          },
-          {
-            "type": "ALIAS",
-            "content": {
-              "type": "PATTERN",
-              "value": "[eE][vV][eE][nN][tT]"
-            },
-            "named": false,
-            "value": "event"
+            "type": "SYMBOL",
+            "name": "end_event_keyword"
           }
         ]
+      }
+    },
+    "on_event_block_section": {
+      "type": "REPEAT1",
+      "content": {
+        "type": "SYMBOL",
+        "name": "on_event_block"
       }
     },
     "on_event_block": {
@@ -5199,6 +5254,18 @@
         },
         "named": false,
         "value": "type variables"
+      }
+    },
+    "end_event_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "ALIAS",
+        "content": {
+          "type": "PATTERN",
+          "value": "[eE][nN][dD] [eE][vV][eE][nN][tT]"
+        },
+        "named": false,
+        "value": "end event"
       }
     },
     "structure_keyword": {
