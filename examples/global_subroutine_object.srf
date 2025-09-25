@@ -1,0 +1,12 @@
+HA$PBExportHeader$global_subroutine_object.srf
+global type global_subroutine_object from function_object
+end type
+
+forward prototypes
+global subroutine global_subroutine_object ()
+end prototypes
+
+global subroutine global_subroutine_object ();
+return 
+end subroutine
+
