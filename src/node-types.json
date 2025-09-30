@@ -2992,6 +2992,10 @@
           "named": true
         },
         {
+          "type": "global_keyword",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },

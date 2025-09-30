@@ -726,13 +726,8 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "ALIAS",
-          "content": {
-            "type": "PATTERN",
-            "value": "[gG][lL][oO][bB][aA][lL]"
-          },
-          "named": false,
-          "value": "global"
+          "type": "SYMBOL",
+          "name": "global_keyword"
         },
         {
           "type": "ALIAS",

@@ -226,7 +226,7 @@ module.exports = grammar({
     ),
 
     user_object_type_declaration: $ => seq(
-      caseInsensitive('global'),
+      $.global_keyword,
       caseInsensitive('type'),
       $.identifier,
       caseInsensitive('from'),
