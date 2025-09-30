@@ -27,116 +27,21 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [22]
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v5
 
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v5
+    - name: Set up tree-sitter
+      uses: tree-sitter/setup-action/cli@v2
+
+    - name: Run tests
+      uses: tree-sitter/parser-test-action@v3
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    - name: Install tree-sitter CLI
-      run: npm install -g tree-sitter-cli
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Generate grammar
-      run: npm run ts:generate
-
-    - name: Run tree-sitter tests
-      run: npm run ts:test
-
-    - name: Run linting
-      run: npm run lint
-
-    - name: Build WASM
-      run: tree-sitter build --wasm
-
-    - name: Test Node.js bindings
-      run: npm test
-      if: matrix.os == 'ubuntu-latest'
-
-  build-bindings:
-    name: Build Bindings
-    runs-on: ${{matrix.os}}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        include:
-          - os: ubuntu-latest
-            target: linux-x64
-          - os: windows-latest
-            target: win32-x64
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v5
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v5
+        test-rust: true
+        test-node: true
+        test-python: true
+    - name: Parse examples
+      uses: tree-sitter/parse-action@v4
       with:
-        node-version: 20
-        cache: 'npm'
-
-    - name: Install tree-sitter CLI
-      run: npm install -g tree-sitter-cli
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Generate grammar
-      run: npm run ts:generate
-
-    - name: Build prebuilds
-      run: npx prebuildify --napi --strip
-      if: matrix.os != 'windows-latest'
-
-    - name: Build prebuilds (Windows)
-      run: npx prebuildify --napi --strip
-      if: matrix.os == 'windows-latest'
-      shell: cmd
-
-    - name: Upload prebuilds
-      uses: actions/upload-artifact@v4
-      with:
-        name: prebuilds-${{ matrix.target }}
-        path: prebuilds/
-        retention-days: 7
-
-  validate-grammar:
-    name: Validate Grammar
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v5
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v5
-      with:
-        node-version: 20
-        cache: 'npm'
-
-    - name: Install tree-sitter CLI
-      run: npm install -g tree-sitter-cli
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Generate grammar
-      run: npm run ts:generate
-
-    - name: Validate grammar
-      run: tree-sitter parse --quiet --time examples/*.pb 2>/dev/null || echo "No example files found"
-
-    - name: Check grammar size
-      run: |
-        echo "Grammar file size:"
-        ls -lh grammar.js
-        echo "Generated parser size:"
-        ls -lh src/parser.c
+        files: examples/*
