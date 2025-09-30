@@ -18,13 +18,14 @@ const PREC = {
   ADDITIVE: 7,
   MULTIPLICATIVE: 8,
   UNARY: 9,
-  MEMBER: 10,
-  CALL: 11,
-  POSTFIX: 12,
-  PRIMARY: 13,
-  VALUE_BY: 14,
-  ACCESS_MODIFIER: 15,
-  VARIABLE_DECL_ACCESS: 16,
+  UPDATE_UNARY: 10,
+  MEMBER: 11,
+  CALL: 12,
+  POSTFIX: 13,
+  PRIMARY: 14,
+  VALUE_BY: 15,
+  ACCESS_MODIFIER: 16,
+  VARIABLE_DECL_ACCESS: 17,
 };
 
 module.exports = grammar({
@@ -131,21 +132,9 @@ module.exports = grammar({
     ),
 
     function_content: $ => seq(
-      $.function_type_declaration,
-      repeat(choice(
-        $.forward_prototypes_section,
-        $.function_implementation,
-      )),
-    ),
-
-    function_type_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      caseInsensitive('function_object'),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
+      $.global_type_definition,
+      $.global_function_forward_section, // $.forward_prototypes_section,
+      $.global_function_implementaion_section, // $.function_implementation_section,
     ),
 
     // Structure Content
@@ -478,7 +467,7 @@ module.exports = grammar({
 
     type_implementation_section: $ => repeat1($.type_implementation),
 
-    event_implementation_section: $ => prec(200, repeat1($.event_implementation)),
+    event_implementation_section: $ => prec(220, repeat1($.event_implementation)),
 
     second_event_implementation_section: $ => repeat1($.event_implementation),
 
@@ -541,18 +530,36 @@ module.exports = grammar({
 
     // Function Definitions with Throws Support
     forward_prototypes_section: $ => seq(
-      caseInsensitive('forward'),
-      caseInsensitive('prototypes'),
-      repeat1($.function_prototype),
-      caseInsensitive('end'),
-      caseInsensitive('prototypes'),
+      field('init', $.forward_prototypes_keyword),
+      field('body', repeat1($.function_prototype)),
+      field('end', $.end_prototypes_keyword),
+    ),
+
+
+    global_function_forward_section: $ => seq(
+      field('init', $.forward_prototypes_keyword),
+      field('body', repeat1($.global_function_prototype)),
+      field('end', $.end_prototypes_keyword),
+    ),
+
+    global_function_implementaion_section: $ => repeat1($.global_function_implementation),
+
+    global_function_prototype: $ => seq(
+      $.global_keyword,
+      choice(
+        seq($.function_keyword, $.data_type),
+        $.subroutine_keyword,
+      ),
+      $.identifier,
+      $.parameter_list,
+      optional($.throws_clause),
     ),
 
     function_prototype: $ => seq(
       optional($.access_modifier),
       choice(
-        seq(caseInsensitive('function'), $.data_type),
-        caseInsensitive('subroutine'),
+        seq($.function_keyword, $.data_type),
+        $.subroutine_keyword,
       ),
       $.identifier,
       $.parameter_list,
@@ -560,19 +567,29 @@ module.exports = grammar({
     ),
 
     throws_clause: $ => seq(
-      caseInsensitive('throws'),
+      $.throws_keyword,
       commaSep1($.identifier),
     ),
 
-    function_implementation: $ => seq(
+    global_function_implementation: $ => prec(500, seq(
+      $.global_function_prototype,
+      ';',
+      repeat($.statement),
+      choice(
+        $.end_function_keyword,
+        $.end_subroutine_keyword,
+      ),
+    )),
+
+    function_implementation: $ => prec(500, seq(
       $.function_prototype,
       ';',
       repeat($.statement),
       choice(
-        caseInsensitive('end function'),
-        caseInsensitive('end subroutine'),
+        $.end_function_keyword,
+        $.end_subroutine_keyword,
       ),
-    ),
+    )),
 
     function_body: $ => repeat1($.statement),
 
@@ -666,9 +683,9 @@ module.exports = grammar({
     ),
 
     assignment_statement: $ => prec(PREC.ASSIGNMENT, seq(
-      $.lvalue,
-      '=',
-      $.expression,
+      field('left', $.lvalue),
+      field('operator', choice('=', '+=', '-=', '*=', '/=')),
+      field('right', $.expression),
     )),
 
     return_statement: $ => prec.left(seq(
@@ -820,6 +837,7 @@ module.exports = grammar({
       $.create_expression,
       $.destroy_expression,
       $.primary_expression,
+      $.update_expression,
     ),
 
     create_expression: $ => seq(
@@ -833,6 +851,15 @@ module.exports = grammar({
       $.expression,
       ')',
     ),
+
+    update_expression: $ => {
+      const argument = field('argument', $.expression);
+      const operator = field('operator', choice('--', '++'));
+      return prec.right(PREC.UPDATE_UNARY, choice(
+        seq(operator, argument),
+        seq(argument, operator),
+      ));
+    },
 
     binary_expression: $ => choice(
       prec.left(PREC.OR, seq($.expression, caseInsensitive('or'), $.expression)),
@@ -1103,12 +1130,17 @@ module.exports = grammar({
     or_keyword: _ => caseInsensitive('or'),
     and_keyword: _ => caseInsensitive('and'),
     not_keyword: _ => caseInsensitive('not'),
+    throws_keyword: _ => caseInsensitive('throws'),
     end_type_keyword: _ => token(caseInsensitive('end type')),
     end_variables_keyword: _ => token(caseInsensitive('end variables')),
     end_forward_keyword: _ => token(caseInsensitive('end forward')),
     global_variables_keyword: _ => token(caseInsensitive('global variables')),
     type_variables_keyword: _ => token(caseInsensitive('type variables')),
     end_event_keyword: _ => token(caseInsensitive('end event')),
+    forward_prototypes_keyword: _ => caseInsensitive('forward prototypes'),
+    end_prototypes_keyword: _ => caseInsensitive('end prototypes'),
+    end_subroutine_keyword: _ => caseInsensitive('end subroutine'),
+    end_function_keyword: _ => caseInsensitive('end function'),
     structure_keyword: _ => caseInsensitive('structure'),
     tab_char: _ => /\t/,
 
