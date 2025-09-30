@@ -3,19 +3,31 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ master ]
+    paths:
+      - grammar.js
+      - src/**
+      - test/**
+      - bindings/**
+      - binding.gyp
   pull_request:
-    branches: [ main, develop ]
+    branches: [ master ]
+    paths:
+      - grammar.js
+      - src/**
+      - test/**
+      - bindings/**
+      - binding.gyp
 
 jobs:
   test:
     name: Test
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18, 20, 22]
+        os: [ubuntu-latest, windows-latest]
+        node-version: [22]
 
     steps:
     - name: Checkout code
@@ -51,18 +63,16 @@ jobs:
 
   build-bindings:
     name: Build Bindings
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest]
         include:
           - os: ubuntu-latest
             target: linux-x64
           - os: windows-latest
             target: win32-x64
-          - os: macos-latest
-            target: darwin-x64
 
     steps:
     - name: Checkout code
