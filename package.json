@@ -2,7 +2,7 @@
   "name": "tree-sitter-powerbuilder",
   "version": "0.1.0",
   "description": "Powerbuilder grammar for tree-sitter",
-  "repository": "https://github.com/tree-sitter/tree-sitter-powerbuilder",
+  "repository": "https://github.com/pb-shrugged/tree-sitter-powerbuilder",
   "license": "MIT",
   "author": {
     "name": "Jose Cagnini"
