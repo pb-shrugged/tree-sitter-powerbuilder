@@ -1,10 +1,5 @@
 # tree-sitter-powerbuilder
 
-[![CI](https://i.ytimg.com/vi/GlqQGLz6hfs/sddefault.jpg)
-[![NPM Version](https://www.jsdelivr.com/open-graph/image/npm/web-tree-sitter)
-[![NPM Downloads](https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Npm-logo.svg/250px-Npm-logo.svg.png)
-[![License: MIT](https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Software_Categories_expanded.svg/1200px-Software_Categories_expanded.svg.png)
-
 A [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for PowerBuilder, providing syntax highlighting, code navigation, and parsing capabilities for PowerBuilder source files.
 
 ## Features
@@ -18,12 +13,13 @@ A [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for PowerBui
 
 ## Supported File Types
 
-- `.srs` - PowerBuilder Source (Application)
-- `.srf` - PowerBuilder Source (Function)
-- `.srw` - PowerBuilder Source (Window)
-- `.sru` - PowerBuilder Source (User Object)
-- `.sra` - PowerBuilder Source (Application)
-- `.srm` - PowerBuilder Source (Menu)
+- `.srs` - Structure
+- `.srf` - Function
+- `.srw` - Window
+- `.sru` - User Object
+- `.sra` - Application
+- `.srm` - Menu
+- `.srd` - DataWindow Syntax
 
 ## Installation
 
@@ -75,23 +71,6 @@ end on
 
 const tree = parser.parse(sourceCode);
 console.log(tree.rootNode.toString());
-```
-
-### Web (WebAssembly)
-
-```html
-<script src="https://unpkg.com/web-tree-sitter@^0.22.0/tree-sitter.js"></script>
-<script>
-(async () => {
-  await TreeSitter.init();
-  const parser = new TreeSitter();
-  const Lang = await TreeSitter.Language.load('tree-sitter-powerbuilder.wasm');
-  parser.setLanguage(Lang);
-  
-  const tree = parser.parse('your PowerBuilder code here');
-  console.log(tree.rootNode.toString());
-})();
-</script>
 ```
 
 ## Development
@@ -177,4 +156,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [NPM Package](https://www.npmjs.com/package/tree-sitter-powerbuilder)
 - [GitHub Repository](https://github.com/pb-shrugged/tree-sitter-powerbuilder)
 - [Tree-sitter Documentation](https://tree-sitter.github.io/tree-sitter/)
-- [PowerBuilder Documentation](https://docs.appeon.com/pb2022/)
+- [PowerBuilder Documentation](https://docs.appeon.com/#pb)
