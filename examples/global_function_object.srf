@@ -7,7 +7,8 @@ global function integer global_function_object (integer al_value)
 end prototypes
 
 global function integer global_function_object (integer al_value);al_value += 1
-
+++al_value
+teste.teste().teste(); teste.teste()
 return al_value
 end function
 
