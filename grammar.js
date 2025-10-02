@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-spacing */
 /**
  * @file Powerbuilder grammar for tree-sitter
  * @author Jose Cagnini
@@ -17,15 +18,18 @@ const PREC = {
   RELATIONAL: 6,
   ADDITIVE: 7,
   MULTIPLICATIVE: 8,
-  UNARY: 9,
-  UPDATE_UNARY: 10,
-  MEMBER: 11,
-  CALL: 12,
-  POSTFIX: 13,
-  PRIMARY: 14,
-  VALUE_BY: 15,
-  ACCESS_MODIFIER: 16,
-  VARIABLE_DECL_ACCESS: 17,
+  EXPONENTIATION: 9,
+  UNARY: 10,
+  UPDATE_UNARY: 11,
+  FIELD_ACCESS: 12,
+  METHOD_INVOCATION: 13,
+  GLOBAL_SCOPE_OPERADOR_VAR: 14,
+  GLOBAL_SCOPE_OPERADOR_METHOD: 15,
+  CALL: 13,
+  PRIMARY: 15,
+  VALUE_BY: 16,
+  ACCESS_MODIFIER: 17,
+  VARIABLE_DECL_ACCESS: 18,
 };
 
 module.exports = grammar({
@@ -35,10 +39,11 @@ module.exports = grammar({
     $.line_comment,
     $.block_comment,
     /\s/,
-    $.line_continuation,
   ],
 
   rules: {
+
+    // || 1. FILE TYPE ||
 
     source_file: $ => choice(
       $.datawindow_file,
@@ -91,9 +96,9 @@ module.exports = grammar({
       $.query_content,
     ),
 
-    // ========================================
-    // FILE TYPE CONTENT DEFINITIONS
-    // ========================================
+    // || 1. FILE TYPE END ||
+
+    // || 2. FILE CONTENT STRUCTURE ||
 
     // Application Content
     application_file_extension: _ => 'sra',
@@ -101,7 +106,7 @@ module.exports = grammar({
     application_header_file: $ => seq(
       $.export_header_name,
       $.application_file_extension,
-      /[\r?\n]/,
+      $._new_line,
       optional($.export_comments),
     ),
 
@@ -112,6 +117,7 @@ module.exports = grammar({
       optional($.global_variables_section),
       $.global_type_definition,
       $.global_var_declaration,
+      optional($.external_function_type_prototypes_section),
       optional($.type_variables_section),
       optional($.forward_prototypes_section),
       optional($.event_implementation_section),
@@ -120,6 +126,7 @@ module.exports = grammar({
       optional($.second_event_implementation_section),
       optional($.type_implementation_section),
     ),
+    // Application Content End
 
     // Function Content
     function_file_extension: $ => 'srf',
@@ -127,15 +134,66 @@ module.exports = grammar({
     function_header_file: $ => seq(
       $.export_header_name,
       $.function_file_extension,
-      /[\r?\n]/,
+      $._new_line,
       optional($.export_comments),
     ),
 
     function_content: $ => seq(
       $.global_type_definition,
-      $.global_function_forward_section, // $.forward_prototypes_section,
-      $.global_function_implementaion_section, // $.function_implementation_section,
+      $.global_function_forward_section,
+      $.global_function_implementaion_section,
     ),
+
+    global_function_forward_section: $ => seq(
+      field('init', $.forward_prototypes_section_init),
+      field('body', $.forward_prototypes_global_body),
+      field('end', $.prototypes_section_end),
+    ),
+
+    forward_prototypes_global_body: $ => repeat1($.global_function_prototype),
+
+    global_function_prototype: $ => choice(
+      $.global_function_declaration,
+      $.global_subroutine_declaration,
+    ),
+
+    global_function_declaration: $ => seq(
+      $.global_keyword,
+      $.function_keyword,
+      $.datatype,
+      $.identifier,
+      $.parameter_list,
+      optional($.throws_clause),
+    ),
+
+    global_subroutine_declaration: $ => seq(
+      $.global_keyword,
+      $.subroutine_keyword,
+      $.identifier,
+      $.parameter_list,
+      optional($.throws_clause),
+    ),
+
+    global_function_implementaion_section: $ => repeat1($.global_function_implementation),
+
+    global_function_implementation: $ => choice(
+      $._global_function_implementation,
+      $._global_subroutine_implementation,
+    ),
+
+    _global_function_implementation: $ => seq(
+      field('init', seq($.global_function_declaration, $._statement_separation)),
+      field('body', $.scriptable_block),
+      field('end', $.end_function_implementation),
+    ),
+
+    _global_subroutine_implementation: $ => seq(
+      field('init', seq($.global_subroutine_declaration, $._statement_separation)),
+      field('body', $.scriptable_block),
+      field('end', $.end_subroutine_implementation),
+    ),
+
+    // Function Content End
 
     // Structure Content
     structure_file_extension: _ => 'srs',
@@ -143,7 +201,7 @@ module.exports = grammar({
     structure_header_file: $ => seq(
       $.export_header_name,
       $.structure_file_extension,
-      /[\r?\n]/,
+      $._new_line,
       optional($.export_comments),
     ),
 
@@ -151,6 +209,7 @@ module.exports = grammar({
       $.global_keyword,
       $.structure_definition,
     ),
+    // Structure Content End
 
     // Window Content
     window_file_extension: _ => 'srw',
@@ -158,7 +217,7 @@ module.exports = grammar({
     window_header_file: $ => seq(
       $.export_header_name,
       $.window_file_extension,
-      /[\r?\n]/,
+      $._new_line,
       optional($.export_comments),
     ),
 
@@ -180,6 +239,8 @@ module.exports = grammar({
       caseInsensitive('end'),
       caseInsensitive('type'),
     ),
+    // Window Content End
+
 
     // Menu Content
     menu_file_extension: _ => 'srm',
@@ -187,7 +248,7 @@ module.exports = grammar({
     menu_header_file: $ => seq(
       $.export_header_name,
       $.menu_file_extension,
-      /[\r?\n]/,
+      $._new_line,
       optional($.export_comments),
     ),
 
@@ -206,6 +267,8 @@ module.exports = grammar({
       caseInsensitive('end'),
       caseInsensitive('type'),
     ),
+    // Menu Content End
+
 
     // User Object Content
     user_object_file_extension: _ => 'sru',
@@ -213,7 +276,7 @@ module.exports = grammar({
     user_object_header_file: $ => seq(
       $.export_header_name,
       $.user_object_file_extension,
-      /[\r?\n]/,
+      $._new_line,
       optional($.export_comments),
     ),
 
@@ -231,7 +294,7 @@ module.exports = grammar({
       $.identifier,
       caseInsensitive('from'),
       $.user_object_base_type,
-      optional($.autoinstantiate_modifier),
+      optional($.autoinstantiate_keyword),
       repeat(choice(
         $.property_assignment,
         $.event_declaration,
@@ -251,8 +314,6 @@ module.exports = grammar({
       $.identifier, // Custom user object types
     ),
 
-    autoinstantiate_modifier: $ => caseInsensitive('autoinstantiate'),
-
     global_instance_declaration: $ => seq(
       caseInsensitive('global'),
       $.identifier,
@@ -271,19 +332,24 @@ module.exports = grammar({
       '=',
       $.string_literal,
     ),
+    // User Object Content End
 
-    // Query Content - placeholder
+
+    // Query Content
     query_file_extension: _ => 'srq',
 
     query_header_file: $ => seq(
       $.export_header_name,
       $.query_file_extension,
-      /[\r?\n]/,
+      $._new_line,
       optional($.export_comments),
     ),
 
     query_content: $ => $.identifier,
+    // Query Content End
 
+
+    // Menu Content
     menu_item: $ => seq(
       $.identifier,
       $.identifier,
@@ -294,12 +360,14 @@ module.exports = grammar({
       $.function_prototype,
       $.function_implementation,
     ),
+    // Menu Content End
 
-    // ========================================
-    // COMMON CONSTRUCTS
-    // ========================================
 
-    // Export Headers
+    // || 2. FILE CONTENT STRUCTURE END ||
+
+
+    // || 3. COMMON CONSTRUCT ||
+
     export_header_name: $ => seq(
       /HA\$PBExportHeader\$/,
       field('file_name', $.identifier),
@@ -308,72 +376,48 @@ module.exports = grammar({
 
     export_comments: $ => seq(
       /\$PBExportComments\$/,
-      field('comment', $.rest_of_line),
+      field('comment', $._rest_of_line),
     ),
 
-    rest_of_line: _ => /[^\r\n]*/,
-
-    // Forward Declarations
-    forward_section: $ => seq(
-      field('init', $.forward_keyword),
-      field(
-        'body',
-        $.forward_section_body,
-      ),
-      field('end', $.end_forward_keyword),
+    global_variables_section: $ => seq(
+      field('init', $.global_variables_section_init),
+      field('body', optional($.global_variables_section_body)),
+      field('end', $.end_variables_section),
     ),
 
-    forward_section_body: $ => seq(
-      $.global_type_declaration,
-      repeat($.inner_object_type_declaration),
-      repeat($.global_variable_declaration), // Only in application files
-    ),
-
-    global_type_declaration: $ => seq(
+    global_variables_section_init: $ => seq(
       $.global_keyword,
+      $.variables_keyword,
+    ),
+
+    global_variables_section_body: $ => repeat1($.local_variable_declaration),
+
+    shared_variables_section: $ => seq(
+      field('init', $.shared_variables_section_init),
+      field('body', optional($.shared_variables_section_body)),
+      field('end', $.end_variables_section),
+    ),
+
+    shared_variables_section_init: $ => seq(
+      $.shared_keyword,
+      $.variables_keyword,
+    ),
+
+    shared_variables_section_body: $ => repeat1($.local_variable_declaration),
+
+    type_variables_section: $ => seq(
+      field('init', $.type_variables_section_init),
+      field('body', optional($.type_variables_section_body)),
+      field('end', $.end_variables_section),
+    ),
+
+    type_variables_section_init: $ => seq(
       $.type_keyword,
-      field('type_name', $.identifier),
-      $.from_keyword,
-      $.base_type,
-      $.end_type_keyword,
+      $.variables_keyword,
     ),
 
-    inner_object_type_declaration: $ => seq(
-      $.type_keyword,
-      field('type_name', $.identifier),
-      $.from_keyword,
-      $.base_type,
-      $.within_keyword,
-      $.identifier,
-      $.end_type_keyword,
-    ),
+    type_variables_section_body: $ => repeat1($.class_variable_declaration),
 
-    global_variable_declaration: $ => seq(
-      $.global_keyword,
-      $.data_type,
-      field('var_name', $.identifier),
-    ),
-
-    base_type: $ => choice(
-      caseInsensitive('application'),
-      caseInsensitive('window'),
-      caseInsensitive('userobject'),
-      caseInsensitive('nonvisualobject'),
-      caseInsensitive('menu'),
-      caseInsensitive('structure'),
-      caseInsensitive('function_object'),
-      caseInsensitive('datawindow'),
-      caseInsensitive('datastore'),
-      caseInsensitive('transaction'),
-      caseInsensitive('dynamicdescriptionarea'),
-      caseInsensitive('dynamicstagingarea'),
-      caseInsensitive('error'),
-      caseInsensitive('message'),
-      caseInsensitive('exception'),
-      $.identifier, // For custom types
-    ),
-
-    // Structure Definitions
     structure_definition_section: $ => repeat1(
       $.structure_definition,
     ),
@@ -384,20 +428,20 @@ module.exports = grammar({
         $.structure_definition_init,
       ),
       field('body', $.structure_definition_body),
-      field('end', $.end_type_keyword),
+      field('end', $.end_type_section),
     ),
 
     structure_definition_init: $ => seq(
       $.type_keyword,
       $.identifier,
       $.from_keyword,
-      $.structure_keyword,
+      field('structure', 'structure'),
     ),
 
     structure_definition_body: $ => repeat1($.structure_field),
 
     structure_field: $ => seq(
-      $.data_type,
+      $.datatype,
       $.structure_field_separator,
       $.identifier,
       optional($.array_suffix),
@@ -405,191 +449,49 @@ module.exports = grammar({
 
     structure_field_separator: $ => /\t\t/,
 
-    // Variables Sections
-    global_variables_section: $ => seq(
-      field('init', $.global_variables_keyword),
-      field('body', $.global_variables_section_body),
-      field('end', $.end_variables_keyword),
+    function_prototype: $ => choice(
+      $.function_declaration,
+      $.subroutine_declaration,
     ),
 
-    global_variables_section_body: $ => repeat1($.variable_declaration),
-
-    shared_variables_section: $ => seq(
-      field('init', $.shared_variables_keyword),
-      field('body', $.shared_variables_section_body),
-      field('end', $.end_variables_keyword),
-    ),
-
-    shared_variables_section_body: $ => repeat1($.variable_declaration),
-
-    access_section: $ => prec(PREC.ACCESS_MODIFIER, seq(
-      $.access_modifier,
-      ':',
-    )),
-
-    type_variables_section: $ => seq(
-      field('init', $.type_variables_keyword),
-      field('body', optional($.type_variables_section_body)),
-      field('end', $.end_variables_keyword),
-    ),
-
-    type_variables_section_body: $ => repeat1(choice(
-      prec(PREC.VARIABLE_DECL_ACCESS, $.variable_declaration_with_access),
-      seq(
-        $.access_section,
-        repeat1($.variable_declaration_no_access),
-      ),
-    )),
-
-    global_type_definition: $ => prec.right(seq(
-      field('init', $.global_type_definition_init),
-      field('body', repeat(choice(
-        $.event_declaration,
-        $.inner_object_var_declaration,
-      ))),
-      field('end', $.end_type_keyword),
-    )),
-
-    global_type_definition_init: $ => seq(
-      $.global_keyword,
-      $.type_keyword,
-      field('type_name', $.identifier),
-      $.from_keyword,
-      $.base_type,
-    ),
-
-
-    global_var_declaration: $ => $.type_implementation,
-
-    inner_object_var_declaration: $ => $.variable_declaration,
-
-    function_implementation_section: $ => repeat1($.function_implementation),
-
-    type_implementation_section: $ => repeat1($.type_implementation),
-
-    event_implementation_section: $ => prec(220, repeat1($.event_implementation)),
-
-    second_event_implementation_section: $ => repeat1($.event_implementation),
-
-    event_implementation: $ => prec(3, seq(
-      $.event_keyword,
-      optional(seq($.type_keyword, $.data_type)),
-      $.identifier,
-      optional($.parameter_list),
-      optional($.throws_clause),
-      ';',
-      repeat($.statement),
-      $.end_event_keyword,
-    )),
-
-    on_event_block_section: $ => repeat1($.on_event_block),
-
-    on_event_block: $ => prec(2, seq(
-      caseInsensitive('on'),
-      $.member_expression,
-      repeat($.statement),
-      caseInsensitive('end'),
-      caseInsensitive('on'),
-    )),
-
-    variable_declaration: $ => seq(
+    function_declaration: $ => seq(
       optional($.access_modifier),
-      $.data_type,
-      optional($.variable_precision),
-      $.variable_declaration_list,
-    ),
-
-    // Declaração sem modificador de acesso (dentro de seções Private:, Protected:, etc.)
-    variable_declaration_no_access: $ => seq(
-      $.data_type,
-      optional($.variable_precision),
-      $.variable_declaration_list,
-    ),
-
-    // Declaração com modificador de acesso inline
-    variable_declaration_with_access: $ => prec(PREC.VARIABLE_DECL_ACCESS, seq(
-      $.access_modifier,
-      $.data_type,
-      optional($.variable_precision),
-      $.variable_declaration_list,
-    )),
-
-    variable_declaration_list: $ => commaSep1(seq(
-      $.identifier,
-      optional($.array_suffix),
-      optional(seq('=', $.expression)),
-    )),
-
-    variable_precision: $ => /\{\d\}/,
-
-    access_modifier: $ => prec(PREC.ACCESS_MODIFIER, choice(
-      $.public_keyword,
-      $.private_keyword,
-      $.protected_keyword,
-    )),
-
-    // Function Definitions with Throws Support
-    forward_prototypes_section: $ => seq(
-      field('init', $.forward_prototypes_keyword),
-      field('body', repeat1($.function_prototype)),
-      field('end', $.end_prototypes_keyword),
-    ),
-
-
-    global_function_forward_section: $ => seq(
-      field('init', $.forward_prototypes_keyword),
-      field('body', repeat1($.global_function_prototype)),
-      field('end', $.end_prototypes_keyword),
-    ),
-
-    global_function_implementaion_section: $ => repeat1($.global_function_implementation),
-
-    global_function_prototype: $ => seq(
-      $.global_keyword,
-      choice(
-        seq($.function_keyword, $.data_type),
-        $.subroutine_keyword,
-      ),
-      $.identifier,
+      $.function_keyword,
+      $.datatype,
+      field('name', $.identifier),
       $.parameter_list,
       optional($.throws_clause),
     ),
 
-    function_prototype: $ => seq(
+    subroutine_declaration: $ => seq(
       optional($.access_modifier),
-      choice(
-        seq($.function_keyword, $.data_type),
-        $.subroutine_keyword,
-      ),
-      $.identifier,
+      $.subroutine_keyword,
+      field('name', $.identifier),
       $.parameter_list,
       optional($.throws_clause),
+    ),
+
+    function_implementation: $ => choice(
+      $._function_implementantion,
+      $._subroutine_implementation,
+    ),
+
+    _function_implementantion: $ => seq(
+      field('init', seq($.function_declaration, $._statement_separation)),
+      field('body', $.scriptable_block),
+      field('end', $.end_function_implementation),
+    ),
+
+    _subroutine_implementation: $ => seq(
+      field('init', seq($.subroutine_declaration, $._statement_separation)),
+      field('body', $.scriptable_block),
+      field('end', $.end_subroutine_implementation),
     ),
 
     throws_clause: $ => seq(
       $.throws_keyword,
       commaSep1($.identifier),
     ),
-
-    global_function_implementation: $ => prec(500, seq(
-      $.global_function_prototype,
-      ';',
-      repeat($.statement),
-      choice(
-        $.end_function_keyword,
-        $.end_subroutine_keyword,
-      ),
-    )),
-
-    function_implementation: $ => prec(500, seq(
-      $.function_prototype,
-      ';',
-      repeat($.statement),
-      choice(
-        $.end_function_keyword,
-        $.end_subroutine_keyword,
-      ),
-    )),
 
     function_body: $ => repeat1($.statement),
 
@@ -604,20 +506,176 @@ module.exports = grammar({
         $.ref_keyword,
         $.readonly_keyword,
       )),
-      $.data_type,
+      $.datatype,
       $.identifier,
       optional($.array_suffix),
     ),
 
-    // Event Definitions with Throws Support
-    event_declaration: $ => prec(1, seq(
+    external_function_type_prototypes_section: $ => seq(
+      field('init', $.external_function_type_prototypes_section_init),
+      field('body', repeat($.external_function_declaration)),
+      field('end', $.prototypes_section_end),
+    ),
+
+    external_function_type_prototypes_section_init: $ => seq(
+      $.type_keyword,
+      $.prototypes_keyword,
+    ),
+
+    external_function_declaration: $ => seq(
+      $.function_prototype,
+      $.library_keyword,
+      field('library_name', $.string_literal),
+      $.alias_keyword,
+      $.for_keyword,
+      field('alias_name', $.string_literal),
+    ),
+
+    forward_section: $ => seq(
+      field('init', $.forward_keyword),
+      field('body', $.forward_section_body),
+      field('end', $.end_forward_section),
+    ),
+
+    end_forward_section: $ => seq(
+      $.end_keyword,
+      $.forward_keyword,
+    ),
+
+    forward_section_body: $ => seq(
+      $.global_type_declaration,
+      repeat($.inner_object_type_declaration),
+      repeat($.global_variable_declaration), // Only in application files
+    ),
+
+    global_type_declaration: $ => seq(
+      $.global_keyword,
+      $.type_keyword,
+      field('type_name', $.identifier),
+      $.from_keyword,
+      $.class_datatype,
+      $.end_type_section,
+    ),
+
+    inner_object_type_declaration: $ => seq(
+      $.type_keyword,
+      field('type_name', $.identifier),
+      $.from_keyword,
+      $.class_datatype,
+      $.within_keyword,
+      $.identifier,
+      $.end_type_section,
+    ),
+
+    global_variable_declaration: $ => seq(
+      $.global_keyword,
+      $.datatype,
+      field('var_name', $.identifier),
+    ),
+
+    scriptable_block: $ => repeat1($.statement),
+
+    end_subroutine_implementation: $ => seq(
+      $.end_keyword,
+      $.subroutine_keyword,
+    ),
+
+    end_function_implementation: $ => seq(
+      $.end_keyword,
+      $.function_keyword,
+    ),
+
+    end_type_section: $ => seq(
+      $.end_keyword,
+      $.type_keyword,
+    ),
+
+    end_variables_section: $ => seq(
+      $.end_keyword,
+      $.variables_keyword,
+    ),
+
+    end_event_implementation: $ => seq(
+      $.end_keyword,
       $.event_keyword,
-      optional(seq($.type_keyword, $.data_type)),
+    ),
+
+    global_type_definition: $ => seq(
+      field('init', $.global_type_definition_init),
+      field('body', repeat(choice(
+        $.event_declaration,
+        $.inner_object_var_declaration,
+      ))),
+      field('end', $.end_type_section),
+    ),
+
+    global_type_definition_init: $ => seq(
+      $.global_keyword,
+      $.type_keyword,
+      field('type_name', $.identifier),
+      $.from_keyword,
+      $.class_datatype,
+    ),
+
+
+    global_var_declaration: $ => $.type_implementation,
+
+    inner_object_var_declaration: $ => $.local_variable_declaration,
+
+    function_implementation_section: $ => repeat1($.function_implementation),
+
+    type_implementation_section: $ => repeat1($.type_implementation),
+
+    event_implementation_section: $ => prec(220, repeat1($.event_implementation)),
+
+    second_event_implementation_section: $ => repeat1($.event_implementation),
+
+    event_implementation: $ => seq(
+      $.event_keyword,
+      optional(seq($.type_keyword, $.datatype)),
+      $.identifier,
+      optional($.parameter_list),
+      optional($.throws_clause),
+      $._statement_separation,
+      repeat($.statement),
+      $.end_event_implementation,
+    ),
+
+    on_event_block_section: $ => repeat1($.on_event_block),
+
+    on_event_block: $ => prec(2, seq(
+      caseInsensitive('on'),
+      $.field_access,
+      repeat($.statement),
+      caseInsensitive('end'),
+      caseInsensitive('on'),
+    )),
+
+    // Function Definitions with Throws Support
+    forward_prototypes_section: $ => seq(
+      field('init', $.forward_prototypes_section_init),
+      field('body', repeat($.function_prototype)),
+      field('end', $.prototypes_section_end),
+    ),
+
+    forward_prototypes_section_init: $ => seq(
+      $.forward_keyword,
+      $.prototypes_keyword,
+    ),
+
+    prototypes_section_end: $ => seq(
+      $.end_keyword,
+      $.prototypes_keyword,
+    ),
+
+    event_declaration: $ => seq(
+      $.event_keyword,
+      optional(seq($.type_keyword, $.datatype)),
       $.identifier,
       optional($.parameter_list),
       optional($.throws_clause),
       optional($.event_id),
-    )),
+    ),
 
     event_id: $ => /pbm_[a-zA-Z_][a-zA-Z0-9_]*/,
 
@@ -636,7 +694,7 @@ module.exports = grammar({
       caseInsensitive('type'),
       $.identifier,
       caseInsensitive('from'),
-      $.base_type,
+      $.class_datatype,
       caseInsensitive('within'),
       $.identifier,
       optional($.descriptor_clause),
@@ -651,7 +709,7 @@ module.exports = grammar({
 
     type_implementation: $ => seq(
       caseInsensitive('global'),
-      $.data_type,
+      $.datatype,
       $.identifier,
     ),
 
@@ -666,11 +724,73 @@ module.exports = grammar({
 
     property_list: $ => commaSep1($.property_assignment),
 
-    // ========================================
-    // EXPRESSIONS AND STATEMENTS
-    // ========================================
+    class_variable_declaration: $ => choice(
+      $.block_class_variable_declaration,
+      $.inline_class_variable_declaration,
+    ),
+
+    inline_class_variable_declaration: $ => seq(
+      // optional($.constant_keyword), TODO
+      optional($.access_modifier),
+      optional($.readacess_modifier),
+      optional($.writeaccess_modifier),
+      $.local_variable_declaration,
+    ),
+
+    block_class_variable_declaration: $ => prec(500, seq(
+      $.access_section,
+      repeat1($.inline_class_variable_declaration),
+    )),
+
+    variable_declaration_list: $ => commaSep1($.variable_declaration_identifier),
+
+    variable_declaration_identifier: $ => seq(
+      field('var_name', $.identifier),
+      optional($.array_suffix),
+      optional(seq('=', $.expression)),
+    ),
+
+    variable_precision: $ => /\{\d\}/,
+
+    array_suffix: $ => seq(
+      '[',
+      field('array_range', choice(
+        commaSep($.integer_literal),
+        commaSep(seq($.integer_literal, $.to_keyword, $.integer_literal)),
+      )),
+      ']',
+    ),
+
+    access_section: $ => seq(
+      $.access_modifier,
+      ':',
+      $._new_line,
+    ),
+
+    access_modifier: $ => choice(
+      $.public_keyword,
+      $.private_keyword,
+      $.protected_keyword,
+    ),
+
+    readacess_modifier: $ => choice(
+      $.protectedread_keyword,
+      $.privateread_keyword,
+    ),
+
+    writeaccess_modifier: $ => choice(
+      $.protectedwrite_keyword,
+      $.privatewrite_keyword,
+    ),
+
+    // || 3. COMMON CONSTRUCT END ||
+
+    // || 4. EXPRESSION AND STATEMENT ||
 
     statement: $ => choice(
+      $.create_statement,
+      $.destroy_statement,
+      $.local_variable_declaration,
       $.assignment_statement,
       $.return_statement,
       $.if_statement,
@@ -682,11 +802,43 @@ module.exports = grammar({
       $.call_statement,
     ),
 
+    create_statement: $ => choice(
+      seq(
+        field('var_name', $.identifier),
+        field('assignment_operator', '='),
+        $.create_keyword,
+        field('datatype', $.datatype),
+      ),
+      seq(
+        field('var_name', $.identifier),
+        field('assignment_operator', '='),
+        $.create_keyword,
+        $.using_keyword,
+        field('type_string_literal', $.string_literal),
+      ),
+    ),
+
+    destroy_statement: $ => choice(
+      seq($.destroy_keyword, '(', field('var_name', $.identifier), ')'),
+      seq($.destroy_keyword, field('var_name', $.identifier)),
+    ),
+
+    local_variable_declaration: $ => seq(
+      optional($.constant_keyword),
+      $.datatype,
+      optional($.variable_precision),
+      $.variable_declaration_list,
+      $._statement_separation,
+    ),
+
     assignment_statement: $ => prec(PREC.ASSIGNMENT, seq(
-      field('left', $.lvalue),
-      field('operator', choice('=', '+=', '-=', '*=', '/=')),
-      field('right', $.expression),
+      field('left', seq(choice($.identifier, $.field_access, $.array_access), optional($._line_continuation))),
+      field('operator', seq($.assignment_operator, optional($._line_continuation))),
+      field('right', seq($.expression, optional($._line_continuation))),
+      $._statement_separation,
     )),
+
+    assignment_operator: $ => choice('=', '+=', '-=', '*=', '/=', '^/'),
 
     return_statement: $ => prec.left(seq(
       caseInsensitive('return'),
@@ -708,9 +860,9 @@ module.exports = grammar({
     ),
 
     catch_clause: $ => seq(
-      caseInsensitive('catch'),
+      $.catch_keyword,
       '(',
-      $.data_type,
+      $.datatype,
       $.identifier,
       ')',
       repeat($.statement),
@@ -727,7 +879,7 @@ module.exports = grammar({
     ),
 
     super_call: $ => prec.right(seq(
-      caseInsensitive('call'),
+      $.autoinstantiate_keyword,
       caseInsensitive('super'),
       '::',
       $.identifier,
@@ -822,69 +974,86 @@ module.exports = grammar({
       caseInsensitive('loop'),
     ),
 
-    expression_statement: $ => seq(
-      $.expression,
-    ),
+    expression_statement: $ => $.expression,
 
     // Expressions
     expression: $ => choice(
+      $.update_expression,
       $.binary_expression,
       $.unary_expression,
-      $.member_expression,
-      $.function_call,
-      $.array_access,
-      $.parenthesized_expression,
-      $.create_expression,
-      $.destroy_expression,
       $.primary_expression,
-      $.update_expression,
-    ),
-
-    create_expression: $ => seq(
-      caseInsensitive('create'),
-      $.identifier,
-    ),
-
-    destroy_expression: $ => seq(
-      caseInsensitive('destroy'),
-      '(',
-      $.expression,
-      ')',
     ),
 
     update_expression: $ => {
       const argument = field('argument', $.expression);
       const operator = field('operator', choice('--', '++'));
-      return prec.right(PREC.UPDATE_UNARY, choice(
-        seq(operator, argument),
+      return prec.right(PREC.UPDATE_UNARY,
         seq(argument, operator),
-      ));
+      );
     },
 
-    binary_expression: $ => choice(
-      prec.left(PREC.OR, seq($.expression, caseInsensitive('or'), $.expression)),
-      prec.left(PREC.AND, seq($.expression, caseInsensitive('and'), $.expression)),
-      prec.left(PREC.EQUALITY, seq($.expression, choice('=', '<>'), $.expression)),
-      prec.left(PREC.RELATIONAL, seq($.expression, choice('<', '>', '<=', '>='), $.expression)),
-      prec.left(PREC.ADDITIVE, seq($.expression, choice('+', '-'), $.expression)),
-      prec.left(PREC.MULTIPLICATIVE, seq($.expression, choice('*', '/', '^'), $.expression)),
-    ),
+    binary_expression: $ => {
+      const table = [
+        { operator: '+', precedence: PREC.ADDITIVE },
+        { operator: '-', precedence: PREC.ADDITIVE },
+        { operator: '*', precedence: PREC.MULTIPLICATIVE },
+        { operator: '/', precedence: PREC.MULTIPLICATIVE },
+        { operator: '^', precedence: PREC.EXPONENTIATION },
+        { operator: $.or_keyword, precedence: PREC.OR },
+        { operator: $.and_keyword, precedence: PREC.AND },
+        { operator: '=', precedence: PREC.EQUALITY },
+        { operator: '<>', precedence: PREC.EQUALITY },
+        { operator: '>', precedence: PREC.RELATIONAL },
+        { operator: '<', precedence: PREC.RELATIONAL },
+        { operator: '>=', precedence: PREC.RELATIONAL },
+        { operator: '<=', precedence: PREC.RELATIONAL },
+      ];
 
-    unary_expression: $ => choice(
-      prec(PREC.UNARY, seq(caseInsensitive('not'), $.expression)),
-      prec(PREC.UNARY, seq('-', $.expression)),
-      prec(PREC.UNARY, seq('+', $.expression)),
-    ),
+      return choice(...table.map(({ operator, precedence }) => {
+        return prec.left(precedence, seq(
+          field('left', $.expression),
+          field('operator', operator),
+          field('right', $.expression),
+        ));
+      }));
+    },
 
-    member_expression: $ => prec(PREC.MEMBER, seq(
-      $.expression,
-      choice('.', '::'),
-      $.identifier,
+    unary_expression: $ => prec.left(PREC.UNARY, seq(
+      field('operator', choice($.not_keyword, '-', '+')),
+      field('argument', $.expression),
     )),
 
-    function_call: $ => prec(PREC.CALL, seq(
+    primary_expression: $ => choice(
       $.identifier,
-      $.argument_list,
+      $._literal,
+      $.global_scope_var,
+      $.global_scope_method,
+      $.this_literal,
+      $.parenthesized_expression,
+      $.array_access,
+      $.field_access,
+      $.method_invocation,
+    ),
+
+    global_scope_var: $ => prec(PREC.GLOBAL_SCOPE_OPERADOR_VAR, seq('::', field('var_name', $.identifier))),
+
+    global_scope_method: $ => prec(PREC.GLOBAL_SCOPE_OPERADOR_METHOD, seq('::', field('method_name', $.identifier), $.argument_list)),
+
+    parenthesized_expression: $ => seq('(', $.expression, ')'),
+
+    array_access: $ => seq($.primary_expression, '[', $.expression, ']'),
+
+    field_access: $ => prec(PREC.FIELD_ACCESS, seq(
+      field('object', choice($.primary_expression, $.super_keyword)),
+      '.',
+      field('field', choice($.identifier)),
+    )),
+
+    method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
+      field('object', choice($.primary_expression, $.super_keyword)),
+      field('operator', choice('.', '::')),
+      field('method_name', $.identifier),
+      field('arguments', $.argument_list),
     )),
 
     argument_list: $ => seq(
@@ -893,41 +1062,13 @@ module.exports = grammar({
       ')',
     ),
 
-    array_access: $ => prec(PREC.POSTFIX, seq(
-      $.expression,
-      '[',
-      $.expression,
-      ']',
-    )),
+    // || 4. EXPRESSION AND STATEMENT END ||
 
-    parenthesized_expression: $ => seq(
-      '(',
-      $.expression,
-      ')',
-    ),
+    // || 5. DATATYPE AND LITERAL ||
 
-    primary_expression: $ => choice(
-      $.identifier,
-      $.number,
-      $.string_literal,
-      $.boolean_literal,
-      $.null_literal,
-      $.this_literal,
-    ),
+    identifier: $ => /[a-zA-Z_][a-zA-Z0-9_\-$#%]*/,
 
-    this_literal: $ => caseInsensitive('this'),
-
-    lvalue: $ => prec(1, choice(
-      $.identifier,
-      $.member_expression,
-      $.array_access,
-    )),
-
-    // ========================================
-    // BASIC TYPES AND LITERALS
-    // ========================================
-
-    data_type: $ => choice(
+    standard_primitive_datatype: $ => choice(
       caseInsensitive('blob'),
       caseInsensitive('boolean'),
       caseInsensitive('byte'),
@@ -951,23 +1092,60 @@ module.exports = grammar({
       caseInsensitive('unsignedlong'),
       caseInsensitive('ulong'),
       caseInsensitive('any'),
+    ),
+
+    standard_class_datatype: $ => choice(
+      caseInsensitive('application'),
+      caseInsensitive('window'),
+      caseInsensitive('userobject'),
+      caseInsensitive('nonvisualobject'),
+      caseInsensitive('menu'),
+      caseInsensitive('structure'),
+      caseInsensitive('function_object'),
+      caseInsensitive('datawindow'),
+      caseInsensitive('datastore'),
+      caseInsensitive('transaction'),
+      caseInsensitive('dynamicdescriptionarea'),
+      caseInsensitive('dynamicstagingarea'),
+      caseInsensitive('error'),
+      caseInsensitive('message'),
       caseInsensitive('exception'),
-      $.custom_data_type,
     ),
 
-    array_suffix: $ => seq('[', ']'),
+    custom_datatype: $ => prec(-10, $.identifier),
 
-    identifier: $ => /[a-zA-Z_][a-zA-Z0-9_\-$#%]*/,
+    enumetation_datatype: $ => seq($.identifier, '!'),
 
-    // Custom data type
-    custom_data_type: $ => prec(-10, $.identifier),
-
-    number: $ => choice(
-      /\d+/,
-      /\d*\.\d+/,
-      /\d+[eE][+-]?\d+/,
-      /\d*\.\d+[eE][+-]?\d+/,
+    datatype: $ => choice(
+      $.standard_primitive_datatype,
+      $.standard_class_datatype,
+      $.custom_datatype,
     ),
+
+    class_datatype: $ => choice(
+      $.standard_class_datatype,
+      $.custom_datatype,
+    ),
+
+    _literal: $ => choice(
+      $.number_literal,
+      $.string_literal,
+      $.date_literal,
+      $.time_literal,
+      $.boolean_literal,
+    ),
+
+    number_literal: $ => choice(
+      $.integer_literal,
+      $.decimal_literal,
+      $.real_literal,
+    ),
+    integer_literal: _ => /\d+/,
+    decimal_literal: _ => /\d*\.\d+/,
+    real_literal: _ => /(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)[Ee][+-]?[0-9]+/,
+
+    date_literal: _ => /(?:\d{4}-\d{2}-\d{2})/,
+    time_literal: $ => /(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\.[0-9]{1,6})?/,
 
     string_literal: $ => choice(
       seq('"', repeat(choice(/[^"\\]/, /\\./)), '"'),
@@ -975,18 +1153,140 @@ module.exports = grammar({
     ),
 
     boolean_literal: $ => choice(
-      caseInsensitive('true'),
-      caseInsensitive('false'),
+      $.true_keyword,
+      $.false_keyword,
     ),
 
     null_literal: _ => caseInsensitive('null'),
 
-    // Comments
-    line_comment: _ => seq('//', /.*/),
+    this_literal: $ => $.this_keyword,
 
+    // || 5. DATATYPE AND LITERAL END ||
+
+    // || 6. KEYWORD ||
+
+    public_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('public'))),
+    private_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('private'))),
+    protected_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('protected'))),
+
+    alias_keyword: _ => caseInsensitive('alias'),
+    and_keyword: _ => caseInsensitive('and'),
+    autoinstantiate_keyword: $ => caseInsensitive('autoinstantiate'),
+    call_keyword: _ => caseInsensitive('call'),
+    case_keyword: _ => caseInsensitive('case'),
+    catch_keyword: _ => caseInsensitive('catch'),
+    choose_keyword: _ => caseInsensitive('choose'),
+    close_keyword: _ => caseInsensitive('close'),
+    commit_keyword: _ => caseInsensitive('commit'),
+    connect_keyword: _ => caseInsensitive('connect'),
+    constant_keyword: _ => caseInsensitive('constant'),
+    continue_keyword: _ => caseInsensitive('continue'),
+    create_keyword: _ => caseInsensitive('create'),
+    cursor_keyword: _ => caseInsensitive('cursor'),
+    declare_keyword: _ => caseInsensitive('declare'),
+    descriptor_keyword: _ => caseInsensitive('descriptor'),
+    destroy_keyword: _ => caseInsensitive('destroy'),
+    disconnect_keyword: _ => caseInsensitive('disconnect'),
+    do_keyword: _ => caseInsensitive('do'),
+    dynamic_keyword: _ => caseInsensitive('dynamic'),
+    else_keyword: _ => caseInsensitive('else'),
+    elseif_keyword: _ => caseInsensitive('elseif'),
+    end_keyword: _ => caseInsensitive('end'),
+    enumerated_keyword: _ => caseInsensitive('enumerated'),
+    event_keyword: _ => caseInsensitive('event'),
+    execute_keyword: _ => caseInsensitive('execute'),
+    exit_keyword: _ => caseInsensitive('exit'),
+    external_keyword: _ => caseInsensitive('external'),
+    false_keyword: _ => caseInsensitive('false'),
+    fetch_keyword: _ => caseInsensitive('fetch'),
+    finally_keyword: _ => caseInsensitive('finally'),
+    first_keyword: _ => caseInsensitive('first'),
+    for_keyword: _ => caseInsensitive('for'),
+    forward_keyword: _ => caseInsensitive('forward'),
+    from_keyword: _ => caseInsensitive('from'),
+    function_keyword: _ => caseInsensitive('function'),
+    global_keyword: _ => caseInsensitive('global'),
+    goto_keyword: _ => caseInsensitive('goto'),
+    halt_keyword: _ => caseInsensitive('halt'),
+    if_keyword: _ => caseInsensitive('if'),
+    immediate_keyword: _ => caseInsensitive('immediate'),
+    indirect_keyword: _ => caseInsensitive('indirect'),
+    insert_keyword: _ => caseInsensitive('insert'),
+    into_keyword: _ => caseInsensitive('into'),
+    intrinsic_keyword: _ => caseInsensitive('intrinsic'),
+    is_keyword: _ => caseInsensitive('is'),
+    last_keyword: _ => caseInsensitive('last'),
+    library_keyword: _ => caseInsensitive('library'),
+    loop_keyword: _ => caseInsensitive('loop'),
+    native_keyword: _ => caseInsensitive('native'),
+    next_keyword: _ => caseInsensitive('next'),
+    not_keyword: _ => caseInsensitive('not'),
+    of_keyword: _ => caseInsensitive('of'),
+    on_keyword: _ => caseInsensitive('on'),
+    open_keyword: _ => caseInsensitive('open'),
+    or_keyword: _ => caseInsensitive('or'),
+    parent_keyword: _ => caseInsensitive('parent'),
+    post_keyword: _ => caseInsensitive('post'),
+    prepare_keyword: _ => caseInsensitive('prepare'),
+    prior_keyword: _ => caseInsensitive('prior'),
+    privateread_keyword: _ => caseInsensitive('privateread'),
+    privatewrite_keyword: _ => caseInsensitive('privatewrite'),
+    procedure_keyword: _ => caseInsensitive('procedure'),
+    protectedread_keyword: _ => caseInsensitive('protectedread'),
+    protectedwrite_keyword: _ => caseInsensitive('protectedwrite'),
+    prototypes_keyword: _ => caseInsensitive('prototypes'),
+    readonly_keyword: $ => caseInsensitive('readonly'),
+    ref_keyword: $ => caseInsensitive('ref'),
+    return_keyword: _ => caseInsensitive('return'),
+    rollback_keyword: _ => caseInsensitive('rollback'),
+    rpcfunc_keyword: _ => caseInsensitive('rpcfunc'),
+    select_keyword: _ => caseInsensitive('select'),
+    selectblob: _ => caseInsensitive('selectblob'),
+    shared_keyword: _ => caseInsensitive('shared'),
+    static_keyword: _ => caseInsensitive('static'),
+    step_keyword: _ => caseInsensitive('step'),
+    subroutine_keyword: _ => caseInsensitive('subroutine'),
+    super_keyword: _ => caseInsensitive('super'),
+    system_keyword: _ => caseInsensitive('system'),
+    systemread_keyword: _ => caseInsensitive('systemread'),
+    systemwrite_keyword: _ => caseInsensitive('systemwrite'),
+    then_keyword: _ => caseInsensitive('then'),
+    this_keyword: _ => caseInsensitive('this'),
+    throw_keyword: _ => caseInsensitive('throw'),
+    throws_keyword: _ => caseInsensitive('throws'),
+    to_keyword: _ => caseInsensitive('to'),
+    trigger_keyword: _ => caseInsensitive('trigger'),
+    true_keyword: _ => caseInsensitive('true'),
+    try_keyword: _ => caseInsensitive('try'),
+    type_keyword: _ => caseInsensitive('type'),
+    until_keyword: _ => caseInsensitive('until'),
+    update_keyword: _ => caseInsensitive('update'),
+    updateblob_keyword: _ => caseInsensitive('updateblob'),
+    using_keyword: _ => caseInsensitive('using'),
+    variables_keyword: _ => caseInsensitive('variables'),
+    while_keyword: _ => caseInsensitive('while'),
+    with_keyword: _ => caseInsensitive('with'),
+    within_keyword: _ => caseInsensitive('within'),
+    debug_keyword: _ => caseInsensitive('_debug'),
+
+
+    // || 6. KEYWORD END ||
+
+    // || 7. SPECIAL ||
+
+    line_comment: _ => seq('//', /.*/),
     block_comment: _ => seq('/*', /[^*]*\*+([^/*][^*]*\*+)*/, '/'),
 
-    line_continuation: $ => '&',
+    _line_continuation: $ => '&',
+    _statement_separation: $ => choice(';', $._new_line),
+    _new_line: _ => /\r?\n/,
+    _rest_of_line: _ => /[^\r\n]*/,
+    _tab_char: _ => /\t/,
+
+    // || 7. SPECIAL END ||
+
+
+    // || 99. DATAWINDOW SYNTAX ||
 
     // Datawindow Content
     datawindow_file_extension: _ => 'srd',
@@ -994,7 +1294,7 @@ module.exports = grammar({
     datawindow_header_file: $ => seq(
       $.export_header_name,
       $.datawindow_file_extension,
-      /[\r?\n]/,
+      $._new_line,
       optional($.export_comments),
     ),
 
@@ -1011,8 +1311,8 @@ module.exports = grammar({
     // Datawindow Definitions
     release_statement: $ => seq(
       caseInsensitive('release'),
-      $.number,
-      ';',
+      $.number_literal,
+      $._statement_separation,
     ),
 
     datawindow_definition: $ => seq(
@@ -1091,58 +1391,7 @@ module.exports = grammar({
       ')',
     ),
 
-    // Keywords
-    forward_keyword: _ => caseInsensitive('forward'),
-    end_keyword: _ => caseInsensitive('end'),
-    global_keyword: _ => caseInsensitive('global'),
-    type_keyword: _ => caseInsensitive('type'),
-    from_keyword: _ => caseInsensitive('from'),
-    release_keyword: _ => caseInsensitive('release'),
-    within_keyword: _ => caseInsensitive('within'),
-    variables_keyword: _ => caseInsensitive('variables'),
-    shared_variables_keyword: _ => token(caseInsensitive('shared variables')),
-    event_keyword: _ => token(prec(100, caseInsensitive('event'))),
-    on_keyword: _ => caseInsensitive('on'),
-
-    public_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('public'))),
-    private_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('private'))),
-    protected_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('protected'))),
-
-    prototypes_keyword: _ => caseInsensitive('prototypes'),
-    function_keyword: _ => caseInsensitive('function'),
-    subroutine_keyword: _ => caseInsensitive('subroutine'),
-    ref_keyword: $ => token(prec(100, caseInsensitive('ref'))),
-    readonly_keyword: $ => token(prec(100, caseInsensitive('readonly'))),
-    return_keyword: _ => caseInsensitive('return'),
-    if_keyword: _ => caseInsensitive('if'),
-    then_keyword: _ => caseInsensitive('then'),
-    elseif_keyword: _ => caseInsensitive('elseif'),
-    else_keyword: _ => caseInsensitive('else'),
-    choose_keyword: _ => caseInsensitive('choose'),
-    case_keyword: _ => caseInsensitive('case'),
-    do_keyword: _ => caseInsensitive('do'),
-    loop_keyword: _ => caseInsensitive('loop'),
-    while_keyword: _ => caseInsensitive('while'),
-    for_keyword: _ => caseInsensitive('for'),
-    to_keyword: _ => caseInsensitive('to'),
-    step_keyword: _ => caseInsensitive('step'),
-    next_keyword: _ => caseInsensitive('next'),
-    or_keyword: _ => caseInsensitive('or'),
-    and_keyword: _ => caseInsensitive('and'),
-    not_keyword: _ => caseInsensitive('not'),
-    throws_keyword: _ => caseInsensitive('throws'),
-    end_type_keyword: _ => token(caseInsensitive('end type')),
-    end_variables_keyword: _ => token(caseInsensitive('end variables')),
-    end_forward_keyword: _ => token(caseInsensitive('end forward')),
-    global_variables_keyword: _ => token(caseInsensitive('global variables')),
-    type_variables_keyword: _ => token(caseInsensitive('type variables')),
-    end_event_keyword: _ => token(caseInsensitive('end event')),
-    forward_prototypes_keyword: _ => caseInsensitive('forward prototypes'),
-    end_prototypes_keyword: _ => caseInsensitive('end prototypes'),
-    end_subroutine_keyword: _ => caseInsensitive('end subroutine'),
-    end_function_keyword: _ => caseInsensitive('end function'),
-    structure_keyword: _ => caseInsensitive('structure'),
-    tab_char: _ => /\t/,
+    // || 99. DATAWINDOW SYNTAX END ||
 
   },
 });
