@@ -3,10 +3,13 @@ global type global_function_object from function_object
 end type
 
 forward prototypes
-global function integer global_function_object (integer al_value)
+global function integer global_function_object_integer (integer al_value)
 end prototypes
 
 global function integer global_function_object (integer al_value);
-Int li_a;
+int li_a = 1;
+li_a = 1;
+
+object.event dynamic  ue_call()
 end function
 
