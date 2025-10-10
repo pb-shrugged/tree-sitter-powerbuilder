@@ -40,9 +40,119 @@ module.exports = grammar({
   extras: $ => [
     $.line_comment,
     $.block_comment,
-    /[ \t\r\n]/,
-    '&',
+    /[ \t]*/,
+    $.line_continuation,
+    $._new_line,
   ],
+
+  // @ts-ignore
+  reserved: {
+    global: $ => {
+      return [$.public_keyword,
+        $.private_keyword,
+        $.protected_keyword,
+        $.alias_keyword,
+        $.and_keyword,
+        $.autoinstantiate_keyword,
+        $.call_keyword,
+        $.case_keyword,
+        $.catch_keyword,
+        $.choose_keyword,
+        $.close_keyword,
+        // $.commit_keyword,
+        // $.connect_keyword,
+        $.constant_keyword,
+        $.continue_keyword,
+        $.create_keyword,
+        // $.cursor_keyword,
+        // $.declare_keyword,
+        $.descriptor_keyword,
+        $.destroy_keyword,
+        // $.disconnect_keyword,
+        $.do_keyword,
+        $.dynamic_keyword,
+        $.else_keyword,
+        $.elseif_keyword,
+        $.end_keyword,
+        // $.enumerated_keyword,
+        $.event_keyword,
+        // $.execute_keyword,
+        $.exit_keyword,
+        // $.external_keyword,
+        $.false_keyword,
+        // $.fetch_keyword,
+        $.finally_keyword,
+        // $.first_keyword,
+        $.for_keyword,
+        $.forward_keyword,
+        $.from_keyword,
+        $.function_keyword,
+        $.global_keyword,
+        $.goto_keyword,
+        $.halt_keyword,
+        $.if_keyword,
+        // $.immediate_keyword,
+        // $.indirect_keyword,
+        // $.insert_keyword,
+        // $.into_keyword,
+        // $.intrinsic_keyword,
+        $.is_keyword,
+        // $.last_keyword,
+        $.library_keyword,
+        $.loop_keyword,
+        // $.native_keyword,
+        $.next_keyword,
+        $.not_keyword,
+        // $.of_keyword,
+        $.on_keyword,
+        // $.open_keyword,
+        $.or_keyword,
+        // $.parent_keyword,
+        $.post_keyword,
+        // $.prepare_keyword,
+        // $.prior_keyword,
+        $.privateread_keyword,
+        $.privatewrite_keyword,
+        // $.procedure_keyword,
+        $.protectedread_keyword,
+        $.protectedwrite_keyword,
+        $.prototypes_keyword,
+        $.readonly_keyword,
+        $.ref_keyword,
+        $.return_keyword,
+        // $.rollback_keyword,
+        // $.rpcfunc_keyword,
+        // $.select_keyword,
+        // $.selectblob,
+        $.shared_keyword,
+        $.static_keyword,
+        $.step_keyword,
+        $.subroutine_keyword,
+        $.super_keyword,
+        // $.system_keyword,
+        // $.systemread_keyword,
+        // $.systemwrite_keyword,
+        $.then_keyword,
+        $.this_keyword,
+        $.throw_keyword,
+        $.throws_keyword,
+        $.to_keyword,
+        $.trigger_keyword,
+        $.true_keyword,
+        $.try_keyword,
+        $.type_keyword,
+        $.until_keyword,
+        // $.update_keyword,
+        // $.updateblob_keyword,
+        $.using_keyword,
+        $.variables_keyword,
+        $.while_keyword,
+        // $.with_keyword,
+        $.within_keyword,
+        // $.debug_keyword
+      ];
+    },
+  },
 
   rules: {
 
@@ -167,6 +277,7 @@ module.exports = grammar({
       $.identifier,
       $.parameter_list,
       optional($.throws_clause),
+      $._statement_separation,
     ),
 
     global_subroutine_declaration: $ => seq(
@@ -175,6 +286,7 @@ module.exports = grammar({
       $.identifier,
       $.parameter_list,
       optional($.throws_clause),
+      $._statement_separation,
     ),
 
     global_function_implementaion_section: $ => repeat1($.global_function_implementation),
@@ -185,14 +297,14 @@ module.exports = grammar({
     ),
 
     _global_function_implementation: $ => seq(
-      field('init', seq($.global_function_declaration, $._statement_separation)),
-      field('body', $.scriptable_block),
+      field('init', $.global_function_declaration),
+      field('body', optional($.scriptable_block)),
       field('end', $.end_function_implementation),
     ),
 
     _global_subroutine_implementation: $ => seq(
-      field('init', seq($.global_subroutine_declaration, $._statement_separation)),
-      field('body', $.scriptable_block),
+      field('init', $.global_subroutine_declaration),
+      field('body', optional($.scriptable_block)),
       field('end', $.end_subroutine_implementation),
     ),
 
@@ -296,7 +408,7 @@ module.exports = grammar({
       caseInsensitive('type'),
       $.identifier,
       caseInsensitive('from'),
-      $.user_object_base_type,
+      $.datatype,
       optional($.autoinstantiate_keyword),
       repeat(choice(
         $.property_assignment,
@@ -307,14 +419,6 @@ module.exports = grammar({
       caseInsensitive('end'),
       caseInsensitive('type'),
       optional($.global_instance_declaration),
-    ),
-
-    user_object_base_type: $ => choice(
-      caseInsensitive('datawindow'),
-      caseInsensitive('datastore'),
-      caseInsensitive('userobject'),
-      caseInsensitive('nonvisualobject'),
-      $.identifier, // Custom user object types
     ),
 
     global_instance_declaration: $ => seq(
@@ -330,7 +434,7 @@ module.exports = grammar({
     ),
 
     descriptor_clause: $ => seq(
-      caseInsensitive('descriptor'),
+      $.descriptor_keyword,
       $.string_literal,
       '=',
       $.string_literal,
@@ -379,7 +483,7 @@ module.exports = grammar({
 
     export_comments: $ => seq(
       /\$PBExportComments\$/,
-      field('comment', $._rest_of_line),
+      field('comment', seq($._rest_of_line, $._new_line)),
     ),
 
     global_variables_section: $ => seq(
@@ -481,13 +585,13 @@ module.exports = grammar({
 
     _function_implementantion: $ => seq(
       field('init', seq($.function_declaration, $._statement_separation)),
-      field('body', $.scriptable_block),
+      field('body', optional($.scriptable_block)),
       field('end', $.end_function_implementation),
     ),
 
     _subroutine_implementation: $ => seq(
       field('init', seq($.subroutine_declaration, $._statement_separation)),
-      field('body', $.scriptable_block),
+      field('body', optional($.scriptable_block)),
       field('end', $.end_subroutine_implementation),
     ),
 
@@ -581,16 +685,19 @@ module.exports = grammar({
     end_subroutine_implementation: $ => seq(
       $.end_keyword,
       $.subroutine_keyword,
+      $._new_line,
     ),
 
     end_function_implementation: $ => seq(
       $.end_keyword,
       $.function_keyword,
+      $._new_line,
     ),
 
     end_type_section: $ => seq(
       $.end_keyword,
       $.type_keyword,
+      $._new_line,
     ),
 
     end_variables_section: $ => seq(
@@ -618,6 +725,7 @@ module.exports = grammar({
       field('type_name', $.identifier),
       $.from_keyword,
       $.class_datatype,
+      $._new_line,
     ),
 
 
@@ -647,11 +755,11 @@ module.exports = grammar({
     on_event_block_section: $ => repeat1($.on_event_block),
 
     on_event_block: $ => prec(2, seq(
-      caseInsensitive('on'),
+      $.on_keyword,
       $.field_access,
       repeat($.statement),
-      caseInsensitive('end'),
-      caseInsensitive('on'),
+      $.end_keyword,
+      $.on_keyword,
     )),
 
     // Function Definitions with Throws Support
@@ -664,21 +772,24 @@ module.exports = grammar({
     forward_prototypes_section_init: $ => seq(
       $.forward_keyword,
       $.prototypes_keyword,
+      $._new_line,
     ),
 
     prototypes_section_end: $ => seq(
       $.end_keyword,
       $.prototypes_keyword,
+      $._new_line,
     ),
 
-    event_declaration: $ => seq(
+    event_declaration: $ => prec(10, seq(
       $.event_keyword,
       optional(seq($.type_keyword, $.datatype)),
       $.identifier,
       optional($.parameter_list),
       optional($.throws_clause),
       optional($.event_id),
-    ),
+      $._new_line,
+    )),
 
     event_id: $ => /pbm_[a-zA-Z_][a-zA-Z0-9_]*/,
 
@@ -791,21 +902,93 @@ module.exports = grammar({
     // || 4. EXPRESSION AND STATEMENT ||
 
     statement: $ => choice(
-      $.create_statement,
-      $.destroy_statement,
       $.local_variable_declaration_statement,
-      $.assignment_statement,
-      $.expression_statement,
-      $.return_statement,
-      $.if_statement,
+      seq($.inline_statement, $._statement_separation),
       $.choose_statement,
       $.loop_statement,
+      $.goto_label,
+      $._if_statement,
       $.throw_statement,
       $.try_catch_statement,
+      $.sql_statement,
+    ),
+
+    inline_statement: $ => choice(
+      $.assignment_statement,
       $.call_statement,
+      $.continue_statement,
+      $.create_statement,
+      $.destroy_statement,
+      $.exit_statement,
+      $.goto_statement,
+      $.halt_statement,
+      $.return_statement,
+      $.throw_statement,
+      $.expression_statement,
     ),
 
     local_variable_declaration_statement: $ => prec(100, $.local_variable_declaration),
+
+    local_variable_declaration: $ => seq(
+      optional($.constant_keyword),
+      $.datatype,
+      optional($.variable_precision),
+      $.variable_declaration_list,
+      $._statement_separation,
+    ),
+
+    assignment_statement: $ => prec(PREC.ASSIGNMENT, seq(
+      field('left', choice($.identifier, $.field_access, $.array_access)),
+      field('operator', $.assignment_operator),
+      field('right', $.expression),
+    )),
+
+    assignment_operator: $ => choice('=', '+=', '-=', '*=', '/=', '^/'),
+
+    call_statement: $ => seq(
+      $.call_keyword,
+      field('ancestor', $.identifier),
+      field('control', optional(seq('`', $.identifier))),
+      '::',
+      field('event_name', $.identifier),
+    ),
+
+    choose_statement: $ => seq(
+      $.choose_keyword,
+      $.case_keyword,
+      field('test_expression', $.expression),
+      $._statement_separation,
+      field(
+        'case_condition',
+        seq(
+          repeat1($.case_clause),
+          optional($.case_else_clause),
+        ),
+      ),
+      $.end_keyword,
+      $.choose_keyword,
+      $._statement_separation,
+    ),
+
+    case_clause: $ => seq(
+      $.case_keyword,
+      field('condition', choice(
+        commaSep($.expression),
+        seq($.expression, $.to_keyword, $.expression),
+        seq($.is_keyword, choice('>', '<', '>=', '<='), $.expression),
+      )),
+      $._statement_separation,
+      field('block', optional($.scriptable_block)),
+    ),
+
+    case_else_clause: $ => seq(
+      $.case_keyword,
+      $.else_keyword,
+      $._statement_separation,
+      field('block', optional($.scriptable_block)),
+    ),
+
+    continue_statement: $ => $.continue_keyword,
 
     create_statement: $ => choice(
       seq(
@@ -828,155 +1011,137 @@ module.exports = grammar({
       seq($.destroy_keyword, field('var_name', $.identifier)),
     ),
 
-    local_variable_declaration: $ => seq(
-      optional($.constant_keyword),
-      $.datatype,
-      optional($.variable_precision),
-      $.variable_declaration_list,
+    loop_statement: $ => choice(
+      $.while_loop,
+      $.do_loop,
+      $.for_loop,
+    ),
+
+    while_loop: $ => seq(
+      $.do_keyword,
+      choice($.until_keyword, $.while_keyword),
+      field('condition', $.expression),
+      $._statement_separation,
+      field('block', optional($.scriptable_block)),
+      $.loop_keyword,
       $._statement_separation,
     ),
 
-    assignment_statement: $ => prec(PREC.ASSIGNMENT, seq(
-      field('left', choice($.identifier, $.field_access, $.array_access)),
-      field('operator', $.assignment_operator),
-      field('right', $.expression),
+    do_loop: $ => seq(
+      $.do_keyword,
+      $._statement_separation,
+      field('block', optional($.scriptable_block)),
+      $.loop_keyword,
+      choice($.until_keyword, $.while_keyword),
+      field('condition', $.expression),
+      $._statement_separation,
+    ),
+
+    for_loop: $ => seq(
+      $.for_keyword,
+      field('iteration_counter', $.identifier),
+      '=',
+      field('initial_value', $.expression),
+      $.to_keyword,
+      field('final_value', $.expression),
+      optional(seq($.step_keyword, field('increment_value', $.expression))),
+      $._statement_separation,
+      field('block', optional($.scriptable_block)),
+      $.next_keyword,
+      $._statement_separation,
+    ),
+
+    exit_statement: $ => $.exit_keyword,
+
+    goto_statement: $ => seq($.goto_keyword, field('label', $.identifier)),
+
+    goto_label: $ => seq(field('label', $.identifier), ':', $._statement_separation),
+
+    halt_statement: $ => seq($.halt_keyword, optional($.close_keyword)),
+
+    _if_statement: $ => choice(
+      $.if_statement,
+      $.inline_if_statement,
+    ),
+
+    if_statement: $ => seq(
+      $.if_keyword,
+      field('if_condition', $.expression),
+      $.then_keyword,
+      $._statement_separation,
+      field('if_block', optional($.scriptable_block)),
+      field('elseif_clause', repeat($.elseif_clause)),
+      field('else_clause', optional($.else_clause)),
+      $.end_keyword,
+      $.if_keyword,
+      $._statement_separation,
+    ),
+
+    inline_if_statement: $ => prec.left(seq(
+      $.if_keyword,
+      field('if_condition', $.expression),
+      $.then_keyword,
+      field('inline_if_statement', $.inline_statement),
+      optional(seq($.else_keyword, field('inline_else_statement', $.inline_statement))),
       $._statement_separation,
     )),
 
-    assignment_operator: $ => choice('=', '+=', '-=', '*=', '/=', '^/'),
+    elseif_clause: $ => seq(
+      $.elseif_keyword,
+      field('elseif_condition', $.expression),
+      $.then_keyword,
+      $._statement_separation,
+      field('elseif_block', optional($.scriptable_block)),
+    ),
+
+    else_clause: $ => seq(
+      $.else_keyword,
+      $._statement_separation,
+      field('else_block', optional($.scriptable_block)),
+    ),
 
     return_statement: $ => prec.left(seq(
-      caseInsensitive('return'),
-      optional($.expression),
+      $.return_keyword,
+      field('return_value', optional($.expression)),
     )),
 
     throw_statement: $ => seq(
-      caseInsensitive('throw'),
-      $.expression,
+      $.throw_keyword,
+      choice(
+        seq($.create_keyword, $.datatype),
+        $.expression,
+      ),
     ),
 
     try_catch_statement: $ => seq(
-      caseInsensitive('try'),
-      repeat($.statement),
+      $.try_keyword,
+      $._statement_separation,
+      field('try_block', optional($.scriptable_block)),
       repeat($.catch_clause),
       optional($.finally_clause),
-      caseInsensitive('end'),
-      caseInsensitive('try'),
+      $.end_keyword,
+      $.try_keyword,
+      $._statement_separation,
     ),
 
     catch_clause: $ => seq(
       $.catch_keyword,
       '(',
-      $.datatype,
-      $.identifier,
+      field('throwable_type', $.datatype),
+      field('throwable_name', $.identifier),
       ')',
-      repeat($.statement),
+      $._statement_separation,
+      field('catch_block', optional($.scriptable_block)),
     ),
 
     finally_clause: $ => seq(
-      caseInsensitive('finally'),
-      repeat($.statement),
+      $.finally_keyword,
+      $._statement_separation,
+      field('finally_block', optional($.scriptable_block)),
     ),
 
-    call_statement: $ => choice(
-      $.super_call,
-      $.trigger_event_call,
-    ),
-
-    super_call: $ => prec.right(seq(
-      $.autoinstantiate_keyword,
-      caseInsensitive('super'),
-      '::',
-      $.identifier,
-      optional($.argument_list),
-    )),
-
-    trigger_event_call: $ => seq(
-      caseInsensitive('triggerevent'),
-      '(',
-      $.expression,
-      ',',
-      $.string_literal,
-      optional(seq(',', commaSep($.expression))),
-      ')',
-    ),
-
-    if_statement: $ => seq(
-      caseInsensitive('if'),
-      $.expression,
-      caseInsensitive('then'),
-      repeat($.statement),
-      repeat($.elseif_clause),
-      optional($.else_clause),
-      caseInsensitive('end'),
-      caseInsensitive('if'),
-    ),
-
-    elseif_clause: $ => seq(
-      caseInsensitive('elseif'),
-      $.expression,
-      caseInsensitive('then'),
-      repeat($.statement),
-    ),
-
-    else_clause: $ => seq(
-      caseInsensitive('else'),
-      repeat($.statement),
-    ),
-
-    choose_statement: $ => seq(
-      caseInsensitive('choose'),
-      caseInsensitive('case'),
-      $.expression,
-      repeat($.case_clause),
-      optional($.case_else_clause),
-      caseInsensitive('end'),
-      caseInsensitive('choose'),
-    ),
-
-    case_clause: $ => seq(
-      caseInsensitive('case'),
-      commaSep1($.expression),
-      repeat($.statement),
-    ),
-
-    case_else_clause: $ => seq(
-      caseInsensitive('case'),
-      caseInsensitive('else'),
-      repeat($.statement),
-    ),
-
-    loop_statement: $ => choice(
-      $.do_loop,
-      $.for_loop,
-      $.while_loop,
-    ),
-
-    do_loop: $ => seq(
-      caseInsensitive('do'),
-      repeat($.statement),
-      caseInsensitive('loop'),
-      optional(seq(caseInsensitive('while'), $.expression)),
-    ),
-
-    for_loop: $ => seq(
-      caseInsensitive('for'),
-      $.identifier,
-      '=',
-      $.expression,
-      caseInsensitive('to'),
-      $.expression,
-      optional(seq(caseInsensitive('step'), $.expression)),
-      repeat($.statement),
-      caseInsensitive('next'),
-    ),
-
-    while_loop: $ => seq(
-      caseInsensitive('do'),
-      caseInsensitive('while'),
-      $.expression,
-      repeat($.statement),
-      caseInsensitive('loop'),
+    sql_statement: $ => choice(
+      'select',
     ),
 
     expression_statement: $ => prec(100, seq(
@@ -984,7 +1149,6 @@ module.exports = grammar({
         $.update_expression,
         $.method_invocation,
       ),
-      $._statement_separation,
     )),
 
     // Expressions
@@ -1292,9 +1456,9 @@ module.exports = grammar({
     line_comment: _ => seq('//', /.*/),
     block_comment: _ => seq('/*', /[^*]*\*+([^/*][^*]*\*+)*/, '/'),
 
-    _line_continuation: $ => prec(100, seq('&', $._new_line)),
+    line_continuation: _ => /&[ \t]*\r?\n/,
     _statement_separation: $ => choice(';', $._new_line),
-    _new_line: _ => /[\r\n]/,
+    _new_line: _ => /\r?\n/,
     _rest_of_line: _ => /[^\r\n]*/,
     _tab_char: _ => /\t/,
 
