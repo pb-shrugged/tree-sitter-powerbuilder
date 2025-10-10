@@ -4417,8 +4417,469 @@
       "type": "CHOICE",
       "members": [
         {
+          "type": "SYMBOL",
+          "name": "close_cursor_procedure_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "commit_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "connect_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declare_cursor_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declare_procedure_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "delete_statement"
+        }
+      ]
+    },
+    "close_cursor_procedure_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "close_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "cursor_procedure_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "using_transaction_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "using_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "transaction_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        }
+      ]
+    },
+    "commit_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "commit_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "connect_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "connect_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "declare_cursor_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "declare_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "cursor_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "cursor_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "for_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "select_statement"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "declare_procedure_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "declare_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "procedure_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "procedure_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "for_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "store_procedure_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "stored_procedure_param_list"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "stored_procedure_param_list": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "stored_procedure_param_ase"
+            },
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ","
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "stored_procedure_param_ase"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "("
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "stored_procedure_param_oracle"
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "stored_procedure_param_oracle"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "STRING",
+              "value": ")"
+            }
+          ]
+        }
+      ]
+    },
+    "stored_procedure_param_ase": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "@"
+        },
+        {
+          "type": "FIELD",
+          "name": "param_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "var_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "expression"
+          }
+        }
+      ]
+    },
+    "stored_procedure_param_oracle": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "var_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "expression"
+          }
+        }
+      ]
+    },
+    "delete_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "delete_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "from_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "table_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "where_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "where_criteria"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "using_transaction_statement"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "delete_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "from_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "table_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "where_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "current_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "of_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "cursor_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        }
+      ]
+    },
+    "select_statement": {
+      "type": "SEQ",
+      "members": [
+        {
           "type": "STRING",
           "value": "select"
+        }
+      ]
+    },
+    "where_criteria": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "where_criteria"
         }
       ]
     },
@@ -6305,6 +6766,22 @@
         }
       }
     },
+    "delete_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 50,
+        "content": {
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "[dD][eE][lL][eE][tT][eE]"
+          },
+          "named": false,
+          "value": "delete"
+        }
+      }
+    },
     "descriptor_keyword": {
       "type": "TOKEN",
       "content": {
@@ -7649,6 +8126,38 @@
         }
       }
     },
+    "where_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 50,
+        "content": {
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "[wW][hH][eE][rR][eE]"
+          },
+          "named": false,
+          "value": "where"
+        }
+      }
+    },
+    "current_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 50,
+        "content": {
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "[cC][uU][rR][rR][eE][nN][tT]"
+          },
+          "named": false,
+          "value": "current"
+        }
+      }
+    },
     "line_comment": {
       "type": "SEQ",
       "members": [
@@ -8147,6 +8656,14 @@
       },
       {
         "type": "SYMBOL",
+        "name": "commit_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "connect_keyword"
+      },
+      {
+        "type": "SYMBOL",
         "name": "constant_keyword"
       },
       {
@@ -8156,6 +8673,18 @@
       {
         "type": "SYMBOL",
         "name": "create_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "cursor_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "declare_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "delete_keyword"
       },
       {
         "type": "SYMBOL",
@@ -8272,6 +8801,10 @@
       {
         "type": "SYMBOL",
         "name": "privatewrite_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "procedure_keyword"
       },
       {
         "type": "SYMBOL",

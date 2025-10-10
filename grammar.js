@@ -59,16 +59,17 @@ module.exports = grammar({
         $.catch_keyword,
         $.choose_keyword,
         $.close_keyword,
-        // $.commit_keyword,
-        // $.connect_keyword,
+        $.commit_keyword,
+        $.connect_keyword,
         $.constant_keyword,
         $.continue_keyword,
         $.create_keyword,
-        // $.cursor_keyword,
-        // $.declare_keyword,
+        $.cursor_keyword,
+        $.declare_keyword,
+        $.delete_keyword,
         $.descriptor_keyword,
         $.destroy_keyword,
-        // $.disconnect_keyword,
+        $.disconnect_keyword,
         $.do_keyword,
         $.dynamic_keyword,
         $.else_keyword,
@@ -76,11 +77,11 @@ module.exports = grammar({
         $.end_keyword,
         // $.enumerated_keyword,
         $.event_keyword,
-        // $.execute_keyword,
+        $.execute_keyword,
         $.exit_keyword,
         // $.external_keyword,
         $.false_keyword,
-        // $.fetch_keyword,
+        $.fetch_keyword,
         $.finally_keyword,
         // $.first_keyword,
         $.for_keyword,
@@ -93,8 +94,8 @@ module.exports = grammar({
         $.if_keyword,
         // $.immediate_keyword,
         // $.indirect_keyword,
-        // $.insert_keyword,
-        // $.into_keyword,
+        $.insert_keyword,
+        $.into_keyword,
         // $.intrinsic_keyword,
         $.is_keyword,
         // $.last_keyword,
@@ -103,9 +104,9 @@ module.exports = grammar({
         // $.native_keyword,
         $.next_keyword,
         $.not_keyword,
-        // $.of_keyword,
+        $.of_keyword,
         $.on_keyword,
-        // $.open_keyword,
+        $.open_keyword,
         $.or_keyword,
         // $.parent_keyword,
         $.post_keyword,
@@ -113,17 +114,17 @@ module.exports = grammar({
         // $.prior_keyword,
         $.privateread_keyword,
         $.privatewrite_keyword,
-        // $.procedure_keyword,
+        $.procedure_keyword,
         $.protectedread_keyword,
         $.protectedwrite_keyword,
         $.prototypes_keyword,
         $.readonly_keyword,
         $.ref_keyword,
         $.return_keyword,
-        // $.rollback_keyword,
+        $.rollback_keyword,
         // $.rpcfunc_keyword,
-        // $.select_keyword,
-        // $.selectblob,
+        $.select_keyword,
+        $.selectblob_keyword,
         $.shared_keyword,
         $.static_keyword,
         $.step_keyword,
@@ -1141,7 +1142,166 @@ module.exports = grammar({
     ),
 
     sql_statement: $ => choice(
-      'select',
+      $.close_cursor_procedure_statement,
+      $.commit_statement,
+      $.connect_statement,
+      $.declare_cursor_statement,
+      $.declare_procedure_statement,
+      $.delete_statement,
+      $.disconnect_statement,
+      $.execute_statement,
+      $.fetch_statement,
+      $.insert_statement,
+      $.open_cursor_statement,
+      $.rollback_statement,
+      $.select_statement,
+      $.update_statement,
+    ),
+
+    close_cursor_procedure_statement: $ => seq(
+      $.close_keyword,
+      field('cursor_procedure_name', $.identifier),
+      ';',
+    ),
+
+    using_transaction_statement: $ => seq(
+      $.using_keyword,
+      field('transaction_name', $.identifier),
+    ),
+
+    commit_statement: $ => seq(
+      $.commit_keyword,
+      optional($.using_transaction_statement),
+      ';',
+    ),
+
+    connect_statement: $ => seq(
+      $.connect_keyword,
+      optional($.using_transaction_statement),
+      ';',
+    ),
+
+    declare_cursor_statement: $ => seq(
+      $.declare_keyword,
+      field('cursor_name', $.identifier),
+      $.cursor_keyword,
+      $.for_keyword,
+      $.select_statement,
+      optional($.using_transaction_statement),
+      ';',
+    ),
+
+    declare_procedure_statement: $ => seq(
+      $.declare_keyword,
+      field('procedure_name', $.identifier),
+      $.procedure_keyword,
+      $.for_keyword,
+      field('store_procedure_name', $.identifier),
+      optional($.stored_procedure_param_list),
+      optional($.using_transaction_statement),
+      ';',
+    ),
+
+    stored_procedure_param_list: $ => choice(
+      commaSep1($.stored_procedure_param_ase),
+      seq('(', commaSep1($.stored_procedure_param_oracle), ')'),
+    ),
+
+    stored_procedure_param_ase: $ => seq(
+      '@',
+      field('param_name', $.identifier),
+      '=',
+      optional(':'),
+      field('var_name', $.expression),
+    ),
+
+    stored_procedure_param_oracle: $ => seq(
+      optional(':'),
+      field('var_name', $.expression),
+    ),
+
+    delete_statement: $ => choice(
+      seq(
+        $.delete_keyword,
+        $.from_keyword,
+        field('table_name', $.identifier),
+        $.where_keyword,
+        $.where_criteria,
+        optional($.using_transaction_statement),
+        ';',
+      ),
+      seq(
+        $.delete_keyword,
+        $.from_keyword,
+        field('table_name', $.identifier),
+        $.where_keyword,
+        $.current_keyword,
+        $.of_keyword,
+        field('cursor_name', $.identifier),
+        ';',
+      ),
+    ),
+
+    disconnect_statement: $ => seq(
+      $.disconnect_keyword,
+      optional($.using_transaction_statement),
+      ';',
+    ),
+
+    execute_statement: $ => seq(
+      $.execute_keyword,
+      field('procedure_name', $.identifier),
+      ';',
+    ),
+
+    fetch_statement: $ => seq(
+      $.fetch_keyword,
+      field('cursor_procedure_name', $.identifier),
+      $.into_keyword,
+      $.fetch_variable_list,
+      ';',
+    ),
+
+    insert_statement: $ => seq(
+      $.insert_keyword,
+      $.into_keyword,
+      field('table_name', $.identifier),
+      caseInsensitive('values'),
+      '(',
+      commaSep1($.stored_procedure_param_oracle),
+      ')',
+      optional($.using_transaction_statement),
+      ';',
+    ),
+
+    open_cursor_statement: $ => seq(
+      $.open_keyword,
+      field('cursos_name', $.identifier),
+      ';',
+    ),
+
+    rollback_statement: $ => seq(
+      $.rollback_keyword,
+      optional($.using_transaction_statement),
+      ';',
+    ),
+
+    select_statement: $ => seq(
+      choice($.select_keyword, $.selectblob_keyword),
+      $.rest_of_sql,
+      ';',
+    ),
+
+    rest_of_sql: $ => token(/[^;]*/),
+
+    update_statement: $ => seq(
+
+    ),
+
+    fetch_variable_list: $ => commaSep1(seq(':', field('var_name', $.identifier), optional(seq(':', field('indicator_var', $.identifier))))),
+
+    where_criteria: $ => seq(
+      'where_criteria',
     ),
 
     expression_statement: $ => prec(100, seq(
@@ -1363,6 +1523,7 @@ module.exports = grammar({
     create_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('create'))),
     cursor_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('cursor'))),
     declare_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('declare'))),
+    delete_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('delete'))),
     descriptor_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('descriptor'))),
     destroy_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('destroy'))),
     disconnect_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('disconnect'))),
@@ -1420,7 +1581,7 @@ module.exports = grammar({
     rollback_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('rollback'))),
     rpcfunc_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('rpcfunc'))),
     select_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('select'))),
-    selectblob: _ => token(prec(PREC.KEYWORD, caseInsensitive('selectblob'))),
+    selectblob_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('selectblob'))),
     shared_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('shared'))),
     static_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('static'))),
     step_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('step'))),
@@ -1447,6 +1608,9 @@ module.exports = grammar({
     with_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('with'))),
     within_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('within'))),
     debug_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('_debug'))),
+
+    where_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('where'))),
+    current_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('current'))),
 
 
     // || 6. KEYWORD END ||
