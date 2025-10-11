@@ -9,8 +9,8 @@
 // @ts-check
 
 const PREC = {
-  KEYWORD: 50,
-  STD_TYPE: 51,
+  KEYWORD: 60,
+  STD_TYPE: 50,
   COMMENT: 0,
   ASSIGNMENT: 1,
   TERNARY: 2,
@@ -68,6 +68,7 @@ module.exports = grammar({
         $.declare_keyword,
         $.delete_keyword,
         $.descriptor_keyword,
+        $.describe_keyword,
         $.destroy_keyword,
         $.disconnect_keyword,
         $.do_keyword,
@@ -92,7 +93,7 @@ module.exports = grammar({
         $.goto_keyword,
         $.halt_keyword,
         $.if_keyword,
-        // $.immediate_keyword,
+        $.immediate_keyword,
         // $.indirect_keyword,
         $.insert_keyword,
         $.into_keyword,
@@ -110,7 +111,7 @@ module.exports = grammar({
         $.or_keyword,
         // $.parent_keyword,
         $.post_keyword,
-        // $.prepare_keyword,
+        $.prepare_keyword,
         // $.prior_keyword,
         $.privateread_keyword,
         $.privatewrite_keyword,
@@ -903,7 +904,7 @@ module.exports = grammar({
     // || 4. EXPRESSION AND STATEMENT ||
 
     statement: $ => choice(
-      $.local_variable_declaration_statement,
+      $._local_variable_declaration_statement,
       seq($.inline_statement, $._statement_separation),
       $.choose_statement,
       $.loop_statement,
@@ -928,7 +929,7 @@ module.exports = grammar({
       $.expression_statement,
     ),
 
-    local_variable_declaration_statement: $ => prec(100, $.local_variable_declaration),
+    _local_variable_declaration_statement: $ => prec(100, $.local_variable_declaration),
 
     local_variable_declaration: $ => seq(
       optional($.constant_keyword),
@@ -1147,6 +1148,8 @@ module.exports = grammar({
       $.connect_statement,
       $.declare_cursor_statement,
       $.declare_procedure_statement,
+      $.declare_dynamic_statement,
+      $.describe_sql_statement,
       $.delete_statement,
       $.disconnect_statement,
       $.execute_statement,
@@ -1156,6 +1159,7 @@ module.exports = grammar({
       $.rollback_statement,
       $.select_statement,
       $.update_statement,
+      $.prepare_sql_statement,
     ),
 
     close_cursor_procedure_statement: $ => seq(
@@ -1187,8 +1191,8 @@ module.exports = grammar({
       $.cursor_keyword,
       $.for_keyword,
       $.select_statement,
-      optional($.using_transaction_statement),
-      ';',
+      // optional($.using_transaction_statement),
+      // ';',
     ),
 
     declare_procedure_statement: $ => seq(
@@ -1199,6 +1203,24 @@ module.exports = grammar({
       field('store_procedure_name', $.identifier),
       optional($.stored_procedure_param_list),
       optional($.using_transaction_statement),
+      ';',
+    ),
+
+    declare_dynamic_statement: $ => seq(
+      $.declare_keyword,
+      field('cursor_procedure_name', $.identifier),
+      $.dynamic_keyword,
+      choice($.cursor_keyword, $.procedure_keyword),
+      $.for_keyword,
+      field('dynamic_stage_area', $.identifier),
+      ';',
+    ),
+
+    describe_sql_statement: $ => seq(
+      $.describe_keyword,
+      field('dynamic_stage_area', $.identifier),
+      $.into_keyword,
+      field('dynamic_description_area', $.identifier),
       ';',
     ),
 
@@ -1227,7 +1249,8 @@ module.exports = grammar({
         field('table_name', $.identifier),
         $.where_keyword,
         $.where_criteria,
-        optional($.using_transaction_statement),
+        $.rest_of_sql,
+        // optional($.using_transaction_statement),
         ';',
       ),
       seq(
@@ -1248,36 +1271,64 @@ module.exports = grammar({
       ';',
     ),
 
-    execute_statement: $ => seq(
-      $.execute_keyword,
-      field('procedure_name', $.identifier),
-      ';',
+    execute_statement: $ => choice(
+      seq($.execute_keyword, field('procedure_name', $.identifier), ';'),
+      seq($.execute_keyword, $.immediate_keyword, $.select_statement),
+      seq($.execute_keyword, field('dynamic_stage_area', $.identifier), seq($.using_keyword, commaSep1($.stored_procedure_param_oracle)), ';'),
+      seq($.execute_keyword, $.dynamic_keyword, field('procedure_name', $.identifier), optional(seq($.using_keyword, commaSep1($.stored_procedure_param_oracle))), ';'),
+      seq($.execute_keyword, $.dynamic_keyword, field('procedure_name', $.identifier), $.using_keyword, $.descriptor_keyword, field('dynamic_description_area', $.identifier), ';'),
     ),
 
-    fetch_statement: $ => seq(
-      $.fetch_keyword,
-      field('cursor_procedure_name', $.identifier),
-      $.into_keyword,
-      $.fetch_variable_list,
-      ';',
+    fetch_statement: $ => choice(
+      seq(
+        $.fetch_keyword,
+        field('cursor_procedure_name', $.identifier),
+        $.into_keyword,
+        $.fetch_variable_list,
+        ';',
+      ),
+      seq(
+        $.fetch_keyword,
+        field('cursor_procedure_name', $.identifier),
+        $.using_keyword,
+        $.descriptor_keyword,
+        field('dynamic_stage_area', $.identifier),
+        ';',
+      ),
     ),
+
+    fetch_variable_list: $ => commaSep1(seq(':', field('var_name', $.identifier), optional(seq(':', field('indicator_var', $.identifier))))),
 
     insert_statement: $ => seq(
       $.insert_keyword,
-      $.into_keyword,
-      field('table_name', $.identifier),
-      caseInsensitive('values'),
-      '(',
-      commaSep1($.stored_procedure_param_oracle),
-      ')',
-      optional($.using_transaction_statement),
+      $.rest_of_sql,
+      // optional($.using_transaction_statement),
       ';',
     ),
 
-    open_cursor_statement: $ => seq(
-      $.open_keyword,
-      field('cursos_name', $.identifier),
-      ';',
+    open_cursor_statement: $ => choice(
+      seq(
+        $.open_keyword,
+        field('cursor_name', $.identifier),
+        ';',
+      ),
+      seq(
+        $.open_keyword,
+        $.dynamic_keyword,
+        field('cursor_name', $.identifier),
+        $.using_keyword,
+        commaSep1($.stored_procedure_param_oracle),
+        ';',
+      ),
+      seq(
+        $.open_keyword,
+        $.dynamic_keyword,
+        field('cursor_name', $.identifier),
+        $.using_keyword,
+        $.descriptor_keyword,
+        field('dynamic_staging_area', $.identifier),
+        ';',
+      ),
     ),
 
     rollback_statement: $ => seq(
@@ -1292,17 +1343,28 @@ module.exports = grammar({
       ';',
     ),
 
+    update_statement: $ => seq(
+      choice($.update_keyword, $.updateblob_keyword),
+      field('table_name', $.identifier),
+      $.rest_of_sql,
+      // optional($.using_transaction_statement),
+      ';',
+    ),
+
+    prepare_sql_statement: $ => seq(
+      $.prepare_keyword,
+      field('dynamic_staging_area', $.identifier),
+      $.from_keyword,
+      choice(
+        $.string_literal,
+        seq(':', $.expression),
+      ),
+      ';',
+    ),
+
     rest_of_sql: $ => token(/[^;]*/),
 
-    update_statement: $ => seq(
-
-    ),
-
-    fetch_variable_list: $ => commaSep1(seq(':', field('var_name', $.identifier), optional(seq(':', field('indicator_var', $.identifier))))),
-
-    where_criteria: $ => seq(
-      'where_criteria',
-    ),
+    where_criteria: $ => $.rest_of_sql,
 
     expression_statement: $ => prec(100, seq(
       choice(
@@ -1360,6 +1422,7 @@ module.exports = grammar({
 
     primary_expression: $ => choice(
       $.identifier_expression,
+      $.enumetation_datatype,
       // $.global_scope_var,
       // $.global_scope_method,
       $._literal,
@@ -1524,6 +1587,7 @@ module.exports = grammar({
     cursor_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('cursor'))),
     declare_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('declare'))),
     delete_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('delete'))),
+    describe_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('describe'))),
     descriptor_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('descriptor'))),
     destroy_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('destroy'))),
     disconnect_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('disconnect'))),

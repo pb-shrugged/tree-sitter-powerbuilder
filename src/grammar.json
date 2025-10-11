@@ -3078,7 +3078,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "local_variable_declaration_statement"
+          "name": "_local_variable_declaration_statement"
         },
         {
           "type": "SEQ",
@@ -3172,7 +3172,7 @@
         }
       ]
     },
-    "local_variable_declaration_statement": {
+    "_local_variable_declaration_statement": {
       "type": "PREC",
       "value": 100,
       "content": {
@@ -4438,7 +4438,51 @@
         },
         {
           "type": "SYMBOL",
+          "name": "declare_dynamic_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "describe_sql_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "delete_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "disconnect_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "execute_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "fetch_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "insert_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "open_cursor_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rollback_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "select_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "update_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "prepare_sql_statement"
         }
       ]
     },
@@ -4556,22 +4600,6 @@
         {
           "type": "SYMBOL",
           "name": "select_statement"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "using_transaction_statement"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "STRING",
-          "value": ";"
         }
       ]
     },
@@ -4629,6 +4657,89 @@
               "type": "BLANK"
             }
           ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "declare_dynamic_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "declare_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "cursor_procedure_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dynamic_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "cursor_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "procedure_keyword"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "for_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "dynamic_stage_area",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "describe_sql_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "describe_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "dynamic_stage_area",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "into_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "dynamic_description_area",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
         },
         {
           "type": "STRING",
@@ -4801,16 +4912,8 @@
               "name": "where_criteria"
             },
             {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "using_transaction_statement"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
+              "type": "SYMBOL",
+              "name": "rest_of_sql"
             },
             {
               "type": "STRING",
@@ -4865,23 +4968,689 @@
         }
       ]
     },
+    "disconnect_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "disconnect_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "execute_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "procedure_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "immediate_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "select_statement"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "dynamic_stage_area",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "using_keyword"
+                },
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "stored_procedure_param_oracle"
+                    },
+                    {
+                      "type": "REPEAT",
+                      "content": {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": ","
+                          },
+                          {
+                            "type": "SYMBOL",
+                            "name": "stored_procedure_param_oracle"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "dynamic_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "procedure_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "using_keyword"
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "stored_procedure_param_oracle"
+                        },
+                        {
+                          "type": "REPEAT",
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "stored_procedure_param_oracle"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "dynamic_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "procedure_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "using_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "descriptor_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "dynamic_description_area",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        }
+      ]
+    },
+    "fetch_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "fetch_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "cursor_procedure_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "into_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "fetch_variable_list"
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "fetch_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "cursor_procedure_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "using_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "descriptor_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "dynamic_stage_area",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        }
+      ]
+    },
+    "fetch_variable_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "FIELD",
+              "name": "var_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ":"
+                    },
+                    {
+                      "type": "FIELD",
+                      "name": "indicator_var",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "identifier"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ":"
+                  },
+                  {
+                    "type": "FIELD",
+                    "name": "var_name",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    }
+                  },
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": ":"
+                          },
+                          {
+                            "type": "FIELD",
+                            "name": "indicator_var",
+                            "content": {
+                              "type": "SYMBOL",
+                              "name": "identifier"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "insert_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "insert_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rest_of_sql"
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "open_cursor_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "open_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "cursor_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "open_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "dynamic_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "cursor_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "using_keyword"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "stored_procedure_param_oracle"
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "stored_procedure_param_oracle"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "open_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "dynamic_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "cursor_name",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "SYMBOL",
+              "name": "using_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "descriptor_keyword"
+            },
+            {
+              "type": "FIELD",
+              "name": "dynamic_staging_area",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": ";"
+            }
+          ]
+        }
+      ]
+    },
+    "rollback_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "rollback_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
     "select_statement": {
       "type": "SEQ",
       "members": [
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "select_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "selectblob_keyword"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rest_of_sql"
+        },
+        {
           "type": "STRING",
-          "value": "select"
+          "value": ";"
         }
       ]
     },
-    "where_criteria": {
+    "update_statement": {
       "type": "SEQ",
       "members": [
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "update_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "updateblob_keyword"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "table_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rest_of_sql"
+        },
+        {
           "type": "STRING",
-          "value": "where_criteria"
+          "value": ";"
         }
       ]
+    },
+    "prepare_sql_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "prepare_keyword"
+        },
+        {
+          "type": "FIELD",
+          "name": "dynamic_staging_area",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "from_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "string_literal"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": ":"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "expression"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ";"
+        }
+      ]
+    },
+    "rest_of_sql": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[^;]*"
+      }
+    },
+    "where_criteria": {
+      "type": "SYMBOL",
+      "name": "rest_of_sql"
     },
     "expression_statement": {
       "type": "PREC",
@@ -5450,6 +6219,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "enumetation_datatype"
+        },
+        {
+          "type": "SYMBOL",
           "name": "_literal"
         },
         {
@@ -5774,7 +6547,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5790,7 +6563,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5806,7 +6579,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5822,7 +6595,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5838,7 +6611,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5854,7 +6627,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5870,7 +6643,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5886,7 +6659,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5902,7 +6675,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5918,7 +6691,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5934,7 +6707,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5950,7 +6723,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5966,7 +6739,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5982,7 +6755,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -5998,7 +6771,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6014,7 +6787,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6030,7 +6803,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6046,7 +6819,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6062,7 +6835,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6078,7 +6851,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6094,7 +6867,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6110,7 +6883,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6126,7 +6899,7 @@
           "type": "TOKEN",
           "content": {
             "type": "PREC",
-            "value": 51,
+            "value": 50,
             "content": {
               "type": "ALIAS",
               "content": {
@@ -6530,7 +7303,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6546,7 +7319,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6562,7 +7335,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6578,7 +7351,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6594,7 +7367,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6610,7 +7383,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6626,7 +7399,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6642,7 +7415,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6658,7 +7431,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6674,7 +7447,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6690,7 +7463,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6706,7 +7479,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6722,7 +7495,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6738,7 +7511,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6754,7 +7527,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6770,7 +7543,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6782,11 +7555,27 @@
         }
       }
     },
+    "describe_keyword": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": 60,
+        "content": {
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "[dD][eE][sS][cC][rR][iI][bB][eE]"
+          },
+          "named": false,
+          "value": "describe"
+        }
+      }
+    },
     "descriptor_keyword": {
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6802,7 +7591,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6818,7 +7607,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6834,7 +7623,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6850,7 +7639,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6866,7 +7655,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6882,7 +7671,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6898,7 +7687,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6914,7 +7703,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6930,7 +7719,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6946,7 +7735,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6962,7 +7751,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6978,7 +7767,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -6994,7 +7783,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7010,7 +7799,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7026,7 +7815,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7042,7 +7831,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7058,7 +7847,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7074,7 +7863,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7090,7 +7879,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7106,7 +7895,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7122,7 +7911,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7138,7 +7927,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7154,7 +7943,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7170,7 +7959,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7186,7 +7975,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7202,7 +7991,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7218,7 +8007,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7234,7 +8023,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7250,7 +8039,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7266,7 +8055,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7282,7 +8071,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7298,7 +8087,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7314,7 +8103,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7330,7 +8119,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7346,7 +8135,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7362,7 +8151,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7378,7 +8167,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7394,7 +8183,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7410,7 +8199,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7426,7 +8215,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7442,7 +8231,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7458,7 +8247,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7474,7 +8263,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7490,7 +8279,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7506,7 +8295,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7522,7 +8311,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7538,7 +8327,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7554,7 +8343,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7570,7 +8359,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7586,7 +8375,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7602,7 +8391,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7618,7 +8407,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7634,7 +8423,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7650,7 +8439,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7666,7 +8455,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7682,7 +8471,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7694,11 +8483,11 @@
         }
       }
     },
-    "selectblob": {
+    "selectblob_keyword": {
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7714,7 +8503,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7730,7 +8519,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7746,7 +8535,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7762,7 +8551,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7778,7 +8567,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7794,7 +8583,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7810,7 +8599,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7826,7 +8615,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7842,7 +8631,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7858,7 +8647,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7874,7 +8663,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7890,7 +8679,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7906,7 +8695,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7922,7 +8711,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7938,7 +8727,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7954,7 +8743,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7970,7 +8759,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -7986,7 +8775,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8002,7 +8791,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8018,7 +8807,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8034,7 +8823,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8050,7 +8839,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8066,7 +8855,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8082,7 +8871,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8098,7 +8887,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8114,7 +8903,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8130,7 +8919,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8146,7 +8935,7 @@
       "type": "TOKEN",
       "content": {
         "type": "PREC",
-        "value": 50,
+        "value": 60,
         "content": {
           "type": "ALIAS",
           "content": {
@@ -8692,7 +9481,15 @@
       },
       {
         "type": "SYMBOL",
+        "name": "describe_keyword"
+      },
+      {
+        "type": "SYMBOL",
         "name": "destroy_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "disconnect_keyword"
       },
       {
         "type": "SYMBOL",
@@ -8720,11 +9517,19 @@
       },
       {
         "type": "SYMBOL",
+        "name": "execute_keyword"
+      },
+      {
+        "type": "SYMBOL",
         "name": "exit_keyword"
       },
       {
         "type": "SYMBOL",
         "name": "false_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "fetch_keyword"
       },
       {
         "type": "SYMBOL",
@@ -8764,6 +9569,18 @@
       },
       {
         "type": "SYMBOL",
+        "name": "immediate_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "insert_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "into_keyword"
+      },
+      {
+        "type": "SYMBOL",
         "name": "is_keyword"
       },
       {
@@ -8784,7 +9601,15 @@
       },
       {
         "type": "SYMBOL",
+        "name": "of_keyword"
+      },
+      {
+        "type": "SYMBOL",
         "name": "on_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "open_keyword"
       },
       {
         "type": "SYMBOL",
@@ -8793,6 +9618,10 @@
       {
         "type": "SYMBOL",
         "name": "post_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "prepare_keyword"
       },
       {
         "type": "SYMBOL",
@@ -8829,6 +9658,18 @@
       {
         "type": "SYMBOL",
         "name": "return_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "rollback_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "select_keyword"
+      },
+      {
+        "type": "SYMBOL",
+        "name": "selectblob_keyword"
       },
       {
         "type": "SYMBOL",

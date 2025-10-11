@@ -1039,9 +1039,57 @@
         {
           "type": "select_statement",
           "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "declare_dynamic_statement",
+    "named": true,
+    "fields": {
+      "cursor_procedure_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "dynamic_stage_area": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "cursor_keyword",
+          "named": true
         },
         {
-          "type": "using_transaction_statement",
+          "type": "declare_keyword",
+          "named": true
+        },
+        {
+          "type": "dynamic_keyword",
+          "named": true
+        },
+        {
+          "type": "for_keyword",
+          "named": true
+        },
+        {
+          "type": "procedure_keyword",
           "named": true
         }
       ]
@@ -1145,7 +1193,7 @@
           "named": true
         },
         {
-          "type": "using_transaction_statement",
+          "type": "rest_of_sql",
           "named": true
         },
         {
@@ -1154,6 +1202,46 @@
         },
         {
           "type": "where_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "describe_sql_statement",
+    "named": true,
+    "fields": {
+      "dynamic_description_area": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "dynamic_stage_area": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "describe_keyword",
+          "named": true
+        },
+        {
+          "type": "into_keyword",
           "named": true
         }
       ]
@@ -1214,6 +1302,25 @@
       "types": [
         {
           "type": "property_list",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "disconnect_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "disconnect_keyword",
+          "named": true
+        },
+        {
+          "type": "using_transaction_statement",
           "named": true
         }
       ]
@@ -1448,6 +1555,21 @@
     }
   },
   {
+    "type": "enumetation_datatype",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "event_declaration",
     "named": true,
     "fields": {},
@@ -1539,6 +1661,76 @@
       "types": [
         {
           "type": "event_implementation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "execute_statement",
+    "named": true,
+    "fields": {
+      "dynamic_description_area": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "dynamic_stage_area": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "procedure_name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "descriptor_keyword",
+          "named": true
+        },
+        {
+          "type": "dynamic_keyword",
+          "named": true
+        },
+        {
+          "type": "execute_keyword",
+          "named": true
+        },
+        {
+          "type": "immediate_keyword",
+          "named": true
+        },
+        {
+          "type": "select_statement",
+          "named": true
+        },
+        {
+          "type": "stored_procedure_param_oracle",
+          "named": true
+        },
+        {
+          "type": "using_keyword",
           "named": true
         }
       ]
@@ -1727,6 +1919,84 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "fetch_statement",
+    "named": true,
+    "fields": {
+      "cursor_procedure_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "dynamic_stage_area": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "descriptor_keyword",
+          "named": true
+        },
+        {
+          "type": "fetch_keyword",
+          "named": true
+        },
+        {
+          "type": "fetch_variable_list",
+          "named": true
+        },
+        {
+          "type": "into_keyword",
+          "named": true
+        },
+        {
+          "type": "using_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "fetch_variable_list",
+    "named": true,
+    "fields": {
+      "indicator_var": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "var_name": {
+        "multiple": true,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -2989,6 +3259,25 @@
     }
   },
   {
+    "type": "insert_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "insert_keyword",
+          "named": true
+        },
+        {
+          "type": "rest_of_sql",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "line_comment",
     "named": true,
     "extra": true,
@@ -3016,21 +3305,6 @@
         },
         {
           "type": "variable_precision",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "local_variable_declaration_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "local_variable_declaration",
           "named": true
         }
       ]
@@ -3393,6 +3667,58 @@
     }
   },
   {
+    "type": "open_cursor_statement",
+    "named": true,
+    "fields": {
+      "cursor_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "dynamic_staging_area": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "descriptor_keyword",
+          "named": true
+        },
+        {
+          "type": "dynamic_keyword",
+          "named": true
+        },
+        {
+          "type": "open_keyword",
+          "named": true
+        },
+        {
+          "type": "stored_procedure_param_oracle",
+          "named": true
+        },
+        {
+          "type": "using_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "parameter",
     "named": true,
     "fields": {},
@@ -3454,6 +3780,44 @@
     }
   },
   {
+    "type": "prepare_sql_statement",
+    "named": true,
+    "fields": {
+      "dynamic_staging_area": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "from_keyword",
+          "named": true
+        },
+        {
+          "type": "prepare_keyword",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "primary_expression",
     "named": true,
     "fields": {},
@@ -3471,6 +3835,10 @@
         },
         {
           "type": "date_literal",
+          "named": true
+        },
+        {
+          "type": "enumetation_datatype",
           "named": true
         },
         {
@@ -3694,6 +4062,25 @@
     }
   },
   {
+    "type": "rollback_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "rollback_keyword",
+          "named": true
+        },
+        {
+          "type": "using_transaction_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "scriptable_block",
     "named": true,
     "fields": {},
@@ -3726,7 +4113,25 @@
   {
     "type": "select_statement",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "rest_of_sql",
+          "named": true
+        },
+        {
+          "type": "select_keyword",
+          "named": true
+        },
+        {
+          "type": "selectblob_keyword",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "shared_variables_section",
@@ -3867,11 +4272,55 @@
           "named": true
         },
         {
+          "type": "declare_dynamic_statement",
+          "named": true
+        },
+        {
           "type": "declare_procedure_statement",
           "named": true
         },
         {
           "type": "delete_statement",
+          "named": true
+        },
+        {
+          "type": "describe_sql_statement",
+          "named": true
+        },
+        {
+          "type": "disconnect_statement",
+          "named": true
+        },
+        {
+          "type": "execute_statement",
+          "named": true
+        },
+        {
+          "type": "fetch_statement",
+          "named": true
+        },
+        {
+          "type": "insert_statement",
+          "named": true
+        },
+        {
+          "type": "open_cursor_statement",
+          "named": true
+        },
+        {
+          "type": "prepare_sql_statement",
+          "named": true
+        },
+        {
+          "type": "rollback_statement",
+          "named": true
+        },
+        {
+          "type": "select_statement",
+          "named": true
+        },
+        {
+          "type": "update_statement",
           "named": true
         }
       ]
@@ -3916,7 +4365,7 @@
           "named": true
         },
         {
-          "type": "local_variable_declaration_statement",
+          "type": "local_variable_declaration",
           "named": true
         },
         {
@@ -4586,6 +5035,40 @@
     }
   },
   {
+    "type": "update_statement",
+    "named": true,
+    "fields": {
+      "table_name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "rest_of_sql",
+          "named": true
+        },
+        {
+          "type": "update_keyword",
+          "named": true
+        },
+        {
+          "type": "updateblob_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "user_object_content",
     "named": true,
     "fields": {},
@@ -4771,7 +5254,17 @@
   {
     "type": "where_criteria",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "rest_of_sql",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "while_loop",
@@ -4923,6 +5416,10 @@
         }
       ]
     }
+  },
+  {
+    "type": "!",
+    "named": false
   },
   {
     "type": "\"",
@@ -5157,6 +5654,10 @@
     "named": true
   },
   {
+    "type": "describe_keyword",
+    "named": true
+  },
+  {
     "type": "descriptor_keyword",
     "named": true
   },
@@ -5167,6 +5668,10 @@
   {
     "type": "detail",
     "named": false
+  },
+  {
+    "type": "disconnect_keyword",
+    "named": true
   },
   {
     "type": "do_keyword",
@@ -5217,11 +5722,19 @@
     "named": false
   },
   {
+    "type": "execute_keyword",
+    "named": true
+  },
+  {
     "type": "exit_keyword",
     "named": true
   },
   {
     "type": "false_keyword",
+    "named": true
+  },
+  {
+    "type": "fetch_keyword",
     "named": true
   },
   {
@@ -5289,7 +5802,19 @@
     "named": true
   },
   {
+    "type": "immediate_keyword",
+    "named": true
+  },
+  {
+    "type": "insert_keyword",
+    "named": true
+  },
+  {
     "type": "integer_literal",
+    "named": true
+  },
+  {
+    "type": "into_keyword",
     "named": true
   },
   {
@@ -5342,11 +5867,19 @@
     "named": true
   },
   {
+    "type": "open_keyword",
+    "named": true
+  },
+  {
     "type": "or_keyword",
     "named": true
   },
   {
     "type": "post_keyword",
+    "named": true
+  },
+  {
+    "type": "prepare_keyword",
     "named": true
   },
   {
@@ -5406,12 +5939,24 @@
     "named": false
   },
   {
+    "type": "rest_of_sql",
+    "named": true
+  },
+  {
     "type": "return_keyword",
     "named": true
   },
   {
-    "type": "select",
-    "named": false
+    "type": "rollback_keyword",
+    "named": true
+  },
+  {
+    "type": "select_keyword",
+    "named": true
+  },
+  {
+    "type": "selectblob_keyword",
+    "named": true
   },
   {
     "type": "shared_keyword",
@@ -5510,6 +6055,14 @@
     "named": true
   },
   {
+    "type": "update_keyword",
+    "named": true
+  },
+  {
+    "type": "updateblob_keyword",
+    "named": true
+  },
+  {
     "type": "user_object_file_extension",
     "named": true
   },
@@ -5528,10 +6081,6 @@
   {
     "type": "variables_keyword",
     "named": true
-  },
-  {
-    "type": "where_criteria",
-    "named": false
   },
   {
     "type": "where_keyword",
