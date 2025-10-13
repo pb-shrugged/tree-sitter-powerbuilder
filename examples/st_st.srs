@@ -1,0 +1,6 @@
+HA$PBExportHeader$st_st.srs
+global type st_st from structure
+	string		label
+	string		arr[3]
+end type
+
