@@ -1,6 +1,6 @@
 {
   "name": "@pb-shrugged/tree-sitter-powerbuilder",
-  "version": "0.1.0",
+  "version": "2.0.1",
   "description": "Powerbuilder grammar for tree-sitter",
   "repository": "https://github.com/pb-shrugged/tree-sitter-powerbuilder",
   "license": "MIT",

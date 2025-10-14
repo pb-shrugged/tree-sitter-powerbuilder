@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 
 project(tree-sitter-powerbuilder
-        VERSION "0.1.0"
+        VERSION "2.0.1"
         DESCRIPTION "Powerbuilder grammar for tree-sitter"
         HOMEPAGE_URL "https://github.com/tree-sitter/tree-sitter-powerbuilder"
         LANGUAGES C)
