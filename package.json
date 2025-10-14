@@ -1,6 +1,6 @@
 {
   "name": "@pb-shrugged/tree-sitter-powerbuilder",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Powerbuilder grammar for tree-sitter",
   "repository": "https://github.com/pb-shrugged/tree-sitter-powerbuilder",
   "license": "MIT",
@@ -33,7 +33,7 @@
     "eslint": "^9.35.0",
     "eslint-config-treesitter": "^1.0.2",
     "prebuildify": "^6.0.1",
-    "tree-sitter-cli": "^0.25.8"
+    "tree-sitter-cli": "^0.25.10"
   },
   "peerDependencies": {
     "tree-sitter": "^0.25.0"
