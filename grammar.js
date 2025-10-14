@@ -48,12 +48,13 @@ module.exports = grammar({
   // @ts-ignore
   reserved: {
     global: $ => {
-      return [$.public_keyword,
+      return [
+        $.public_keyword,
         $.private_keyword,
         $.protected_keyword,
         $.alias_keyword,
         $.and_keyword,
-        $.autoinstantiate_keyword,
+        // $.autoinstantiate_keyword,
         $.call_keyword,
         $.case_keyword,
         $.catch_keyword,
@@ -109,7 +110,7 @@ module.exports = grammar({
         $.on_keyword,
         $.open_keyword,
         $.or_keyword,
-        // $.parent_keyword,
+        $.parent_keyword,
         $.post_keyword,
         $.prepare_keyword,
         // $.prior_keyword,
@@ -144,8 +145,8 @@ module.exports = grammar({
         $.try_keyword,
         $.type_keyword,
         $.until_keyword,
-        // $.update_keyword,
-        // $.updateblob_keyword,
+        $.update_keyword,
+        $.updateblob_keyword,
         $.using_keyword,
         $.variables_keyword,
         $.while_keyword,
@@ -221,7 +222,6 @@ module.exports = grammar({
     application_header_file: $ => seq(
       $.export_header_name,
       $.application_file_extension,
-      $._new_line,
       optional($.export_comments),
     ),
 
@@ -235,11 +235,12 @@ module.exports = grammar({
       optional($.external_function_type_prototypes_section),
       optional($.type_variables_section),
       optional($.forward_prototypes_section),
-      optional($.event_implementation_section),
-      optional($.function_implementation_section),
-      optional($.on_event_block_section),
-      optional($.second_event_implementation_section),
-      optional($.type_implementation_section),
+      repeat(choice(
+        $.event_implementation,
+        $.function_implementation,
+        $.on_event_block,
+      )),
+      repeat($.inner_type_definition),
     ),
     // Application Content End
 
@@ -249,7 +250,6 @@ module.exports = grammar({
     function_header_file: $ => seq(
       $.export_header_name,
       $.function_file_extension,
-      $._new_line,
       optional($.export_comments),
     ),
 
@@ -318,7 +318,6 @@ module.exports = grammar({
     structure_header_file: $ => seq(
       $.export_header_name,
       $.structure_file_extension,
-      $._new_line,
       optional($.export_comments),
     ),
 
@@ -334,27 +333,28 @@ module.exports = grammar({
     window_header_file: $ => seq(
       $.export_header_name,
       $.window_file_extension,
-      $._new_line,
       optional($.export_comments),
     ),
 
     window_content: $ => seq(
       $.window_type_declaration,
-      repeat($.type_member),
     ),
 
     window_type_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      caseInsensitive('window'),
+      $.forward_section,
+      optional($.structure_definition_section),
+      optional($.shared_variables_section),
+      $.global_type_definition,
+      $.global_var_declaration,
+      optional($.external_function_type_prototypes_section),
+      optional($.type_variables_section),
+      optional($.forward_prototypes_section),
       repeat(choice(
-        $.property_assignment,
-        $.event_declaration,
+        $.event_implementation,
+        $.function_implementation,
+        $.on_event_block,
       )),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
+      repeat($.inner_type_definition),
     ),
     // Window Content End
 
@@ -365,25 +365,26 @@ module.exports = grammar({
     menu_header_file: $ => seq(
       $.export_header_name,
       $.menu_file_extension,
-      $._new_line,
       optional($.export_comments),
     ),
 
     menu_content: $ => seq(
-      $.menu_type_declaration,
-      repeat($.menu_member),
+      $.forward_section,
+      optional($.structure_definition_section),
+      optional($.shared_variables_section),
+      $.global_type_definition,
+      $.global_var_declaration,
+      optional($.external_function_type_prototypes_section),
+      optional($.type_variables_section),
+      optional($.forward_prototypes_section),
+      repeat(choice(
+        $.event_implementation,
+        $.function_implementation,
+        $.on_event_block,
+      )),
+      repeat($.inner_type_definition),
     ),
 
-    menu_type_declaration: $ => seq(
-      caseInsensitive('global'),
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      caseInsensitive('menu'),
-      repeat($.menu_item),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
-    ),
     // Menu Content End
 
 
@@ -393,54 +394,26 @@ module.exports = grammar({
     user_object_header_file: $ => seq(
       $.export_header_name,
       $.user_object_file_extension,
-      $._new_line,
       optional($.export_comments),
     ),
 
     user_object_content: $ => seq(
-      $.user_object_type_declaration,
+      $.forward_section,
+      optional($.structure_definition_section),
+      optional($.shared_variables_section),
+      $.global_type_definition,
+      $.global_var_declaration,
+      optional($.external_function_type_prototypes_section),
+      optional($.type_variables_section),
+      optional($.forward_prototypes_section),
       repeat(choice(
-        $.shared_variables_section,
-        $.type_member,
+        $.event_implementation,
+        $.function_implementation,
+        $.on_event_block,
       )),
+      repeat($.inner_type_definition),
     ),
 
-    user_object_type_declaration: $ => seq(
-      $.global_keyword,
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      $.datatype,
-      optional($.autoinstantiate_keyword),
-      repeat(choice(
-        $.property_assignment,
-        $.event_declaration,
-        $.nested_object_declaration,
-        $.type_variables_section,
-      )),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
-      optional($.global_instance_declaration),
-    ),
-
-    global_instance_declaration: $ => seq(
-      caseInsensitive('global'),
-      $.identifier,
-      $.identifier,
-    ),
-
-    nested_object_declaration: $ => seq(
-      $.identifier,
-      $.identifier,
-      optional($.descriptor_clause),
-    ),
-
-    descriptor_clause: $ => seq(
-      $.descriptor_keyword,
-      $.string_literal,
-      '=',
-      $.string_literal,
-    ),
     // User Object Content End
 
 
@@ -450,26 +423,11 @@ module.exports = grammar({
     query_header_file: $ => seq(
       $.export_header_name,
       $.query_file_extension,
-      $._new_line,
       optional($.export_comments),
     ),
 
     query_content: $ => $.identifier,
     // Query Content End
-
-
-    // Menu Content
-    menu_item: $ => seq(
-      $.identifier,
-      $.identifier,
-    ),
-
-    menu_member: $ => choice(
-      $.type_variables_section,
-      $.function_prototype,
-      $.function_implementation,
-    ),
-    // Menu Content End
 
 
     // || 2. FILE CONTENT STRUCTURE END ||
@@ -532,10 +490,7 @@ module.exports = grammar({
     ),
 
     structure_definition: $ => seq(
-      field(
-        'init',
-        $.structure_definition_init,
-      ),
+      field('init', $.structure_definition_init),
       field('body', $.structure_definition_body),
       field('end', $.end_type_section),
     ),
@@ -620,6 +575,42 @@ module.exports = grammar({
       optional($.array_suffix),
     ),
 
+    event_declaration: $ => prec(10, seq(
+      $.event_keyword,
+      optional(seq($.type_keyword, $.datatype)),
+      $.identifier,
+      optional($.parameter_list),
+      optional($.throws_clause),
+      optional($.event_id),
+    )),
+
+    event_implementation: $ => seq(
+      field('init', $.event_implementation_init),
+      field('body', optional($.scriptable_block)),
+      field('end', $.end_event_implementation),
+    ),
+
+    event_implementation_init: $ => seq(
+      $.event_keyword,
+      optional(seq($.type_keyword, $.datatype)),
+      $.identifier,
+      optional($.parameter_list),
+      optional($.throws_clause),
+      $._statement_separation,
+    ),
+
+    on_event_block: $ => prec(100, seq(
+      field('init', $.on_event_block_init),
+      field('body', optional($.scriptable_block)),
+      field('end', $.on_event_block_end),
+    )),
+
+    on_event_block_init: $ => seq($.on_keyword, field('class_name', $.identifier), '.', field('event_name', choice($.create_keyword, $.destroy_keyword))),
+
+    on_event_block_end: $ => seq($.end_keyword, $.on_keyword),
+
+    event_id: $ => /pbm_[a-zA-Z_][a-zA-Z0-9_]*/,
+
     external_function_type_prototypes_section: $ => seq(
       field('init', $.external_function_type_prototypes_section_init),
       field('body', repeat($.external_function_declaration)),
@@ -635,9 +626,11 @@ module.exports = grammar({
       $.function_prototype,
       $.library_keyword,
       field('library_name', $.string_literal),
-      $.alias_keyword,
-      $.for_keyword,
-      field('alias_name', $.string_literal),
+      optional(seq(
+        $.alias_keyword,
+        $.for_keyword,
+        field('alias_name', $.string_literal),
+      )),
     ),
 
     forward_section: $ => seq(
@@ -655,6 +648,7 @@ module.exports = grammar({
       $.global_type_declaration,
       repeat($.inner_object_type_declaration),
       repeat($.global_variable_declaration), // Only in application files
+      repeat($.global_type_definition),
     ),
 
     global_type_declaration: $ => seq(
@@ -667,13 +661,22 @@ module.exports = grammar({
     ),
 
     inner_object_type_declaration: $ => seq(
+      field('init', $.inner_object_type_declaration_init),
+      field('body', optional($.inner_object_type_declaration_body)),
+      field('end', $.end_type_section),
+    ),
+
+    inner_object_type_declaration_body: $ => repeat1(choice(
+      $.inner_object_var_declaration,
+    )),
+
+    inner_object_type_declaration_init: $ => seq(
       $.type_keyword,
       field('type_name', $.identifier),
       $.from_keyword,
       $.class_datatype,
       $.within_keyword,
-      $.identifier,
-      $.end_type_section,
+      field('parent_class', $.identifier),
     ),
 
     global_variable_declaration: $ => seq(
@@ -687,19 +690,16 @@ module.exports = grammar({
     end_subroutine_implementation: $ => seq(
       $.end_keyword,
       $.subroutine_keyword,
-      $._new_line,
     ),
 
     end_function_implementation: $ => seq(
       $.end_keyword,
       $.function_keyword,
-      $._new_line,
     ),
 
     end_type_section: $ => seq(
       $.end_keyword,
       $.type_keyword,
-      $._new_line,
     ),
 
     end_variables_section: $ => seq(
@@ -712,57 +712,57 @@ module.exports = grammar({
       $.event_keyword,
     ),
 
-    global_type_definition: $ => seq(
-      field('init', $.global_type_definition_init),
-      field('body', repeat(choice(
-        $.event_declaration,
-        $.inner_object_var_declaration,
-      ))),
+    type_definition: $ => seq(
+      field('init', $.type_declaration_init),
+      field('body', optional($.type_definition_body)),
       field('end', $.end_type_section),
     ),
 
-    global_type_definition_init: $ => seq(
-      $.global_keyword,
+    type_declaration_init: $ => seq(
       $.type_keyword,
       field('type_name', $.identifier),
       $.from_keyword,
       $.class_datatype,
-      $._new_line,
+      optional(seq(
+        $.within_keyword,
+        field('parent_class', $.identifier),
+        optional(seq(
+          $.descriptor_keyword,
+          $.string_literal,
+          '=',
+          $.string_literal,
+        )),
+      )),
     ),
 
+    type_definition_body: $ => repeat1(choice(
+      $.event_declaration,
+      $.inner_object_var_declaration,
+    )),
 
-    global_var_declaration: $ => $.type_implementation,
+    type_declaration: $ => seq(
+      field('init', $.type_declaration_init),
+      field('end', $.end_type_section),
+    ),
+
+    global_type_definition: $ => seq(
+      field('init', $.global_type_declaration_init),
+      field('body', optional($.type_definition_body)),
+      field('end', $.end_type_section),
+    ),
+
+    global_type_declaration_init: $ => seq(
+      $.global_keyword,
+      $.type_declaration_init,
+    ),
+
+    global_var_declaration: $ => seq(
+      caseInsensitive('global'),
+      $.datatype,
+      $.identifier,
+    ),
 
     inner_object_var_declaration: $ => $.local_variable_declaration,
-
-    function_implementation_section: $ => repeat1($.function_implementation),
-
-    type_implementation_section: $ => repeat1($.type_implementation),
-
-    event_implementation_section: $ => prec(220, repeat1($.event_implementation)),
-
-    second_event_implementation_section: $ => repeat1($.event_implementation),
-
-    event_implementation: $ => seq(
-      $.event_keyword,
-      optional(seq($.type_keyword, $.datatype)),
-      $.identifier,
-      optional($.parameter_list),
-      optional($.throws_clause),
-      $._statement_separation,
-      repeat($.statement),
-      $.end_event_implementation,
-    ),
-
-    on_event_block_section: $ => repeat1($.on_event_block),
-
-    on_event_block: $ => prec(2, seq(
-      $.on_keyword,
-      $.field_access,
-      repeat($.statement),
-      $.end_keyword,
-      $.on_keyword,
-    )),
 
     // Function Definitions with Throws Support
     forward_prototypes_section: $ => seq(
@@ -774,71 +774,12 @@ module.exports = grammar({
     forward_prototypes_section_init: $ => seq(
       $.forward_keyword,
       $.prototypes_keyword,
-      $._new_line,
     ),
 
     prototypes_section_end: $ => seq(
       $.end_keyword,
       $.prototypes_keyword,
-      $._new_line,
     ),
-
-    event_declaration: $ => prec(10, seq(
-      $.event_keyword,
-      optional(seq($.type_keyword, $.datatype)),
-      $.identifier,
-      optional($.parameter_list),
-      optional($.throws_clause),
-      optional($.event_id),
-      $._new_line,
-    )),
-
-    event_id: $ => /pbm_[a-zA-Z_][a-zA-Z0-9_]*/,
-
-    // Type Members
-    type_member: $ => choice(
-      $.property_assignment,
-      $.event_declaration,
-      $.function_implementation,
-      $.type_variables_section,
-      $.on_event_block,
-      $.event_implementation,
-      $.nested_type_declaration,
-    ),
-
-    nested_type_declaration: $ => seq(
-      caseInsensitive('type'),
-      $.identifier,
-      caseInsensitive('from'),
-      $.class_datatype,
-      caseInsensitive('within'),
-      $.identifier,
-      optional($.descriptor_clause),
-      repeat(choice(
-        $.property_assignment,
-        $.event_declaration,
-        $.type_variables_section,
-      )),
-      caseInsensitive('end'),
-      caseInsensitive('type'),
-    ),
-
-    type_implementation: $ => seq(
-      caseInsensitive('global'),
-      $.datatype,
-      $.identifier,
-    ),
-
-    // Property Assignments
-    property_assignment: $ => seq(
-      $.identifier,
-      '=',
-      $.property_value,
-    ),
-
-    property_value: $ => $.expression,
-
-    property_list: $ => commaSep1($.property_assignment),
 
     class_variable_declaration: $ => choice(
       $.block_class_variable_declaration,
@@ -877,10 +818,12 @@ module.exports = grammar({
       ']',
     ),
 
+    array_suffix_ref: _ => /\[[ \t]*\]/,
+
     access_section: $ => seq(
       $.access_modifier,
       ':',
-      $._new_line,
+      $._statement_separation,
     ),
 
     access_modifier: $ => choice(
@@ -897,6 +840,16 @@ module.exports = grammar({
     writeaccess_modifier: $ => choice(
       $.protectedwrite_keyword,
       $.privatewrite_keyword,
+    ),
+
+    inner_type_declaration: $ => $.type_declaration,
+
+    inner_type_definition: $ => seq(
+      $.type_definition,
+      repeat(choice(
+        $.event_implementation,
+        $.on_event_block,
+      )),
     ),
 
     // || 3. COMMON CONSTRUCT END ||
@@ -949,7 +902,7 @@ module.exports = grammar({
 
     call_statement: $ => seq(
       $.call_keyword,
-      field('ancestor', $.identifier),
+      field('ancestor', choice($.identifier, $.super_keyword)),
       field('control', optional(seq('`', $.identifier))),
       '::',
       field('event_name', $.identifier),
@@ -994,7 +947,7 @@ module.exports = grammar({
 
     create_statement: $ => choice(
       seq(
-        field('var_name', $.identifier),
+        field('var_name', choice($.field_access, $.identifier)),
         field('assignment_operator', '='),
         $.create_keyword,
         field('datatype', $.datatype),
@@ -1008,10 +961,10 @@ module.exports = grammar({
       ),
     ),
 
-    destroy_statement: $ => choice(
-      seq($.destroy_keyword, '(', field('var_name', $.identifier), ')'),
-      seq($.destroy_keyword, field('var_name', $.identifier)),
-    ),
+    destroy_statement: $ => prec(100, choice(
+      seq($.destroy_keyword, '(', field('var_name', choice($.field_access, $.identifier)), ')'),
+      seq($.destroy_keyword, field('var_name', choice($.field_access, $.identifier))),
+    )),
 
     loop_statement: $ => choice(
       $.while_loop,
@@ -1420,20 +1373,22 @@ module.exports = grammar({
       field('argument', $.expression),
     )),
 
-    primary_expression: $ => choice(
+    primary_expression: $ => prec.left(choice(
       $.identifier_expression,
       $.enumetation_datatype,
       // $.global_scope_var,
       // $.global_scope_method,
       $._literal,
       $.this_literal,
+      $.array_literal,
+      $.parent_keyword,
       $.parenthesized_expression,
       $.array_access,
       $.field_access,
       $.method_invocation,
-    ),
+    )),
 
-    identifier_expression: $ => prec(-10, $.identifier),
+    identifier_expression: $ => prec(-10, seq($.identifier, optional($.array_suffix_ref))),
 
     // global_scope_var: $ => prec(PREC.GLOBAL_SCOPE_OPERADOR_VAR, seq('::', field('var_name', $.identifier))),
     // global_scope_method: $ => prec(PREC.GLOBAL_SCOPE_OPERADOR_METHOD, seq('::', field('method_name', $.identifier), $.argument_list)),
@@ -1445,7 +1400,7 @@ module.exports = grammar({
     field_access: $ => prec(PREC.FIELD_ACCESS, seq(
       field('object', choice($.primary_expression, $.super_keyword)),
       field('operator', '.'),
-      field('field', choice($.identifier)),
+      field('field', seq($.identifier, optional($.array_suffix_ref))),
     )),
 
     method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
@@ -1460,7 +1415,7 @@ module.exports = grammar({
 
     argument_list: $ => seq(
       '(',
-      commaSep($.expression),
+      commaSep(seq(optional($.ref_keyword), $.expression)),
       ')',
     ),
 
@@ -1550,8 +1505,8 @@ module.exports = grammar({
     time_literal: $ => /(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\.[0-9]{1,6})?/,
 
     string_literal: $ => choice(
-      seq('"', repeat(choice(/[^"\\]/, /\\./)), '"'),
-      seq('\'', repeat(choice(/[^'\\]/, /\\./)), '\''),
+      seq('"', repeat(choice(/[^"\\]/, /\\./, /~"/ )), '"'),
+      seq('\'', repeat(choice(/[^'\\]/, /\\./, /~'/ )), '\''),
     ),
 
     boolean_literal: $ => choice(
@@ -1562,6 +1517,12 @@ module.exports = grammar({
     null_literal: _ => caseInsensitive('null'),
 
     this_literal: $ => $.this_keyword,
+
+    array_literal: $ => seq(
+      '{',
+      commaSep1($.expression),
+      '}',
+    ),
 
     // || 5. DATATYPE AND LITERAL END ||
 
@@ -1701,102 +1662,52 @@ module.exports = grammar({
     datawindow_header_file: $ => seq(
       $.export_header_name,
       $.datawindow_file_extension,
-      $._new_line,
       optional($.export_comments),
     ),
 
     datawindow_content: $ => seq(
       $.release_statement,
       $.datawindow_definition,
-      repeat(choice(
-        $.datawindow_section,
-        $.table_definition,
-        $.control_definition,
-      )),
     ),
 
     // Datawindow Definitions
     release_statement: $ => seq(
       caseInsensitive('release'),
-      $.number_literal,
-      $._statement_separation,
+      field('release_version', $.number_literal),
+      ';',
     ),
 
-    datawindow_definition: $ => seq(
-      caseInsensitive('datawindow'),
+    datawindow_definition: $ => repeat1($.datawindow_statement),
+
+    datawindow_statement: $ => $.datawindow_method_invocation,
+
+    datawindow_method_invocation: $ => prec(100, seq(
+      field('object', optional(seq(choice($.datawindow_method_invocation, $.datawindow_field_access, $.identifier), '.'))),
+      field('method', $.identifier),
       '(',
-      $.property_list,
+      optional($.datawindow_property_list),
       ')',
+    )),
+
+    datawindow_field_access: $ => seq(
+      field('object', choice($.datawindow_method_invocation, $.datawindow_field_access, $.identifier)),
+      '.',
+      field('method', $.identifier),
     ),
 
-    datawindow_section: $ => choice(
-      $.header_section,
-      $.detail_section,
-      $.footer_section,
-      $.summary_section,
-    ),
+    datawindow_property_list: $ => repeat1($.datawindow_property_assignment),
 
-    header_section: $ => seq(
-      caseInsensitive('header'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    detail_section: $ => seq(
-      caseInsensitive('detail'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    footer_section: $ => seq(
-      caseInsensitive('footer'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    summary_section: $ => seq(
-      caseInsensitive('summary'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    table_definition: $ => seq(
-      caseInsensitive('table'),
-      '(',
-      repeat1($.column_definition),
-      ')',
-    ),
-
-    column_definition: $ => seq(
-      caseInsensitive('column'),
+    datawindow_property_assignment: $ => prec.right(seq(
+      field('property', choice($.identifier, $.field_access)),
       '=',
-      '(',
-      $.property_list,
-      ')',
-    ),
+      field('value', choice(
+        $._literal,
+        seq($.identifier, optional(seq('(', $._literal, ')'))),
+        $.datawindow_property_assignment_list,
+      )),
+    )),
 
-    control_definition: $ => choice(
-      $.column_control,
-      $.text_control,
-    ),
-
-    column_control: $ => seq(
-      caseInsensitive('column'),
-      '(',
-      $.property_list,
-      ')',
-    ),
-
-    text_control: $ => seq(
-      caseInsensitive('text'),
-      '(',
-      $.property_list,
-      ')',
-    ),
+    datawindow_property_assignment_list: $ => prec(100, seq('(', $.datawindow_property_list, ')')),
 
     // || 99. DATAWINDOW SYNTAX END ||
 
