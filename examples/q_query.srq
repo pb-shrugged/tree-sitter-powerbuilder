@@ -1,0 +1,2 @@
+HA$PBExportHeader$q_query.srq
+PBSELECT( VERSION(400) TABLE(NAME="call_track" ) COLUMN(NAME="call_track.id") COLUMN(NAME="call_track.call_date") COLUMN(NAME="call_track.call_notes") COLUMN(NAME="call_track.caller_name")) 
