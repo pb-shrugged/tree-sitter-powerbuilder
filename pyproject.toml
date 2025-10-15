@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tree-sitter-powerbuilder"
 description = "Powerbuilder grammar for tree-sitter"
-version = "2.0.2"
+version = "2.0.4"
 keywords = ["incremental", "parsing", "tree-sitter", "powerbuilder"]
 classifiers = [
   "Intended Audience :: Developers",
