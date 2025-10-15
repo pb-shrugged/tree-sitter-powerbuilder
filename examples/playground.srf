@@ -1,15 +1,11 @@
-HA$PBExportHeader$global_function_object.srf
-global type global_function_object from function_object
+HA$PBExportHeader$test.srf
+global type test from function_object
 end type
 
 forward prototypes
-global function integer global_function_object_integer (integer al_value)
+global subroutine test ()
 end prototypes
 
-global function integer global_function_object (integer al_value);
-int li_a = 1;
-li_a = 1;
-
-object.event dynamic  ue_call()
-end function
-
+global subroutine test ();
+Int li_a;
+end subroutine
