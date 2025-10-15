@@ -3543,10 +3543,19 @@
             },
             {
               "type": "FIELD",
-              "name": "type_string_literal",
+              "name": "dynamic_type_string",
               "content": {
-                "type": "SYMBOL",
-                "name": "string_literal"
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "string_literal"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "identifier"
+                  }
+                ]
               }
             }
           ]

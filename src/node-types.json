@@ -837,10 +837,14 @@
           }
         ]
       },
-      "type_string_literal": {
+      "dynamic_type_string": {
         "multiple": false,
         "required": false,
         "types": [
+          {
+            "type": "identifier",
+            "named": true
+          },
           {
             "type": "string_literal",
             "named": true

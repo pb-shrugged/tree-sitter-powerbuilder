@@ -957,7 +957,7 @@ module.exports = grammar({
         field('assignment_operator', $._equals_operator),
         $.create_keyword,
         $.using_keyword,
-        field('type_string_literal', $.string_literal),
+        field('dynamic_type_string', choice($.string_literal, $.identifier)),
       ),
     ),
 
