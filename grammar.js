@@ -9,7 +9,7 @@
 // @ts-check
 
 const PREC = {
-  KEYWORD: 60,
+  KEYWORD: 100,
   STD_TYPE: 50,
   COMMENT: 0,
   ASSIGNMENT: 1,
@@ -32,6 +32,8 @@ const PREC = {
   VALUE_BY: 16,
   ACCESS_MODIFIER: 17,
   VARIABLE_DECL_ACCESS: 18,
+  CONFLICT_PARAMETER_LIST_ARGUMENT_LIST: 19,
+  CONFLICT_EVENT_DECLARATION_EVENT_IMPLEMENTATION: 20,
 };
 
 module.exports = grammar({
@@ -170,6 +172,27 @@ module.exports = grammar({
       $.window_file,
       $.menu_file,
       $.query_file,
+      $.script_file,
+    ),
+
+    script_file: $ => seq(
+      '#!',
+      $._new_line,
+      repeat1(choice(
+        $.statement,
+        $.global_type_definition,
+        $.global_var_declaration,
+        $.global_variable_declaration,
+        $.structure_definition,
+        $.type_variables_section,
+        $.external_function_declaration,
+        $.function_prototype,
+        $.event_declaration,
+        $.event_implementation,
+        $.function_implementation,
+        $.on_event_block,
+        $.type_definition,
+      )),
     ),
 
     datawindow_file: $ => seq(
@@ -559,11 +582,11 @@ module.exports = grammar({
 
     function_body: $ => repeat1($.statement),
 
-    parameter_list: $ => seq(
+    parameter_list: $ => prec(PREC.CONFLICT_PARAMETER_LIST_ARGUMENT_LIST, seq(
       '(',
       commaSep($.parameter),
       ')',
-    ),
+    )),
 
     parameter: $ => seq(
       optional(choice(
@@ -575,7 +598,7 @@ module.exports = grammar({
       optional($.array_suffix),
     ),
 
-    event_declaration: $ => prec(10, seq(
+    event_declaration: $ => prec(PREC.CONFLICT_EVENT_DECLARATION_EVENT_IMPLEMENTATION, seq(
       $.event_keyword,
       optional(seq($.type_keyword, $.datatype)),
       $.identifier,
@@ -599,11 +622,11 @@ module.exports = grammar({
       $._statement_separation,
     ),
 
-    on_event_block: $ => prec(100, seq(
+    on_event_block: $ => seq(
       field('init', $.on_event_block_init),
       field('body', optional($.scriptable_block)),
       field('end', $.on_event_block_end),
-    )),
+    ),
 
     on_event_block_init: $ => seq($.on_keyword, field('class_name', $.identifier), '.', field('event_name', choice($.create_keyword, $.destroy_keyword))),
 
@@ -645,38 +668,10 @@ module.exports = grammar({
     ),
 
     forward_section_body: $ => seq(
-      $.global_type_declaration,
-      repeat($.inner_object_type_declaration),
+      $.global_type_definition,
+      repeat($.type_definition),
       repeat($.global_variable_declaration), // Only in application files
       repeat($.global_type_definition),
-    ),
-
-    global_type_declaration: $ => seq(
-      $.global_keyword,
-      $.type_keyword,
-      field('type_name', $.identifier),
-      $.from_keyword,
-      $.class_datatype,
-      $.end_type_section,
-    ),
-
-    inner_object_type_declaration: $ => seq(
-      field('init', $.inner_object_type_declaration_init),
-      field('body', optional($.inner_object_type_declaration_body)),
-      field('end', $.end_type_section),
-    ),
-
-    inner_object_type_declaration_body: $ => repeat1(choice(
-      $.inner_object_var_declaration,
-    )),
-
-    inner_object_type_declaration_init: $ => seq(
-      $.type_keyword,
-      field('type_name', $.identifier),
-      $.from_keyword,
-      $.class_datatype,
-      $.within_keyword,
-      field('parent_class', $.identifier),
     ),
 
     global_variable_declaration: $ => seq(
@@ -794,7 +789,7 @@ module.exports = grammar({
       $.local_variable_declaration,
     ),
 
-    block_class_variable_declaration: $ => prec(500, seq(
+    block_class_variable_declaration: $ => prec.left(seq(
       $.access_section,
       repeat1($.inline_class_variable_declaration),
     )),
@@ -882,7 +877,7 @@ module.exports = grammar({
       $.expression_statement,
     ),
 
-    _local_variable_declaration_statement: $ => prec(100, $.local_variable_declaration),
+    _local_variable_declaration_statement: $ => $.local_variable_declaration,
 
     local_variable_declaration: $ => seq(
       optional($.constant_keyword),
@@ -961,10 +956,10 @@ module.exports = grammar({
       ),
     ),
 
-    destroy_statement: $ => prec(100, choice(
+    destroy_statement: $ => choice(
       seq($.destroy_keyword, '(', field('var_name', choice($.field_access, $.identifier)), ')'),
       seq($.destroy_keyword, field('var_name', choice($.field_access, $.identifier))),
-    )),
+    ),
 
     loop_statement: $ => choice(
       $.while_loop,
@@ -1032,14 +1027,14 @@ module.exports = grammar({
       $._statement_separation,
     ),
 
-    inline_if_statement: $ => prec.left(seq(
+    inline_if_statement: $ => seq(
       $.if_keyword,
       field('if_condition', $.expression),
       $.then_keyword,
       field('inline_if_statement', $.inline_statement),
       optional(seq($.else_keyword, field('inline_else_statement', $.inline_statement))),
       $._statement_separation,
-    )),
+    ),
 
     elseif_clause: $ => seq(
       $.elseif_keyword,
@@ -1055,10 +1050,10 @@ module.exports = grammar({
       field('else_block', optional($.scriptable_block)),
     ),
 
-    return_statement: $ => prec.left(seq(
+    return_statement: $ => seq(
       $.return_keyword,
       field('return_value', optional($.expression)),
-    )),
+    ),
 
     throw_statement: $ => seq(
       $.throw_keyword,
@@ -1319,12 +1314,12 @@ module.exports = grammar({
 
     where_criteria: $ => $.rest_of_sql,
 
-    expression_statement: $ => prec(100, seq(
+    expression_statement: $ => seq(
       choice(
         $.update_expression,
         $.method_invocation,
       ),
-    )),
+    ),
 
     // Expressions
     expression: $ => choice(
@@ -1681,13 +1676,13 @@ module.exports = grammar({
 
     datawindow_statement: $ => $.datawindow_method_invocation,
 
-    datawindow_method_invocation: $ => prec(100, seq(
+    datawindow_method_invocation: $ => seq(
       field('object', optional(seq(choice($.datawindow_method_invocation, $.datawindow_field_access, $.identifier), '.'))),
       field('method', $.identifier),
       '(',
       optional($.datawindow_property_list),
       ')',
-    )),
+    ),
 
     datawindow_field_access: $ => seq(
       field('object', choice($.datawindow_method_invocation, $.datawindow_field_access, $.identifier)),
@@ -1707,7 +1702,7 @@ module.exports = grammar({
       )),
     )),
 
-    datawindow_property_assignment_list: $ => prec(100, seq('(', $.datawindow_property_list, ')')),
+    datawindow_property_assignment_list: $ => seq('(', $.datawindow_property_list, ')'),
 
     // || 99. DATAWINDOW SYNTAX END ||
 
