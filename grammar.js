@@ -30,6 +30,8 @@ const PREC = {
   CONFLICT_PARAMETER_LIST_ARGUMENT_LIST: 19,
   CONFLICT_EVENT_DECLARATION_EVENT_IMPLEMENTATION: 20,
   CONFLICT_EXECUTE_STATEMENT_LITERAL: 21,
+  ON_EVENT_BLOCK_LEXICAL_PREC: 22,
+  DESTROY_LEXICAL_PREC: 23,
   STD_TYPE: 50,
   KEYWORD: 60,
 };
@@ -619,11 +621,11 @@ module.exports = grammar({
       $._statement_separation,
     ),
 
-    on_event_block: $ => seq(
+    on_event_block: $ => prec(PREC.ON_EVENT_BLOCK_LEXICAL_PREC, seq(
       field('init', $.on_event_block_init),
       field('body', optional($.scriptable_block)),
       field('end', $.on_event_block_end),
-    ),
+    )),
 
     on_event_block_init: $ => seq($.on_keyword, field('class_name', $.identifier), $._dot_char, field('event_name', choice($.create_keyword, $.destroy_keyword))),
 
@@ -962,10 +964,10 @@ module.exports = grammar({
       ),
     ),
 
-    destroy_statement: $ => choice(
+    destroy_statement: $ => prec(PREC.DESTROY_LEXICAL_PREC, choice(
       seq($.destroy_keyword, $._open_parenthesis, field('var_name', choice($.field_access, $.identifier)), $._close_parenthesis),
       seq($.destroy_keyword, field('var_name', choice($.field_access, $.identifier))),
-    ),
+    )),
 
     loop_statement: $ => choice(
       $.while_loop,

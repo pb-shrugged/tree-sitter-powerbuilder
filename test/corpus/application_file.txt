@@ -1,3 +1,7 @@
+===
+Application file
+===
+
 HA$PBExportHeader$main_app.sra
 $PBExportComments$Generated Application Object
 forward
@@ -145,4 +149,7 @@ end on
 on ds_non_visual_object.destroy
 call super::destroy
 end on
+
+---
+
 
