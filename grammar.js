@@ -897,10 +897,7 @@ module.exports = grammar({
     ),
 
     choose_statement: $ => seq(
-      $.choose_keyword,
-      $.case_keyword,
-      field('test_expression', $.expression),
-      $._statement_separation,
+      $.choose_statement_init,
       field(
         'case_condition',
         seq(
@@ -908,6 +905,17 @@ module.exports = grammar({
           optional($.case_else_clause),
         ),
       ),
+      $.end_choose_statement,
+    ),
+
+    choose_statement_init: $ => seq(
+      $.choose_keyword,
+      $.case_keyword,
+      field('test_expression', $.expression),
+      $._statement_separation,
+    ),
+
+    end_choose_statement: $ => seq(
       $.end_keyword,
       $.choose_keyword,
       $._statement_separation,
@@ -916,13 +924,19 @@ module.exports = grammar({
     case_clause: $ => seq(
       $.case_keyword,
       field('condition', choice(
-        commaSep($.expression),
-        seq($.expression, $.to_keyword, $.expression),
-        seq($.is_keyword, $.relational_operator, $.expression),
+        $.case_to_expression,
+        $.case_is_relational_expression,
+        $.case_condition_expression,
       )),
       $._statement_separation,
       field('block', optional($.scriptable_block)),
     ),
+
+    case_to_expression: $ => seq($.expression, $.to_keyword, $.expression),
+
+    case_is_relational_expression: $ => seq($.is_keyword, $.relational_operator, $.expression),
+
+    case_condition_expression: $ => commaSep1($.expression),
 
     relational_operator: _ => choice('>', '<', '>=', '<='),
 
@@ -1547,7 +1561,6 @@ module.exports = grammar({
     public_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('public'))),
     private_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('private'))),
     protected_keyword: _ => token(prec(PREC.ACCESS_MODIFIER, caseInsensitive('protected'))),
-
     alias_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('alias'))),
     and_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('and'))),
     autoinstantiate_keyword: $ => token(prec(PREC.KEYWORD, caseInsensitive('autoinstantiate'))),
@@ -1649,7 +1662,6 @@ module.exports = grammar({
     with_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('with'))),
     within_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('within'))),
     debug_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('_debug'))),
-
     where_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('where'))),
     current_keyword: _ => token(prec(PREC.KEYWORD, caseInsensitive('current'))),
 

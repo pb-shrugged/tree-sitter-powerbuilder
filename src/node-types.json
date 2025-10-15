@@ -473,27 +473,19 @@
         ]
       },
       "condition": {
-        "multiple": true,
-        "required": false,
+        "multiple": false,
+        "required": true,
         "types": [
           {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "expression",
+            "type": "case_condition_expression",
             "named": true
           },
           {
-            "type": "is_keyword",
+            "type": "case_is_relational_expression",
             "named": true
           },
           {
-            "type": "relational_operator",
-            "named": true
-          },
-          {
-            "type": "to_keyword",
+            "type": "case_to_expression",
             "named": true
           }
         ]
@@ -505,6 +497,21 @@
       "types": [
         {
           "type": "case_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "case_condition_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
           "named": true
         }
       ]
@@ -535,6 +542,48 @@
         },
         {
           "type": "else_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "case_is_relational_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "is_keyword",
+          "named": true
+        },
+        {
+          "type": "relational_operator",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "case_to_expression",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "to_keyword",
           "named": true
         }
       ]
@@ -619,7 +668,27 @@
             "named": true
           }
         ]
-      },
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "choose_statement_init",
+          "named": true
+        },
+        {
+          "type": "end_choose_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "choose_statement_init",
+    "named": true,
+    "fields": {
       "test_expression": {
         "multiple": false,
         "required": true,
@@ -641,10 +710,6 @@
         },
         {
           "type": "choose_keyword",
-          "named": true
-        },
-        {
-          "type": "end_keyword",
           "named": true
         }
       ]
@@ -1493,6 +1558,25 @@
         },
         {
           "type": "then_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "end_choose_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "choose_keyword",
+          "named": true
+        },
+        {
+          "type": "end_keyword",
           "named": true
         }
       ]
