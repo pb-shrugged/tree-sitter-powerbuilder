@@ -1,10 +1,981 @@
-================================================================================
-If statements
-================================================================================
+===
+CALL statement
+===
 
-If 1 = 1 Then
-    // Code to execute when the condition is true
-End If
+#!
+CALL w_emp`cb_close::Clicked
+CALL w_emp::Open
 
---------------------------------------------------------------------------------
+---
 
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (inline_statement
+        (call_statement
+          (call_keyword)
+          (identifier)
+          (identifier)
+          (identifier))))
+    (statement
+      (inline_statement
+        (call_statement
+          (call_keyword)
+          (identifier)
+          (identifier))))))
+
+===
+CHOOSE CASE statement
+===
+
+#!
+CHOOSE CASE Weight
+  CASE IS<16
+    ai_Postage=Weight*0.30
+    as_Method="USPS"
+  CASE 16 to 48
+    ai_Postage=4.50
+    as_Method="UPS"
+  CASE  46, 47, 48
+    ai_Postage=4.50
+    as_Method="UPS"
+  CASE ELSE
+    ai_Postage=25.00
+    as_Method="FedEx"
+END CHOOSE
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (choose_statement
+        (choose_statement_init
+          (choose_keyword)
+          (case_keyword)
+          (expression
+            (primary_expression
+              (identifier_expression
+                (identifier)))))
+        (case_clause
+          (case_keyword)
+          (case_is_relational_expression
+            (is_keyword)
+            (relational_operator)
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal)))))
+          (scriptable_block
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (binary_expression
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier))))
+                      (expression
+                        (primary_expression
+                          (number_literal
+                            (decimal_literal)))))))))
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (primary_expression
+                      (string_literal))))))))
+        (case_clause
+          (case_keyword)
+          (case_to_expression
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))
+            (to_keyword)
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal)))))
+          (scriptable_block
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (primary_expression
+                      (number_literal
+                        (decimal_literal)))))))
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (primary_expression
+                      (string_literal))))))))
+        (case_clause
+          (case_keyword)
+          (case_condition_expression
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal)))))
+          (scriptable_block
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (primary_expression
+                      (number_literal
+                        (decimal_literal)))))))
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (primary_expression
+                      (string_literal))))))))
+        (case_else_clause
+          (case_keyword)
+          (else_keyword)
+          (scriptable_block
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (primary_expression
+                      (number_literal
+                        (decimal_literal)))))))
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (primary_expression
+                      (string_literal))))))))
+        (end_choose_statement
+          (end_keyword)
+          (choose_keyword))))))
+
+===
+CREATE statement
+===
+
+#!
+DBTrans = CREATE transaction
+lnv_fileservice = CREATE USING ls_objectname;
+lnv_fileservice = CREATE USING 'u_teste'
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (inline_statement
+        (create_statement
+          (identifier)
+          (create_keyword)
+          (datatype
+            (custom_datatype
+              (identifier))))))
+    (statement
+      (inline_statement
+        (create_statement
+          (identifier)
+          (create_keyword)
+          (using_keyword)
+          (identifier))))
+    (statement
+      (inline_statement
+        (create_statement
+          (identifier)
+          (create_keyword)
+          (using_keyword)
+          (string_literal))))))
+
+===
+DESTROY statement
+===
+
+#!
+DESTROY DBTrans
+DESTROY (DBTrans)
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (inline_statement
+        (destroy_statement
+          (destroy_keyword)
+          (identifier))))
+    (statement
+      (inline_statement
+        (destroy_statement
+          (destroy_keyword)
+          (identifier))))))
+
+===
+DO LOOP statement
+===
+
+#!
+DO UNTIL A > 15
+  Beep(A)
+  A = (A + 1) * B
+LOOP
+
+DO WHILE A <= 15
+  Beep(A)
+  A = (A + 1) * B
+LOOP
+
+DO
+  Beep(A)
+  A = (A + 1) * B
+LOOP UNTIL A > 15
+
+DO
+  Beep(A)
+  A = (A + 1) * B
+LOOP WHILE A <= 15
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (loop_statement
+        (while_loop
+          (while_loop_init
+            (do_keyword)
+            (until_keyword)
+            (expression
+              (binary_expression
+                (expression
+                  (primary_expression
+                    (identifier_expression
+                      (identifier))))
+                (expression
+                  (primary_expression
+                    (number_literal
+                      (integer_literal)))))))
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier)))))))))
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (binary_expression
+                      (expression
+                        (primary_expression
+                          (parenthesized_expression
+                            (expression
+                              (binary_expression
+                                (expression
+                                  (primary_expression
+                                    (identifier_expression
+                                      (identifier))))
+                                (expression
+                                  (primary_expression
+                                    (number_literal
+                                      (integer_literal)))))))))
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier))))))))))
+          (loop_keyword))))
+    (statement
+      (loop_statement
+        (while_loop
+          (while_loop_init
+            (do_keyword)
+            (while_keyword)
+            (expression
+              (binary_expression
+                (expression
+                  (primary_expression
+                    (identifier_expression
+                      (identifier))))
+                (expression
+                  (primary_expression
+                    (number_literal
+                      (integer_literal)))))))
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier)))))))))
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (binary_expression
+                      (expression
+                        (primary_expression
+                          (parenthesized_expression
+                            (expression
+                              (binary_expression
+                                (expression
+                                  (primary_expression
+                                    (identifier_expression
+                                      (identifier))))
+                                (expression
+                                  (primary_expression
+                                    (number_literal
+                                      (integer_literal)))))))))
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier))))))))))
+          (loop_keyword))))
+    (statement
+      (loop_statement
+        (do_loop
+          (do_keyword)
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier)))))))))
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (binary_expression
+                      (expression
+                        (primary_expression
+                          (parenthesized_expression
+                            (expression
+                              (binary_expression
+                                (expression
+                                  (primary_expression
+                                    (identifier_expression
+                                      (identifier))))
+                                (expression
+                                  (primary_expression
+                                    (number_literal
+                                      (integer_literal)))))))))
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier))))))))))
+          (end_do_loop
+            (loop_keyword)
+            (until_keyword)
+            (expression
+              (binary_expression
+                (expression
+                  (primary_expression
+                    (identifier_expression
+                      (identifier))))
+                (expression
+                  (primary_expression
+                    (number_literal
+                      (integer_literal))))))))))
+    (statement
+      (loop_statement
+        (do_loop
+          (do_keyword)
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier)))))))))
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (binary_expression
+                      (expression
+                        (primary_expression
+                          (parenthesized_expression
+                            (expression
+                              (binary_expression
+                                (expression
+                                  (primary_expression
+                                    (identifier_expression
+                                      (identifier))))
+                                (expression
+                                  (primary_expression
+                                    (number_literal
+                                      (integer_literal)))))))))
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier))))))))))
+          (end_do_loop
+            (loop_keyword)
+            (while_keyword)
+            (expression
+              (binary_expression
+                (expression
+                  (primary_expression
+                    (identifier_expression
+                      (identifier))))
+                (expression
+                  (primary_expression
+                    (number_literal
+                      (integer_literal))))))))))))
+
+===
+EXIT and CONTINUE statement
+===
+
+#!
+DO
+  If A = 8 Then
+    Exit
+  Else
+    Continue
+  End If
+LOOP WHILE A <= 15
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (loop_statement
+        (do_loop
+          (do_keyword)
+          (scriptable_block
+            (statement
+              (if_statement
+                (if_statement_init
+                  (if_keyword)
+                  (expression
+                    (binary_expression
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier))))
+                      (expression
+                        (primary_expression
+                          (number_literal
+                            (integer_literal))))))
+                  (then_keyword))
+                (scriptable_block
+                  (statement
+                    (inline_statement
+                      (exit_statement
+                        (exit_keyword)))))
+                (else_clause
+                  (else_keyword)
+                  (scriptable_block
+                    (statement
+                      (inline_statement
+                        (continue_statement
+                          (continue_keyword))))))
+                (end_if_statement
+                  (end_keyword)
+                  (if_keyword)))))
+          (end_do_loop
+            (loop_keyword)
+            (while_keyword)
+            (expression
+              (binary_expression
+                (expression
+                  (primary_expression
+                    (identifier_expression
+                      (identifier))))
+                (expression
+                  (primary_expression
+                    (number_literal
+                      (integer_literal))))))))))))
+
+===
+FOR statement
+===
+
+#!
+FOR N = 5 TO 25 STEP 5
+  A = A+10
+NEXT
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (loop_statement
+        (for_loop
+          (for_loop_init
+            (for_keyword)
+            (identifier)
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))
+            (to_keyword)
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))
+            (step_keyword)
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal)))))
+          (scriptable_block
+            (statement
+              (inline_statement
+                (assignment_statement
+                  (identifier)
+                  (assignment_operator)
+                  (expression
+                    (binary_expression
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier))))
+                      (expression
+                        (primary_expression
+                          (number_literal
+                            (integer_literal))))))))))
+          (next_keyword))))))
+
+===
+GOTO statement
+===
+
+#!
+GOTO OK
+
+GO:
+  teste()
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (inline_statement
+        (goto_statement
+          (goto_keyword)
+          (identifier))))
+    (statement
+      (goto_label
+        (identifier)))
+    (statement
+      (inline_statement
+        (expression_statement
+          (method_invocation
+            (identifier)
+            (argument_list)))))))
+
+===
+HALT statement
+===
+
+#!
+HALT CLOSE
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (inline_statement
+        (halt_statement
+          (halt_keyword)
+          (close_keyword))))))
+
+===
+IF statement
+===
+
+#!
+IF X=Y THEN
+	Beep(2)
+ELSEIF X=Z THEN
+	Show (lb_parts); lb_parts.SetState(5,TRUE)
+ELSEIF X=" " THEN
+	Show (lb_choose)
+ELSE
+	Hide(cb_empty)
+	Show(cb_full)
+END IF
+
+If 1=1 Then teste()
+
+If 1=1 Then teste() else teste_2()
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (if_statement
+        (if_statement_init
+          (if_keyword)
+          (expression
+            (binary_expression
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier))))
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier))))))
+          (then_keyword))
+        (scriptable_block
+          (statement
+            (inline_statement
+              (expression_statement
+                (method_invocation
+                  (identifier)
+                  (argument_list
+                    (expression
+                      (primary_expression
+                        (number_literal
+                          (integer_literal))))))))))
+        (elseif_clause
+          (elseif_keyword)
+          (expression
+            (binary_expression
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier))))
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier))))))
+          (then_keyword)
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier)))))))))
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (primary_expression
+                      (identifier_expression
+                        (identifier)))
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (number_literal
+                            (integer_literal))))
+                      (expression
+                        (primary_expression
+                          (boolean_literal
+                            (true_keyword)))))))))))
+        (elseif_clause
+          (elseif_keyword)
+          (expression
+            (binary_expression
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier))))
+              (expression
+                (primary_expression
+                  (string_literal)))))
+          (then_keyword)
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier)))))))))))
+        (else_clause
+          (else_keyword)
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier)))))))))
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list
+                      (expression
+                        (primary_expression
+                          (identifier_expression
+                            (identifier)))))))))))
+        (end_if_statement
+          (end_keyword)
+          (if_keyword))))
+    (statement
+      (inline_if_statement
+        (if_keyword)
+        (expression
+          (binary_expression
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))))
+        (then_keyword)
+        (inline_statement
+          (expression_statement
+            (method_invocation
+              (identifier)
+              (argument_list))))))
+    (statement
+      (inline_if_statement
+        (if_keyword)
+        (expression
+          (binary_expression
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))
+            (expression
+              (primary_expression
+                (number_literal
+                  (integer_literal))))))
+        (then_keyword)
+        (inline_statement
+          (expression_statement
+            (method_invocation
+              (identifier)
+              (argument_list))))
+        (else_keyword)
+        (inline_statement
+          (expression_statement
+            (method_invocation
+              (identifier)
+              (argument_list))))))))
+
+===
+RETURN statement
+===
+
+#!
+RETURN Arg1/Arg2
+
+RETURN -1
+
+return
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (inline_statement
+        (return_statement
+          (return_keyword)
+          (expression
+            (binary_expression
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier))))
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier)))))))))
+    (statement
+      (inline_statement
+        (return_statement
+          (return_keyword)
+          (expression
+            (unary_expression
+              (expression
+                (primary_expression
+                  (number_literal
+                    (integer_literal)))))))))
+    (statement
+      (inline_statement
+        (return_statement
+          (return_keyword))))))
+
+===
+THROW statement
+===
+
+#!
+THROW create ExceptionType
+
+THROW ex
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (inline_statement
+        (throw_statement
+          (throw_keyword)
+          (create_keyword)
+          (datatype
+            (custom_datatype
+              (identifier))))))
+    (statement
+      (inline_statement
+        (throw_statement
+          (throw_keyword)
+          (expression
+            (primary_expression
+              (identifier_expression
+                (identifier)))))))))
+
+===
+TRY statement
+===
+
+#!
+TRY
+	teste()
+CATCH ( ThrowableType1 exIdentifier1 )
+	teste()
+CATCH ( ThrowableType2 exIdentifier2 )
+	teste()
+FINALLY
+	teste()
+END TRY
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (try_catch_statement
+        (try_keyword)
+        (scriptable_block
+          (statement
+            (inline_statement
+              (expression_statement
+                (method_invocation
+                  (identifier)
+                  (argument_list))))))
+        (catch_clause
+          (catch_clause_init
+            (catch_keyword)
+            (datatype
+              (custom_datatype
+                (identifier)))
+            (identifier))
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list)))))))
+        (catch_clause
+          (catch_clause_init
+            (catch_keyword)
+            (datatype
+              (custom_datatype
+                (identifier)))
+            (identifier))
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list)))))))
+        (finally_clause
+          (finally_keyword)
+          (scriptable_block
+            (statement
+              (inline_statement
+                (expression_statement
+                  (method_invocation
+                    (identifier)
+                    (argument_list)))))))
+        (end_try_statement
+          (end_keyword)
+          (try_keyword))))))
