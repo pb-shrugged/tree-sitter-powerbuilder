@@ -1,0 +1,945 @@
+===
+CLOSE statement
+===
+
+#!
+CLOSE Emp_cursor ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (close_cursor_procedure_statement
+          (close_keyword)
+          (identifier))))))
+
+===
+COMMIT statement
+===
+
+#!
+COMMIT USING Emp_tran ;
+
+COMMIT ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (commit_statement
+          (commit_keyword)
+          (using_transaction_statement
+            (using_keyword)
+            (identifier)))))
+    (statement
+      (sql_statement
+        (commit_statement
+          (commit_keyword))))))
+
+===
+CONNECT statement
+===
+
+#!
+CONNECT ;
+
+CONNECT USING Emp_tran ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (connect_statement
+          (connect_keyword))))
+    (statement
+      (sql_statement
+        (connect_statement
+          (connect_keyword)
+          (using_transaction_statement
+            (using_keyword)
+            (identifier)))))))
+
+===
+DECLARE CURSOR statement
+===
+
+#!
+DECLARE Emp_cur CURSOR FOR
+    SELECT employee.emp_number, employee.emp_name
+    FROM employee
+    WHERE employee.emp_salary > :Sal_var ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (declare_cursor_statement
+          (declare_keyword)
+          (identifier)
+          (cursor_keyword)
+          (for_keyword)
+          (select_statement
+            (select_keyword)
+            (rest_of_sql)))))))
+
+===
+DECLARE PROCEDURE statement
+===
+
+#!
+DECLARE Emp_proc procedure for GetName
+    @emp_name = :Emp_name_var,
+    @emp_salary = :Emp_sal_var ;
+
+DECLARE Emp_proc procedure for GetName
+    (:Emp_name_var, :Emp_sal_var) ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (declare_procedure_statement
+          (declare_keyword)
+          (identifier)
+          (procedure_keyword)
+          (for_keyword)
+          (identifier)
+          (stored_procedure_param_list
+            (stored_procedure_param_ase
+              (identifier)
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier)))))
+            (stored_procedure_param_ase
+              (identifier)
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier)))))))))
+    (statement
+      (sql_statement
+        (declare_procedure_statement
+          (declare_keyword)
+          (identifier)
+          (procedure_keyword)
+          (for_keyword)
+          (identifier)
+          (stored_procedure_param_list
+            (stored_procedure_param_oracle
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier)))))
+            (stored_procedure_param_oracle
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier)))))))))))
+
+===
+DELETE statement
+===
+
+#!
+DELETE FROM Employee WHERE Emp_num < 100 ;
+
+DELETE FROM Employee
+    WHERE Employee.Emp_num = :Emp_num ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (delete_statement
+          (delete_keyword)
+          (from_keyword)
+          (identifier)
+          (where_keyword)
+          (where_criteria
+            (rest_of_sql))
+          (rest_of_sql))))
+    (statement
+      (sql_statement
+        (delete_statement
+          (delete_keyword)
+          (from_keyword)
+          (identifier)
+          (where_keyword)
+          (where_criteria
+            (rest_of_sql))
+          (rest_of_sql))))))
+
+===
+DELETE WITH CURSOR statement
+===
+
+#!
+DELETE FROM Employee WHERE current of Emp_curs ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (delete_statement
+          (delete_keyword)
+          (from_keyword)
+          (identifier)
+          (where_keyword)
+          (current_keyword)
+          (of_keyword)
+          (identifier))))))
+
+===
+DISCONNECT statement
+===
+
+#!
+DISCONNECT ;
+DISCONNECT USING Emp_tran ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (disconnect_statement
+          (disconnect_keyword))))
+    (statement
+      (sql_statement
+        (disconnect_statement
+          (disconnect_keyword)
+          (using_transaction_statement
+            (using_keyword)
+            (identifier)))))))
+
+===
+EXECUTE statement
+===
+
+#!
+EXECUTE Emp_proc ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (execute_statement
+          (execute_keyword)
+          (identifier))))))
+
+===
+FETCH statement
+===
+
+#!
+FETCH Emp_cur INTO :Emp_num, :Emp_name ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (fetch_statement
+          (fetch_keyword)
+          (identifier)
+          (into_keyword)
+          (fetch_variable_list
+            (identifier)
+            (identifier)))))))
+
+===
+INSERT statement
+===
+
+#!
+INSERT INTO Employee (employee.Emp_nbr,
+    employee.Emp_name)
+    VALUES (:EmpNbr, :EmpName) ;
+
+INSERT INTO Employee (employee.Emp_nbr,
+    employee.Emp_name)
+    VALUES (:EmpNbr, :EmpName) USING Emp_tran ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (insert_statement
+          (insert_keyword)
+          (rest_of_sql))))
+    (statement
+      (sql_statement
+        (insert_statement
+          (insert_keyword)
+          (rest_of_sql))))))
+
+===
+OPEN statement
+===
+
+#!
+OPEN Emp_curs ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (open_cursor_statement
+          (open_keyword)
+          (identifier))))))
+
+===
+ROLLBACK statement
+===
+
+#!
+ROLLBACK ;
+
+ROLLBACK USING emp_tran ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (rollback_statement
+          (rollback_keyword))))
+    (statement
+      (sql_statement
+        (rollback_statement
+          (rollback_keyword)
+          (using_transaction_statement
+            (using_keyword)
+            (identifier)))))))
+
+===
+SELECT statement
+===
+
+#!
+SELECT employee.Emp_LName, employee.Emp_FName
+INTO :Emp_lname, :Emp_fname
+FROM Employee
+WHERE Employee.Emp_nbr = :Emp_num
+USING Emp_tran ;
+
+SELECTBLOB Emp_pic
+INTO :Emp_id_pic
+FROM Employee
+WHERE Employee.Emp_Num = 100
+USING Emp_tran ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (select_statement
+          (select_keyword)
+          (rest_of_sql))))
+    (statement
+      (sql_statement
+        (select_statement
+          (selectblob_keyword)
+          (rest_of_sql))))))
+
+===
+UPDATE statement
+===
+
+#!
+UPDATE Employee
+    SET emp_name = :sle_Name.Text
+    WHERE Employee.emp_num = :Emp_num
+    USING Emp_tran ;
+
+UPDATEBLOB Employee SET emp_pic = :Emp_id_pic
+    WHERE Emp_num = 100
+    USING Emp_tran ;
+
+UPDATE Employee
+    SET salary = 17800
+    WHERE CURRENT of Emp_curs ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (update_statement
+          (update_keyword)
+          (identifier)
+          (rest_of_sql))))
+    (statement
+      (sql_statement
+        (update_statement
+          (updateblob_keyword)
+          (identifier)
+          (rest_of_sql))))
+    (statement
+      (sql_statement
+        (update_statement
+          (update_keyword)
+          (identifier)
+          (rest_of_sql))))))
+
+===
+EXECUTE IMMEDIATE statement
+===
+
+#!
+EXECUTE IMMEDIATE :Mysql ;
+EXECUTE IMMEDIATE :Mysql USING My_trans ;
+EXECUTE IMMEDIATE 'select aijfeiajiejgf' USING My_trans ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (execute_statement
+          (execute_keyword)
+          (immediate_keyword)
+          (stored_procedure_param_oracle
+            (expression
+              (primary_expression
+                (identifier_expression
+                  (identifier))))))))
+    (statement
+      (sql_statement
+        (execute_statement
+          (execute_keyword)
+          (immediate_keyword)
+          (stored_procedure_param_oracle
+            (expression
+              (primary_expression
+                (identifier_expression
+                  (identifier)))))
+          (using_transaction_statement
+            (using_keyword)
+            (identifier)))))
+    (statement
+      (sql_statement
+        (execute_statement
+          (execute_keyword)
+          (immediate_keyword)
+          (string_literal)
+          (using_transaction_statement
+            (using_keyword)
+            (identifier)))))))
+
+===
+PREPARE and EXECUTE dynamic sql format 2
+===
+
+#!
+PREPARE SQLSA
+FROM "DELETE FROM employee WHERE emp_id=?" ;
+EXECUTE SQLSA USING :Emp_id_var ;
+
+PREPARE SQLSA
+FROM "INSERT INTO dept VALUES (?,?)" ;
+EXECUTE SQLSA USING :Dept_id_var,:Dept_name_var ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (prepare_sql_statement
+          (prepare_keyword)
+          (identifier)
+          (from_keyword)
+          (string_literal))))
+    (statement
+      (sql_statement
+        (execute_statement
+          (execute_keyword)
+          (identifier)
+          (using_keyword)
+          (stored_procedure_param_oracle
+            (expression
+              (primary_expression
+                (identifier_expression
+                  (identifier))))))))
+    (statement
+      (sql_statement
+        (prepare_sql_statement
+          (prepare_keyword)
+          (identifier)
+          (from_keyword)
+          (string_literal))))
+    (statement
+      (sql_statement
+        (execute_statement
+          (execute_keyword)
+          (identifier)
+          (using_keyword)
+          (stored_procedure_param_oracle
+            (expression
+              (primary_expression
+                (identifier_expression
+                  (identifier)))))
+          (stored_procedure_param_oracle
+            (expression
+              (primary_expression
+                (identifier_expression
+                  (identifier))))))))))
+
+===
+dynamic sql format 3
+===
+
+#!
+DECLARE my_cursor DYNAMIC CURSOR FOR SQLSA ;
+PREPARE SQLSA FROM "SELECT emp_id FROM employee" ;
+OPEN DYNAMIC my_cursor ;
+FETCH my_cursor INTO :Emp_id_var ;
+CLOSE my_cursor ;
+
+PREPARE SQLSA FROM :sqlstatement ;
+OPEN DYNAMIC my_cursor using :Emp_state_var ;
+FETCH my_cursor INTO :Emp_id_var ;
+CLOSE my_cursor ;
+
+PREPARE SQLSA FROM "emp_select @stateparm=?" ;
+Emp_state_var = "MA"
+EXECUTE DYNAMIC my_proc USING :Emp_state_var ;
+FETCH my_proc INTO :Emp_id_var ;
+CLOSE my_proc ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (sql_statement
+        (declare_dynamic_statement
+          (declare_keyword)
+          (identifier)
+          (dynamic_keyword)
+          (cursor_keyword)
+          (for_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (prepare_sql_statement
+          (prepare_keyword)
+          (identifier)
+          (from_keyword)
+          (string_literal))))
+    (statement
+      (sql_statement
+        (open_cursor_statement
+          (open_keyword)
+          (dynamic_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (fetch_statement
+          (fetch_keyword)
+          (identifier)
+          (into_keyword)
+          (fetch_variable_list
+            (identifier)))))
+    (statement
+      (sql_statement
+        (close_cursor_procedure_statement
+          (close_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (prepare_sql_statement
+          (prepare_keyword)
+          (identifier)
+          (from_keyword)
+          (expression
+            (primary_expression
+              (identifier_expression
+                (identifier)))))))
+    (statement
+      (sql_statement
+        (open_cursor_statement
+          (open_keyword)
+          (dynamic_keyword)
+          (identifier)
+          (using_keyword)
+          (stored_procedure_param_oracle
+            (expression
+              (primary_expression
+                (identifier_expression
+                  (identifier))))))))
+    (statement
+      (sql_statement
+        (fetch_statement
+          (fetch_keyword)
+          (identifier)
+          (into_keyword)
+          (fetch_variable_list
+            (identifier)))))
+    (statement
+      (sql_statement
+        (close_cursor_procedure_statement
+          (close_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (prepare_sql_statement
+          (prepare_keyword)
+          (identifier)
+          (from_keyword)
+          (string_literal))))
+    (statement
+      (inline_statement
+        (assignment_statement
+          (identifier)
+          (assignment_operator)
+          (expression
+            (primary_expression
+              (string_literal))))))
+    (statement
+      (sql_statement
+        (execute_statement
+          (execute_keyword)
+          (dynamic_keyword)
+          (identifier)
+          (using_keyword)
+          (stored_procedure_param_oracle
+            (expression
+              (primary_expression
+                (identifier_expression
+                  (identifier))))))))
+    (statement
+      (sql_statement
+        (fetch_statement
+          (fetch_keyword)
+          (identifier)
+          (into_keyword)
+          (fetch_variable_list
+            (identifier)))))
+    (statement
+      (sql_statement
+        (close_cursor_procedure_statement
+          (close_keyword)
+          (identifier))))))
+
+===
+dynamic sql format 4
+===
+
+#!
+string Stringvar, Sqlstatement
+integer Intvar
+Sqlstatement = "SELECT emp_id FROM employee"
+PREPARE SQLSA FROM :Sqlstatement ;
+DESCRIBE SQLSA INTO SQLDA ;
+DECLARE my_cursor DYNAMIC CURSOR FOR SQLSA ;
+OPEN DYNAMIC my_cursor USING DESCRIPTOR SQLDA ;
+FETCH my_cursor USING DESCRIPTOR SQLDA ;
+CHOOSE CASE SQLDA.OutParmType[1]
+	CASE TypeString!
+		Stringvar = GetDynamicString(SQLDA, 1)
+	CASE TypeInteger!
+		Intvar = GetDynamicNumber(SQLDA, 1)
+END CHOOSE
+CLOSE my_cursor ;
+
+string Sqlstatement
+Sqlstatement = "SELECT emp_id FROM employee "&
++"WHERE emp_state = ?"
+PREPARE SQLSA FROM :Sqlstatement ;
+DESCRIBE SQLSA INTO SQLDA ;
+
+DECLARE my_cursor DYNAMIC CURSOR FOR SQLSA ;
+SetDynamicParm(SQLDA, 1, "MA")
+OPEN DYNAMIC my_cursor USING DESCRIPTOR SQLDA ;
+FETCH my_cursor USING DESCRIPTOR SQLDA ;
+
+CLOSE my_cursor ;
+
+---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (local_variable_declaration
+        (datatype
+          (standard_primitive_datatype))
+        (variable_declaration_list
+          (variable_declaration_identifier
+            (identifier))
+          (variable_declaration_identifier
+            (identifier)))))
+    (statement
+      (local_variable_declaration
+        (datatype
+          (standard_primitive_datatype))
+        (variable_declaration_list
+          (variable_declaration_identifier
+            (identifier)))))
+    (statement
+      (inline_statement
+        (assignment_statement
+          (identifier)
+          (assignment_operator)
+          (expression
+            (primary_expression
+              (string_literal))))))
+    (statement
+      (sql_statement
+        (prepare_sql_statement
+          (prepare_keyword)
+          (identifier)
+          (from_keyword)
+          (expression
+            (primary_expression
+              (identifier_expression
+                (identifier)))))))
+    (statement
+      (sql_statement
+        (describe_sql_statement
+          (describe_keyword)
+          (identifier)
+          (into_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (declare_dynamic_statement
+          (declare_keyword)
+          (identifier)
+          (dynamic_keyword)
+          (cursor_keyword)
+          (for_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (open_cursor_statement
+          (open_keyword)
+          (dynamic_keyword)
+          (identifier)
+          (using_keyword)
+          (descriptor_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (fetch_statement
+          (fetch_keyword)
+          (identifier)
+          (using_keyword)
+          (descriptor_keyword)
+          (identifier))))
+    (statement
+      (choose_statement
+        (choose_statement_init
+          (choose_keyword)
+          (case_keyword)
+          (expression
+            (primary_expression
+              (array_access
+                (primary_expression
+                  (field_access
+                    (primary_expression
+                      (identifier_expression
+                        (identifier)))
+                    (identifier)))
+                (expression
+                  (primary_expression
+                    (number_literal
+                      (integer_literal))))))))
+        (case_clause
+          (case_keyword)
+          (case_condition_expression
+            (expression
+              (primary_expression
+                (enumetation_datatype
+                  (identifier)))))
+          (scriptable_block
+            (statement
+              (local_variable_declaration
+                (datatype
+                  (standard_primitive_datatype))
+                (variable_declaration_list
+                  (variable_declaration_identifier
+                    (identifier)
+                    (expression
+                      (primary_expression
+                        (method_invocation
+                          (identifier)
+                          (argument_list
+                            (expression
+                              (primary_expression
+                                (identifier_expression
+                                  (identifier))))
+                            (expression
+                              (primary_expression
+                                (number_literal
+                                  (integer_literal))))))))))))))
+        (case_clause
+          (case_keyword)
+          (case_condition_expression
+            (expression
+              (primary_expression
+                (enumetation_datatype
+                  (identifier)))))
+          (scriptable_block
+            (statement
+              (local_variable_declaration
+                (datatype
+                  (standard_primitive_datatype))
+                (variable_declaration_list
+                  (variable_declaration_identifier
+                    (identifier)
+                    (expression
+                      (primary_expression
+                        (method_invocation
+                          (identifier)
+                          (argument_list
+                            (expression
+                              (primary_expression
+                                (identifier_expression
+                                  (identifier))))
+                            (expression
+                              (primary_expression
+                                (number_literal
+                                  (integer_literal))))))))))))))
+        (end_choose_statement
+          (end_keyword)
+          (choose_keyword))))
+    (statement
+      (sql_statement
+        (close_cursor_procedure_statement
+          (close_keyword)
+          (identifier))))
+    (statement
+      (local_variable_declaration
+        (datatype
+          (standard_primitive_datatype))
+        (variable_declaration_list
+          (variable_declaration_identifier
+            (identifier)))))
+    (statement
+      (inline_statement
+        (assignment_statement
+          (identifier)
+          (assignment_operator)
+          (expression
+            (binary_expression
+              (expression
+                (primary_expression
+                  (string_literal)))
+              (line_continuation)
+              (expression
+                (primary_expression
+                  (string_literal))))))))
+    (statement
+      (sql_statement
+        (prepare_sql_statement
+          (prepare_keyword)
+          (identifier)
+          (from_keyword)
+          (expression
+            (primary_expression
+              (identifier_expression
+                (identifier)))))))
+    (statement
+      (sql_statement
+        (describe_sql_statement
+          (describe_keyword)
+          (identifier)
+          (into_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (declare_dynamic_statement
+          (declare_keyword)
+          (identifier)
+          (dynamic_keyword)
+          (cursor_keyword)
+          (for_keyword)
+          (identifier))))
+    (statement
+      (inline_statement
+        (expression_statement
+          (method_invocation
+            (identifier)
+            (argument_list
+              (expression
+                (primary_expression
+                  (identifier_expression
+                    (identifier))))
+              (expression
+                (primary_expression
+                  (number_literal
+                    (integer_literal))))
+              (expression
+                (primary_expression
+                  (string_literal))))))))
+    (statement
+      (sql_statement
+        (open_cursor_statement
+          (open_keyword)
+          (dynamic_keyword)
+          (identifier)
+          (using_keyword)
+          (descriptor_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (fetch_statement
+          (fetch_keyword)
+          (identifier)
+          (using_keyword)
+          (descriptor_keyword)
+          (identifier))))
+    (statement
+      (sql_statement
+        (close_cursor_procedure_statement
+          (close_keyword)
+          (identifier))))))

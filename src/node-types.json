@@ -1953,15 +1953,19 @@
           "named": true
         },
         {
-          "type": "select_statement",
-          "named": true
-        },
-        {
           "type": "stored_procedure_param_oracle",
           "named": true
         },
         {
+          "type": "string_literal",
+          "named": true
+        },
+        {
           "type": "using_keyword",
+          "named": true
+        },
+        {
+          "type": "using_transaction_statement",
           "named": true
         }
       ]

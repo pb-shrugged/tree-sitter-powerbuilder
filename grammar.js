@@ -29,8 +29,9 @@ const PREC = {
   ACCESS_MODIFIER: 17,
   CONFLICT_PARAMETER_LIST_ARGUMENT_LIST: 19,
   CONFLICT_EVENT_DECLARATION_EVENT_IMPLEMENTATION: 20,
-  KEYWORD: 22,
-  STD_TYPE: 21,
+  CONFLICT_EXECUTE_STATEMENT_LITERAL: 21,
+  STD_TYPE: 50,
+  KEYWORD: 60,
 };
 
 module.exports = grammar({
@@ -1252,13 +1253,19 @@ module.exports = grammar({
       $._semi_colon_char,
     ),
 
-    execute_statement: $ => choice(
+    execute_statement: $ => prec(PREC.CONFLICT_EXECUTE_STATEMENT_LITERAL, choice(
       seq($.execute_keyword, field('procedure_name', $.identifier), $._semi_colon_char),
-      seq($.execute_keyword, $.immediate_keyword, $.select_statement),
+      seq(
+        $.execute_keyword,
+        $.immediate_keyword,
+        choice($.stored_procedure_param_oracle, $.string_literal),
+        optional($.using_transaction_statement),
+        $._semi_colon_char,
+      ),
       seq($.execute_keyword, field('dynamic_stage_area', $.identifier), seq($.using_keyword, commaSep1($.stored_procedure_param_oracle)), $._semi_colon_char),
       seq($.execute_keyword, $.dynamic_keyword, field('procedure_name', $.identifier), optional(seq($.using_keyword, commaSep1($.stored_procedure_param_oracle))), $._semi_colon_char),
       seq($.execute_keyword, $.dynamic_keyword, field('procedure_name', $.identifier), $.using_keyword, $.descriptor_keyword, field('dynamic_description_area', $.identifier), $._semi_colon_char),
-    ),
+    )),
 
     fetch_statement: $ => choice(
       seq(
@@ -1297,8 +1304,10 @@ module.exports = grammar({
         $.open_keyword,
         $.dynamic_keyword,
         field('cursor_name', $.identifier),
-        $.using_keyword,
-        commaSep1($.stored_procedure_param_oracle),
+        optional(seq(
+          $.using_keyword,
+          commaSep1($.stored_procedure_param_oracle),
+        )),
         $._semi_colon_char,
       ),
       seq(
