@@ -4477,7 +4477,17 @@
   {
     "type": "string_literal",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "string_content",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "structure_content",
@@ -5766,6 +5776,10 @@
   },
   {
     "type": "step_keyword",
+    "named": true
+  },
+  {
+    "type": "string_content",
     "named": true
   },
   {

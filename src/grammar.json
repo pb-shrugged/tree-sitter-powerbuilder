@@ -7151,16 +7151,36 @@
                 "type": "CHOICE",
                 "members": [
                   {
-                    "type": "PATTERN",
-                    "value": "[^\"\\\\]"
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "IMMEDIATE_TOKEN",
+                      "content": {
+                        "type": "PREC",
+                        "value": 2,
+                        "content": {
+                          "type": "STRING",
+                          "value": "~\""
+                        }
+                      }
+                    },
+                    "named": true,
+                    "value": "string_content"
                   },
                   {
-                    "type": "PATTERN",
-                    "value": "\\\\."
-                  },
-                  {
-                    "type": "PATTERN",
-                    "value": "~\""
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "IMMEDIATE_TOKEN",
+                      "content": {
+                        "type": "PREC",
+                        "value": 1,
+                        "content": {
+                          "type": "PATTERN",
+                          "value": "[^\\\\\"\\n(~\")]+"
+                        }
+                      }
+                    },
+                    "named": true,
+                    "value": "string_content"
                   }
                 ]
               }
@@ -7184,16 +7204,36 @@
                 "type": "CHOICE",
                 "members": [
                   {
-                    "type": "PATTERN",
-                    "value": "[^'\\\\]"
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "IMMEDIATE_TOKEN",
+                      "content": {
+                        "type": "PREC",
+                        "value": 2,
+                        "content": {
+                          "type": "STRING",
+                          "value": "~'"
+                        }
+                      }
+                    },
+                    "named": true,
+                    "value": "string_content"
                   },
                   {
-                    "type": "PATTERN",
-                    "value": "\\\\."
-                  },
-                  {
-                    "type": "PATTERN",
-                    "value": "~'"
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "IMMEDIATE_TOKEN",
+                      "content": {
+                        "type": "PREC",
+                        "value": 1,
+                        "content": {
+                          "type": "PATTERN",
+                          "value": "[^\\\\'\\n(~\\')]+"
+                        }
+                      }
+                    },
+                    "named": true,
+                    "value": "string_content"
                   }
                 ]
               }
