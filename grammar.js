@@ -56,7 +56,7 @@ module.exports = grammar({
         $.protected_keyword,
         $.alias_keyword,
         $.and_keyword,
-        // $.autoinstantiate_keyword,
+        $.autoinstantiate_keyword,
         $.call_keyword,
         $.case_keyword,
         $.catch_keyword,
@@ -165,12 +165,12 @@ module.exports = grammar({
 
     source_file: $ => choice(
       $.datawindow_file,
-      $.application_file,
+      $.class_file, // Centralized for now the application, window, menu and userobject types in one class type
+      // $.user_object_file,
+      // $.window_file,
+      // $.menu_file,
       $.function_file,
       $.structure_file,
-      $.user_object_file,
-      $.window_file,
-      $.menu_file,
       $.query_file,
       $.script_file,
     ),
@@ -203,10 +203,25 @@ module.exports = grammar({
       $.datawindow_content,
     ),
 
-    application_file: $ => seq(
-      field('header', $.application_header_file),
-      field('content', $.application_content),
+    class_file: $ => seq(
+      $.class_header_file,
+      $.class_content,
     ),
+
+    // user_object_file: $ => seq(
+    //   $.user_object_header_file,
+    //   $.user_object_content,
+    // ),
+
+    // window_file: $ => seq(
+    //   $.window_header_file,
+    //   $.window_content,
+    // ),
+
+    // menu_file: $ => seq(
+    //   $.menu_header_file,
+    //   $.menu_content,
+    // ),
 
     function_file: $ => seq(
       $.function_header_file,
@@ -216,21 +231,6 @@ module.exports = grammar({
     structure_file: $ => seq(
       $.structure_header_file,
       $.structure_content,
-    ),
-
-    user_object_file: $ => seq(
-      $.user_object_header_file,
-      $.user_object_content,
-    ),
-
-    window_file: $ => seq(
-      $.window_header_file,
-      $.window_content,
-    ),
-
-    menu_file: $ => seq(
-      $.menu_header_file,
-      $.menu_content,
     ),
 
     query_file: $ => seq(
@@ -245,19 +245,19 @@ module.exports = grammar({
     // Application Content
     application_file_extension: _ => 'sra',
 
-    application_header_file: $ => seq(
+    class_header_file: $ => seq(
       $.export_header_name,
-      $.application_file_extension,
+      choice($.application_file_extension, $.user_object_file_extension, $.window_file_extension, $.menu_file_extension),
       optional($.export_comments),
     ),
 
-    application_content: $ => seq(
+    class_content: $ => seq(
       $.forward_section,
       optional($.structure_definition_section),
       optional($.shared_variables_section),
       optional($.global_variables_section),
       $.global_type_definition,
-      $.global_var_declaration,
+      optional($.global_var_declaration), // When autoinstantiate this node is optional
       optional($.external_function_type_prototypes_section),
       optional($.type_variables_section),
       optional($.forward_prototypes_section),
@@ -367,7 +367,7 @@ module.exports = grammar({
       optional($.structure_definition_section),
       optional($.shared_variables_section),
       $.global_type_definition,
-      $.global_var_declaration,
+      optional($.global_var_declaration),
       optional($.external_function_type_prototypes_section),
       optional($.type_variables_section),
       optional($.forward_prototypes_section),
@@ -395,7 +395,7 @@ module.exports = grammar({
       optional($.structure_definition_section),
       optional($.shared_variables_section),
       $.global_type_definition,
-      $.global_var_declaration,
+      optional($.global_var_declaration),
       optional($.external_function_type_prototypes_section),
       optional($.type_variables_section),
       optional($.forward_prototypes_section),
@@ -424,7 +424,7 @@ module.exports = grammar({
       optional($.structure_definition_section),
       optional($.shared_variables_section),
       $.global_type_definition,
-      $.global_var_declaration,
+      optional($.global_var_declaration),
       optional($.external_function_type_prototypes_section),
       optional($.type_variables_section),
       optional($.forward_prototypes_section),
@@ -717,6 +717,7 @@ module.exports = grammar({
       field('type_name', $.identifier),
       $.from_keyword,
       field('ancestor_name', $.identifier),
+      optional($.autoinstantiate_keyword),
       optional(seq(
         $.within_keyword,
         field('parent_class', $.identifier),
@@ -800,10 +801,10 @@ module.exports = grammar({
 
     array_suffix: $ => seq(
       $._open_brackets,
-      field('array_range', choice(
-        commaSep($.integer_literal),
-        commaSep(seq($.integer_literal, $.to_keyword, $.integer_literal)),
-      )),
+      choice(
+        commaSep($.expression),
+        commaSep(seq($.expression, $.to_keyword, $.expression)),
+      ),
       $._close_brackets,
     ),
 
@@ -1542,8 +1543,8 @@ module.exports = grammar({
     time_literal: $ => /(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\.[0-9]{1,6})?/,
 
     string_literal: $ => choice(
-      seq($._double_quote, repeat(choice(/[^"\\]/, /\\./, /~"/ )), $._double_quote),
-      seq($._single_quote, repeat(choice(/[^'\\]/, /\\./, /~'/ )), $._single_quote),
+      seq($._double_quote, repeat(choice(/[^"\\]/, /\\./, /~"/)), $._double_quote),
+      seq($._single_quote, repeat(choice(/[^'\\]/, /\\./, /~'/)), $._single_quote),
     ),
 
     boolean_literal: $ => choice(

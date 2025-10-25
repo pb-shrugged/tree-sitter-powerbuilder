@@ -38,118 +38,6 @@
     }
   },
   {
-    "type": "application_content",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "event_implementation",
-          "named": true
-        },
-        {
-          "type": "external_function_type_prototypes_section",
-          "named": true
-        },
-        {
-          "type": "forward_prototypes_section",
-          "named": true
-        },
-        {
-          "type": "forward_section",
-          "named": true
-        },
-        {
-          "type": "function_implementation",
-          "named": true
-        },
-        {
-          "type": "global_type_definition",
-          "named": true
-        },
-        {
-          "type": "global_var_declaration",
-          "named": true
-        },
-        {
-          "type": "global_variables_section",
-          "named": true
-        },
-        {
-          "type": "inner_type_definition",
-          "named": true
-        },
-        {
-          "type": "on_event_block",
-          "named": true
-        },
-        {
-          "type": "shared_variables_section",
-          "named": true
-        },
-        {
-          "type": "structure_definition_section",
-          "named": true
-        },
-        {
-          "type": "type_variables_section",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "application_file",
-    "named": true,
-    "fields": {
-      "content": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "application_content",
-            "named": true
-          }
-        ]
-      },
-      "header": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "application_header_file",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "application_header_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "application_file_extension",
-          "named": true
-        },
-        {
-          "type": "export_comments",
-          "named": true
-        },
-        {
-          "type": "export_header_name",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "argument_list",
     "named": true,
     "fields": {
@@ -206,25 +94,20 @@
   {
     "type": "array_suffix",
     "named": true,
-    "fields": {
-      "array_range": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": ",",
-            "named": false
-          },
-          {
-            "type": "integer_literal",
-            "named": true
-          },
-          {
-            "type": "to_keyword",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        },
+        {
+          "type": "to_keyword",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -710,6 +593,123 @@
         },
         {
           "type": "choose_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "class_content",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "event_implementation",
+          "named": true
+        },
+        {
+          "type": "external_function_type_prototypes_section",
+          "named": true
+        },
+        {
+          "type": "forward_prototypes_section",
+          "named": true
+        },
+        {
+          "type": "forward_section",
+          "named": true
+        },
+        {
+          "type": "function_implementation",
+          "named": true
+        },
+        {
+          "type": "global_type_definition",
+          "named": true
+        },
+        {
+          "type": "global_var_declaration",
+          "named": true
+        },
+        {
+          "type": "global_variables_section",
+          "named": true
+        },
+        {
+          "type": "inner_type_definition",
+          "named": true
+        },
+        {
+          "type": "on_event_block",
+          "named": true
+        },
+        {
+          "type": "shared_variables_section",
+          "named": true
+        },
+        {
+          "type": "structure_definition_section",
+          "named": true
+        },
+        {
+          "type": "type_variables_section",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "class_file",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "class_content",
+          "named": true
+        },
+        {
+          "type": "class_header_file",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "class_header_file",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "application_file_extension",
+          "named": true
+        },
+        {
+          "type": "export_comments",
+          "named": true
+        },
+        {
+          "type": "export_header_name",
+          "named": true
+        },
+        {
+          "type": "menu_file_extension",
+          "named": true
+        },
+        {
+          "type": "user_object_file_extension",
+          "named": true
+        },
+        {
+          "type": "window_file_extension",
           "named": true
         }
       ]
@@ -3465,107 +3465,6 @@
     }
   },
   {
-    "type": "menu_content",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "event_implementation",
-          "named": true
-        },
-        {
-          "type": "external_function_type_prototypes_section",
-          "named": true
-        },
-        {
-          "type": "forward_prototypes_section",
-          "named": true
-        },
-        {
-          "type": "forward_section",
-          "named": true
-        },
-        {
-          "type": "function_implementation",
-          "named": true
-        },
-        {
-          "type": "global_type_definition",
-          "named": true
-        },
-        {
-          "type": "global_var_declaration",
-          "named": true
-        },
-        {
-          "type": "inner_type_definition",
-          "named": true
-        },
-        {
-          "type": "on_event_block",
-          "named": true
-        },
-        {
-          "type": "shared_variables_section",
-          "named": true
-        },
-        {
-          "type": "structure_definition_section",
-          "named": true
-        },
-        {
-          "type": "type_variables_section",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "menu_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "menu_content",
-          "named": true
-        },
-        {
-          "type": "menu_header_file",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "menu_header_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "export_comments",
-          "named": true
-        },
-        {
-          "type": "export_header_name",
-          "named": true
-        },
-        {
-          "type": "menu_file_extension",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "method_invocation",
     "named": true,
     "fields": {
@@ -4353,7 +4252,7 @@
       "required": true,
       "types": [
         {
-          "type": "application_file",
+          "type": "class_file",
           "named": true
         },
         {
@@ -4362,10 +4261,6 @@
         },
         {
           "type": "function_file",
-          "named": true
-        },
-        {
-          "type": "menu_file",
           "named": true
         },
         {
@@ -4378,14 +4273,6 @@
         },
         {
           "type": "structure_file",
-          "named": true
-        },
-        {
-          "type": "user_object_file",
-          "named": true
-        },
-        {
-          "type": "window_file",
           "named": true
         }
       ]
@@ -4955,6 +4842,10 @@
       "required": true,
       "types": [
         {
+          "type": "autoinstantiate_keyword",
+          "named": true
+        },
+        {
           "type": "descriptor_keyword",
           "named": true
         },
@@ -5206,107 +5097,6 @@
     }
   },
   {
-    "type": "user_object_content",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "event_implementation",
-          "named": true
-        },
-        {
-          "type": "external_function_type_prototypes_section",
-          "named": true
-        },
-        {
-          "type": "forward_prototypes_section",
-          "named": true
-        },
-        {
-          "type": "forward_section",
-          "named": true
-        },
-        {
-          "type": "function_implementation",
-          "named": true
-        },
-        {
-          "type": "global_type_definition",
-          "named": true
-        },
-        {
-          "type": "global_var_declaration",
-          "named": true
-        },
-        {
-          "type": "inner_type_definition",
-          "named": true
-        },
-        {
-          "type": "on_event_block",
-          "named": true
-        },
-        {
-          "type": "shared_variables_section",
-          "named": true
-        },
-        {
-          "type": "structure_definition_section",
-          "named": true
-        },
-        {
-          "type": "type_variables_section",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "user_object_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "user_object_content",
-          "named": true
-        },
-        {
-          "type": "user_object_header_file",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "user_object_header_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "export_comments",
-          "named": true
-        },
-        {
-          "type": "export_header_name",
-          "named": true
-        },
-        {
-          "type": "user_object_file_extension",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "using_transaction_statement",
     "named": true,
     "fields": {
@@ -5457,107 +5247,6 @@
         },
         {
           "type": "while_keyword",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "window_content",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "event_implementation",
-          "named": true
-        },
-        {
-          "type": "external_function_type_prototypes_section",
-          "named": true
-        },
-        {
-          "type": "forward_prototypes_section",
-          "named": true
-        },
-        {
-          "type": "forward_section",
-          "named": true
-        },
-        {
-          "type": "function_implementation",
-          "named": true
-        },
-        {
-          "type": "global_type_definition",
-          "named": true
-        },
-        {
-          "type": "global_var_declaration",
-          "named": true
-        },
-        {
-          "type": "inner_type_definition",
-          "named": true
-        },
-        {
-          "type": "on_event_block",
-          "named": true
-        },
-        {
-          "type": "shared_variables_section",
-          "named": true
-        },
-        {
-          "type": "structure_definition_section",
-          "named": true
-        },
-        {
-          "type": "type_variables_section",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "window_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "window_content",
-          "named": true
-        },
-        {
-          "type": "window_header_file",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "window_header_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "export_comments",
-          "named": true
-        },
-        {
-          "type": "export_header_name",
-          "named": true
-        },
-        {
-          "type": "window_file_extension",
           "named": true
         }
       ]
@@ -5732,6 +5421,10 @@
   },
   {
     "type": "array_suffix_ref",
+    "named": true
+  },
+  {
+    "type": "autoinstantiate_keyword",
     "named": true
   },
   {
