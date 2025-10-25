@@ -7175,7 +7175,7 @@
                         "value": 1,
                         "content": {
                           "type": "PATTERN",
-                          "value": "[^\\\\\"\\n(~\")]+"
+                          "value": "[^\\\"]*"
                         }
                       }
                     },
@@ -7228,7 +7228,7 @@
                         "value": 1,
                         "content": {
                           "type": "PATTERN",
-                          "value": "[^\\\\'\\n(~\\')]+"
+                          "value": "[^\\']*"
                         }
                       }
                     },

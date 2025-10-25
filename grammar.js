@@ -1548,7 +1548,7 @@ module.exports = grammar({
         repeat(
           choice(
             alias(token.immediate(prec(2, '~"')), $.string_content),
-            alias(token.immediate(prec(1, /[^\\"\n(~")]+/)), $.string_content)),
+            alias(token.immediate(prec(1, /[^\"]*/)), $.string_content)),
         ),
         $._double_quote,
       ),
@@ -1557,7 +1557,7 @@ module.exports = grammar({
         repeat(
           choice(
             alias(token.immediate(prec(2, '~\'')), $.string_content),
-            alias(token.immediate(prec(1, /[^\\'\n(~\')]+/)), $.string_content)),
+            alias(token.immediate(prec(1, /[^\']*/)), $.string_content)),
         ),
         $._single_quote,
       ),
