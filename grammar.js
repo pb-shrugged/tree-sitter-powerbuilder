@@ -1543,24 +1543,8 @@ module.exports = grammar({
     time_literal: $ => /(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\.[0-9]{1,6})?/,
 
     string_literal: $ => choice(
-      seq(
-        $._double_quote,
-        repeat(
-          choice(
-            alias(token.immediate(prec(2, '~"')), $.string_content),
-            alias(token.immediate(prec(1, /[^\"]*/)), $.string_content)),
-        ),
-        $._double_quote,
-      ),
-      seq(
-        $._single_quote,
-        repeat(
-          choice(
-            alias(token.immediate(prec(2, '~\'')), $.string_content),
-            alias(token.immediate(prec(1, /[^\']*/)), $.string_content)),
-        ),
-        $._single_quote,
-      ),
+      seq($._double_quote, alias(repeat(token.immediate(prec(1, choice(/[^"\\]/, /\\./, /~"/)))), $.string_content), $._double_quote),
+      seq($._single_quote, alias(repeat(token.immediate(prec(1, choice(/[^'\\]/, /\\./, /~'/)))), $.string_content), $._single_quote),
     ),
 
     boolean_literal: $ => choice(

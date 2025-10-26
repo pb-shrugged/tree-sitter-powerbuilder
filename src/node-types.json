@@ -4475,11 +4475,16 @@
     }
   },
   {
+    "type": "string_content",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "string_literal",
     "named": true,
     "fields": {},
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": false,
       "types": [
         {
@@ -5776,10 +5781,6 @@
   },
   {
     "type": "step_keyword",
-    "named": true
-  },
-  {
-    "type": "string_content",
     "named": true
   },
   {
