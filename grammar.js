@@ -460,7 +460,7 @@ module.exports = grammar({
     export_header_name: $ => seq(
       /HA\$PBExportHeader\$/,
       field('file_name', $.identifier),
-      $._dot_char,
+      $.dot_char,
     ),
 
     export_comments: $ => seq(
@@ -582,9 +582,9 @@ module.exports = grammar({
     function_body: $ => repeat1($.statement),
 
     parameter_list: $ => prec(PREC.CONFLICT_PARAMETER_LIST_ARGUMENT_LIST, seq(
-      $._open_parenthesis,
+      $.open_parenthesis,
       commaSep($.parameter),
-      $._close_parenthesis,
+      $.close_parenthesis,
     )),
 
     parameter: $ => seq(
@@ -627,7 +627,7 @@ module.exports = grammar({
       field('end', $.on_event_block_end),
     )),
 
-    on_event_block_init: $ => seq($.on_keyword, field('class_name', $.identifier), $._dot_char, field('event_name', choice($.create_keyword, $.destroy_keyword))),
+    on_event_block_init: $ => seq($.on_keyword, field('class_name', $.identifier), $.dot_char, field('event_name', choice($.create_keyword, $.destroy_keyword))),
 
     on_event_block_end: $ => seq($.end_keyword, $.on_keyword),
 
@@ -724,7 +724,7 @@ module.exports = grammar({
         optional(seq(
           $.descriptor_keyword,
           $.string_literal,
-          $._equals_operator,
+          $.equals_operator,
           $.string_literal,
         )),
       )),
@@ -794,25 +794,25 @@ module.exports = grammar({
     variable_declaration_identifier: $ => seq(
       field('var_name', $.identifier),
       optional($.array_suffix),
-      optional(seq($._equals_operator, field('initial_value', $.expression))),
+      optional(seq($.equals_operator, field('initial_value', $.expression))),
     ),
 
     variable_precision: $ => /\{\d\}/,
 
     array_suffix: $ => seq(
-      $._open_brackets,
+      $.open_brackets,
       choice(
         commaSep($.expression),
         commaSep(seq($.expression, $.to_keyword, $.expression)),
       ),
-      $._close_brackets,
+      $.close_brackets,
     ),
 
     array_suffix_ref: _ => /\[[ \t]*\]/,
 
     access_section: $ => seq(
       $.access_modifier,
-      $._colon_char,
+      $.colon_char,
       $._statement_separation,
     ),
 
@@ -892,7 +892,7 @@ module.exports = grammar({
       $.call_keyword,
       field('ancestor', choice($.identifier, $.super_keyword)),
       field('control', optional(seq('`', $.identifier))),
-      $._double_colon_char,
+      $.double_colon_char,
       field('event_name', $.identifier),
     ),
 
@@ -952,13 +952,13 @@ module.exports = grammar({
     create_statement: $ => choice(
       seq(
         field('var_name', choice($.field_access, $.identifier)),
-        field('assignment_operator', $._equals_operator),
+        field('assignment_operator', $.equals_operator),
         $.create_keyword,
         field('datatype', $.datatype),
       ),
       seq(
         field('var_name', $.identifier),
-        field('assignment_operator', $._equals_operator),
+        field('assignment_operator', $.equals_operator),
         $.create_keyword,
         $.using_keyword,
         field('dynamic_type_string', choice($.string_literal, $.identifier)),
@@ -966,7 +966,7 @@ module.exports = grammar({
     ),
 
     destroy_statement: $ => prec(PREC.DESTROY_LEXICAL_PREC, choice(
-      seq($.destroy_keyword, $._open_parenthesis, field('var_name', choice($.field_access, $.identifier)), $._close_parenthesis),
+      seq($.destroy_keyword, $.open_parenthesis, field('var_name', choice($.field_access, $.identifier)), $.close_parenthesis),
       seq($.destroy_keyword, field('var_name', choice($.field_access, $.identifier))),
     )),
 
@@ -1014,7 +1014,7 @@ module.exports = grammar({
     for_loop_init: $ => seq(
       $.for_keyword,
       field('iteration_counter', $.identifier),
-      $._equals_operator,
+      $.equals_operator,
       field('initial_value', $.expression),
       $.to_keyword,
       field('final_value', $.expression),
@@ -1026,7 +1026,7 @@ module.exports = grammar({
 
     goto_statement: $ => seq($.goto_keyword, field('label', $.identifier)),
 
-    goto_label: $ => seq(field('label', $.identifier), $._colon_char, $._statement_separation),
+    goto_label: $ => seq(field('label', $.identifier), $.colon_char, $._statement_separation),
 
     halt_statement: $ => seq($.halt_keyword, optional($.close_keyword)),
 
@@ -1114,10 +1114,10 @@ module.exports = grammar({
 
     catch_clause_init: $ => seq(
       $.catch_keyword,
-      $._open_parenthesis,
+      $.open_parenthesis,
       field('throwable_type', $.datatype),
       field('throwable_name', $.identifier),
-      $._close_parenthesis,
+      $.close_parenthesis,
       $._statement_separation,
     ),
 
@@ -1150,7 +1150,7 @@ module.exports = grammar({
     close_cursor_procedure_statement: $ => seq(
       $.close_keyword,
       field('cursor_procedure_name', $.identifier),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     using_transaction_statement: $ => seq(
@@ -1161,13 +1161,13 @@ module.exports = grammar({
     commit_statement: $ => seq(
       $.commit_keyword,
       optional($.using_transaction_statement),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     connect_statement: $ => seq(
       $.connect_keyword,
       optional($.using_transaction_statement),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     declare_cursor_statement: $ => seq(
@@ -1177,7 +1177,7 @@ module.exports = grammar({
       $.for_keyword,
       $.select_statement,
       // optional($.using_transaction_statement),
-      // $._semi_colon_char,
+      // $.semi_colon_char,
     ),
 
     declare_procedure_statement: $ => seq(
@@ -1188,7 +1188,7 @@ module.exports = grammar({
       field('store_procedure_name', $.identifier),
       optional($.stored_procedure_param_list),
       optional($.using_transaction_statement),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     declare_dynamic_statement: $ => seq(
@@ -1198,7 +1198,7 @@ module.exports = grammar({
       choice($.cursor_keyword, $.procedure_keyword),
       $.for_keyword,
       field('dynamic_stage_area', $.identifier),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     describe_sql_statement: $ => seq(
@@ -1206,24 +1206,24 @@ module.exports = grammar({
       field('dynamic_stage_area', $.identifier),
       $.into_keyword,
       field('dynamic_description_area', $.identifier),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     stored_procedure_param_list: $ => choice(
       commaSep1($.stored_procedure_param_ase),
-      seq($._open_parenthesis, commaSep1($.stored_procedure_param_oracle), $._close_parenthesis),
+      seq($.open_parenthesis, commaSep1($.stored_procedure_param_oracle), $.close_parenthesis),
     ),
 
     stored_procedure_param_ase: $ => seq(
-      $._at_char,
+      $.at_char,
       field('param_name', $.identifier),
-      $._equals_operator,
-      optional($._colon_char),
+      $.equals_operator,
+      optional($.colon_char),
       field('var_name', $.expression),
     ),
 
     stored_procedure_param_oracle: $ => seq(
-      optional($._colon_char),
+      optional($.colon_char),
       field('var_name', $.expression),
     ),
 
@@ -1236,7 +1236,7 @@ module.exports = grammar({
         $.where_criteria,
         $.rest_of_sql,
         // optional($.using_transaction_statement),
-        $._semi_colon_char,
+        $.semi_colon_char,
       ),
       seq(
         $.delete_keyword,
@@ -1246,28 +1246,28 @@ module.exports = grammar({
         $.current_keyword,
         $.of_keyword,
         field('cursor_name', $.identifier),
-        $._semi_colon_char,
+        $.semi_colon_char,
       ),
     ),
 
     disconnect_statement: $ => seq(
       $.disconnect_keyword,
       optional($.using_transaction_statement),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     execute_statement: $ => prec(PREC.CONFLICT_EXECUTE_STATEMENT_LITERAL, choice(
-      seq($.execute_keyword, field('procedure_name', $.identifier), $._semi_colon_char),
+      seq($.execute_keyword, field('procedure_name', $.identifier), $.semi_colon_char),
       seq(
         $.execute_keyword,
         $.immediate_keyword,
         choice($.stored_procedure_param_oracle, $.string_literal),
         optional($.using_transaction_statement),
-        $._semi_colon_char,
+        $.semi_colon_char,
       ),
-      seq($.execute_keyword, field('dynamic_stage_area', $.identifier), seq($.using_keyword, commaSep1($.stored_procedure_param_oracle)), $._semi_colon_char),
-      seq($.execute_keyword, $.dynamic_keyword, field('procedure_name', $.identifier), optional(seq($.using_keyword, commaSep1($.stored_procedure_param_oracle))), $._semi_colon_char),
-      seq($.execute_keyword, $.dynamic_keyword, field('procedure_name', $.identifier), $.using_keyword, $.descriptor_keyword, field('dynamic_description_area', $.identifier), $._semi_colon_char),
+      seq($.execute_keyword, field('dynamic_stage_area', $.identifier), seq($.using_keyword, commaSep1($.stored_procedure_param_oracle)), $.semi_colon_char),
+      seq($.execute_keyword, $.dynamic_keyword, field('procedure_name', $.identifier), optional(seq($.using_keyword, commaSep1($.stored_procedure_param_oracle))), $.semi_colon_char),
+      seq($.execute_keyword, $.dynamic_keyword, field('procedure_name', $.identifier), $.using_keyword, $.descriptor_keyword, field('dynamic_description_area', $.identifier), $.semi_colon_char),
     )),
 
     fetch_statement: $ => choice(
@@ -1276,7 +1276,7 @@ module.exports = grammar({
         field('cursor_procedure_name', $.identifier),
         $.into_keyword,
         $.fetch_variable_list,
-        $._semi_colon_char,
+        $.semi_colon_char,
       ),
       seq(
         $.fetch_keyword,
@@ -1284,24 +1284,24 @@ module.exports = grammar({
         $.using_keyword,
         $.descriptor_keyword,
         field('dynamic_stage_area', $.identifier),
-        $._semi_colon_char,
+        $.semi_colon_char,
       ),
     ),
 
-    fetch_variable_list: $ => commaSep1(seq($._colon_char, field('var_name', $.identifier), optional(seq($._colon_char, field('indicator_var', $.identifier))))),
+    fetch_variable_list: $ => commaSep1(seq($.colon_char, field('var_name', $.identifier), optional(seq($.colon_char, field('indicator_var', $.identifier))))),
 
     insert_statement: $ => seq(
       $.insert_keyword,
       $.rest_of_sql,
       // optional($.using_transaction_statement),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     open_cursor_statement: $ => choice(
       seq(
         $.open_keyword,
         field('cursor_name', $.identifier),
-        $._semi_colon_char,
+        $.semi_colon_char,
       ),
       seq(
         $.open_keyword,
@@ -1311,7 +1311,7 @@ module.exports = grammar({
           $.using_keyword,
           commaSep1($.stored_procedure_param_oracle),
         )),
-        $._semi_colon_char,
+        $.semi_colon_char,
       ),
       seq(
         $.open_keyword,
@@ -1320,20 +1320,20 @@ module.exports = grammar({
         $.using_keyword,
         $.descriptor_keyword,
         field('dynamic_staging_area', $.identifier),
-        $._semi_colon_char,
+        $.semi_colon_char,
       ),
     ),
 
     rollback_statement: $ => seq(
       $.rollback_keyword,
       optional($.using_transaction_statement),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     select_statement: $ => seq(
       choice($.select_keyword, $.selectblob_keyword),
       $.rest_of_sql,
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     update_statement: $ => seq(
@@ -1341,7 +1341,7 @@ module.exports = grammar({
       field('table_name', $.identifier),
       $.rest_of_sql,
       // optional($.using_transaction_statement),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     prepare_sql_statement: $ => seq(
@@ -1350,9 +1350,9 @@ module.exports = grammar({
       $.from_keyword,
       field('sql_statement', choice(
         $.string_literal,
-        seq($._colon_char, $.expression),
+        seq($.colon_char, $.expression),
       )),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     rest_of_sql: $ => token(/[^;]*/),
@@ -1432,22 +1432,22 @@ module.exports = grammar({
 
     identifier_expression: $ => prec(PREC.IDENTIFIER_EXPRESSION, seq($.identifier, optional($.array_suffix_ref))),
 
-    // global_scope_var: $ => prec(PREC.GLOBAL_SCOPE_OPERADOR_VAR, seq($._double_colon_char, field('var_name', $.identifier))),
-    // global_scope_method: $ => prec(PREC.GLOBAL_SCOPE_OPERADOR_METHOD, seq($._double_colon_char, field('method_name', $.identifier), $.argument_list)),
+    // global_scope_var: $ => prec(PREC.GLOBAL_SCOPE_OPERADOR_VAR, seq($.double_colon_char, field('var_name', $.identifier))),
+    // global_scope_method: $ => prec(PREC.GLOBAL_SCOPE_OPERADOR_METHOD, seq($.double_colon_char, field('method_name', $.identifier), $.argument_list)),
 
-    parenthesized_expression: $ => seq($._open_parenthesis, $.expression, $._close_parenthesis),
+    parenthesized_expression: $ => seq($.open_parenthesis, $.expression, $.close_parenthesis),
 
-    array_access: $ => seq($.primary_expression, $._open_brackets, $.expression, $._close_brackets),
+    array_access: $ => seq($.primary_expression, $.open_brackets, $.expression, $.close_brackets),
 
     field_access: $ => prec(PREC.FIELD_ACCESS, seq(
       field('object', choice($.primary_expression, $.super_keyword)),
-      field('operator', $._dot_char),
+      field('operator', $.dot_char),
       field('field', seq($.identifier, optional($.array_suffix_ref))),
     )),
 
     method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
       field('object', optional(choice($.primary_expression, $.super_keyword))),
-      field('operator', optional(choice($._dot_char, $._double_colon_char))),
+      field('operator', optional(choice($.dot_char, $.double_colon_char))),
       field('method_type', optional(choice($.function_keyword, $.event_keyword))),
       field('call_type', optional(choice($.static_keyword, $.dynamic_keyword))),
       field('when_type', optional(choice($.trigger_keyword, $.post_keyword))),
@@ -1456,9 +1456,9 @@ module.exports = grammar({
     )),
 
     argument_list: $ => seq(
-      $._open_parenthesis,
+      $.open_parenthesis,
       commaSep(field('argument', seq(optional($.ref_keyword), $.expression))),
-      $._close_parenthesis,
+      $.close_parenthesis,
     ),
 
     // || 4. EXPRESSION AND STATEMENT END ||
@@ -1515,7 +1515,7 @@ module.exports = grammar({
 
     custom_datatype: $ => $.identifier,
 
-    enumetation_datatype: $ => seq($.identifier, $._exclametion_char),
+    enumetation_datatype: $ => seq($.identifier, $.exclamation_char),
 
     datatype: $ => choice(
       $.standard_primitive_datatype,
@@ -1543,8 +1543,8 @@ module.exports = grammar({
     time_literal: $ => /(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](?:\.[0-9]{1,6})?/,
 
     string_literal: $ => choice(
-      seq($._double_quote, alias(repeat(token.immediate(prec(1, choice(/[^"\\]/, /\\./, /~"/)))), $.string_content), $._double_quote),
-      seq($._single_quote, alias(repeat(token.immediate(prec(1, choice(/[^'\\]/, /\\./, /~'/)))), $.string_content), $._single_quote),
+      seq($.double_quote, alias(repeat(token.immediate(prec(1, choice(/[^"\\]/, /\\./, /~"/)))), $.string_content), $.double_quote),
+      seq($.single_quote, alias(repeat(token.immediate(prec(1, choice(/[^'\\]/, /\\./, /~'/)))), $.string_content), $.single_quote),
     ),
 
     boolean_literal: $ => choice(
@@ -1557,9 +1557,9 @@ module.exports = grammar({
     this_literal: $ => $.this_keyword,
 
     array_literal: $ => seq(
-      $._open_curly_brackets,
+      $.open_curly_brackets,
       commaSep1($.expression),
-      $._close_curly_brackets,
+      $.close_curly_brackets,
     ),
 
     // || 5. DATATYPE AND LITERAL END ||
@@ -1682,25 +1682,24 @@ module.exports = grammar({
     block_comment: _ => seq('/*', /[^*]*\*+([^/*][^*]*\*+)*/, '/'),
 
     line_continuation: _ => /&[ \t]*\r?\n/,
-    _statement_separation: $ => choice($._semi_colon_char, $._new_line),
-    _semi_colon_char: _ => ';',
+    _statement_separation: $ => choice($.semi_colon_char, $._new_line),
+    semi_colon_char: _ => ';',
     _new_line: _ => /\r?\n/,
     _rest_of_line: _ => /[^\r\n]*/,
-    _tab_char: _ => /\t/,
-    _dot_char: _ => '.',
-    _open_parenthesis: _ => '(',
-    _close_parenthesis: _ => ')',
-    _open_brackets: _ => '[',
-    _close_brackets: _ => ']',
-    _open_curly_brackets: _ => '{',
-    _close_curly_brackets: _ => '}',
-    _equals_operator: _ => '=',
-    _colon_char: _ => ':',
-    _double_colon_char: _ => '::',
-    _at_char: _ => '@',
-    _exclametion_char: _ => '!',
-    _single_quote: _ => '\'',
-    _double_quote: _ => '"',
+    dot_char: _ => '.',
+    open_parenthesis: _ => '(',
+    close_parenthesis: _ => ')',
+    open_brackets: _ => '[',
+    close_brackets: _ => ']',
+    open_curly_brackets: _ => '{',
+    close_curly_brackets: _ => '}',
+    equals_operator: _ => '=',
+    colon_char: _ => ':',
+    double_colon_char: _ => '::',
+    at_char: _ => '@',
+    exclamation_char: _ => '!',
+    single_quote: _ => '\'',
+    double_quote: _ => '"',
 
     // || 7. SPECIAL END ||
 
@@ -1725,7 +1724,7 @@ module.exports = grammar({
     release_statement: $ => seq(
       caseInsensitive('release'),
       field('release_version', $.number_literal),
-      $._semi_colon_char,
+      $.semi_colon_char,
     ),
 
     datawindow_definition: $ => repeat1($.datawindow_statement),
@@ -1733,16 +1732,16 @@ module.exports = grammar({
     datawindow_statement: $ => $.datawindow_method_invocation,
 
     datawindow_method_invocation: $ => seq(
-      field('object', optional(seq(choice($.datawindow_method_invocation, $.datawindow_field_access, $.identifier), $._dot_char))),
+      field('object', optional(seq(choice($.datawindow_method_invocation, $.datawindow_field_access, $.identifier), $.dot_char))),
       field('method', $.identifier),
-      $._open_parenthesis,
+      $.open_parenthesis,
       optional($.datawindow_property_list),
-      $._close_parenthesis,
+      $.close_parenthesis,
     ),
 
     datawindow_field_access: $ => seq(
       field('object', choice($.datawindow_method_invocation, $.datawindow_field_access, $.identifier)),
-      $._dot_char,
+      $.dot_char,
       field('method', $.identifier),
     ),
 
@@ -1750,15 +1749,15 @@ module.exports = grammar({
 
     datawindow_property_assignment: $ => prec.right(seq(
       field('property', choice($.identifier, $.field_access)),
-      $._equals_operator,
+      $.equals_operator,
       field('value', choice(
         $._literal,
-        seq($.identifier, optional(seq($._open_parenthesis, $._literal, $._close_parenthesis))),
+        seq($.identifier, optional(seq($.open_parenthesis, $._literal, $.close_parenthesis))),
         $.datawindow_property_assignment_list,
       )),
     )),
 
-    datawindow_property_assignment_list: $ => seq($._open_parenthesis, $.datawindow_property_list, $._close_parenthesis),
+    datawindow_property_assignment_list: $ => seq($.open_parenthesis, $.datawindow_property_list, $.close_parenthesis),
 
     // || 99. DATAWINDOW SYNTAX END ||
 
