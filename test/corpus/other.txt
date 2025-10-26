@@ -8,3 +8,40 @@ test = 'string // string string'
 test = 'string /* string */ string'
 
 ---
+
+(source_file
+  (script_file
+    (hashbang_script_notation)
+    (statement
+      (inline_statement
+        (assignment_statement
+          (identifier)
+          (assignment_operator)
+          (expression
+            (primary_expression
+              (string_literal
+                (single_quote)
+                (string_content)
+                (single_quote)))))))
+    (statement
+      (inline_statement
+        (assignment_statement
+          (identifier)
+          (assignment_operator)
+          (expression
+            (primary_expression
+              (string_literal
+                (single_quote)
+                (string_content)
+                (single_quote)))))))
+    (statement
+      (inline_statement
+        (assignment_statement
+          (identifier)
+          (assignment_operator)
+          (expression
+            (primary_expression
+              (string_literal
+                (single_quote)
+                (string_content)
+                (single_quote)))))))))

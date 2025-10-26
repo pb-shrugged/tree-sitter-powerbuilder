@@ -14,7 +14,8 @@ CLOSE Emp_cursor ;
       (sql_statement
         (close_cursor_procedure_statement
           (close_keyword)
-          (identifier))))))
+          (identifier)
+          (semi_colon_char))))))
 
 ===
 COMMIT statement
@@ -36,11 +37,13 @@ COMMIT ;
           (commit_keyword)
           (using_transaction_statement
             (using_keyword)
-            (identifier)))))
+            (identifier))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (commit_statement
-          (commit_keyword))))))
+          (commit_keyword)
+          (semi_colon_char))))))
 
 ===
 CONNECT statement
@@ -59,14 +62,16 @@ CONNECT USING Emp_tran ;
     (statement
       (sql_statement
         (connect_statement
-          (connect_keyword))))
+          (connect_keyword)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (connect_statement
           (connect_keyword)
           (using_transaction_statement
             (using_keyword)
-            (identifier)))))))
+            (identifier))
+          (semi_colon_char))))))
 
 ===
 DECLARE CURSOR statement
@@ -92,7 +97,8 @@ DECLARE Emp_cur CURSOR FOR
           (for_keyword)
           (select_statement
             (select_keyword)
-            (rest_of_sql)))))))
+            (rest_of_sql)
+            (semi_colon_char)))))))
 
 ===
 DECLARE PROCEDURE statement
@@ -121,17 +127,24 @@ DECLARE Emp_proc procedure for GetName
           (identifier)
           (stored_procedure_param_list
             (stored_procedure_param_ase
+              (at_char)
               (identifier)
+              (equals_operator)
+              (colon_char)
               (expression
                 (primary_expression
                   (identifier_expression
                     (identifier)))))
             (stored_procedure_param_ase
+              (at_char)
               (identifier)
+              (equals_operator)
+              (colon_char)
               (expression
                 (primary_expression
                   (identifier_expression
-                    (identifier)))))))))
+                    (identifier))))))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (declare_procedure_statement
@@ -141,16 +154,21 @@ DECLARE Emp_proc procedure for GetName
           (for_keyword)
           (identifier)
           (stored_procedure_param_list
+            (open_parenthesis)
             (stored_procedure_param_oracle
+              (colon_char)
               (expression
                 (primary_expression
                   (identifier_expression
                     (identifier)))))
             (stored_procedure_param_oracle
+              (colon_char)
               (expression
                 (primary_expression
                   (identifier_expression
-                    (identifier)))))))))))
+                    (identifier)))))
+            (close_parenthesis))
+          (semi_colon_char))))))
 
 ===
 DELETE statement
@@ -176,7 +194,8 @@ DELETE FROM Employee
           (where_keyword)
           (where_criteria
             (rest_of_sql))
-          (rest_of_sql))))
+          (rest_of_sql)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (delete_statement
@@ -186,7 +205,8 @@ DELETE FROM Employee
           (where_keyword)
           (where_criteria
             (rest_of_sql))
-          (rest_of_sql))))))
+          (rest_of_sql)
+          (semi_colon_char))))))
 
 ===
 DELETE WITH CURSOR statement
@@ -209,7 +229,8 @@ DELETE FROM Employee WHERE current of Emp_curs ;
           (where_keyword)
           (current_keyword)
           (of_keyword)
-          (identifier))))))
+          (identifier)
+          (semi_colon_char))))))
 
 ===
 DISCONNECT statement
@@ -227,14 +248,16 @@ DISCONNECT USING Emp_tran ;
     (statement
       (sql_statement
         (disconnect_statement
-          (disconnect_keyword))))
+          (disconnect_keyword)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (disconnect_statement
           (disconnect_keyword)
           (using_transaction_statement
             (using_keyword)
-            (identifier)))))))
+            (identifier))
+          (semi_colon_char))))))
 
 ===
 EXECUTE statement
@@ -252,7 +275,8 @@ EXECUTE Emp_proc ;
       (sql_statement
         (execute_statement
           (execute_keyword)
-          (identifier))))))
+          (identifier)
+          (semi_colon_char))))))
 
 ===
 FETCH statement
@@ -273,8 +297,11 @@ FETCH Emp_cur INTO :Emp_num, :Emp_name ;
           (identifier)
           (into_keyword)
           (fetch_variable_list
+            (colon_char)
             (identifier)
-            (identifier)))))))
+            (colon_char)
+            (identifier))
+          (semi_colon_char))))))
 
 ===
 INSERT statement
@@ -298,12 +325,14 @@ INSERT INTO Employee (employee.Emp_nbr,
       (sql_statement
         (insert_statement
           (insert_keyword)
-          (rest_of_sql))))
+          (rest_of_sql)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (insert_statement
           (insert_keyword)
-          (rest_of_sql))))))
+          (rest_of_sql)
+          (semi_colon_char))))))
 
 ===
 OPEN statement
@@ -321,7 +350,8 @@ OPEN Emp_curs ;
       (sql_statement
         (open_cursor_statement
           (open_keyword)
-          (identifier))))))
+          (identifier)
+          (semi_colon_char))))))
 
 ===
 ROLLBACK statement
@@ -340,14 +370,16 @@ ROLLBACK USING emp_tran ;
     (statement
       (sql_statement
         (rollback_statement
-          (rollback_keyword))))
+          (rollback_keyword)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (rollback_statement
           (rollback_keyword)
           (using_transaction_statement
             (using_keyword)
-            (identifier)))))))
+            (identifier))
+          (semi_colon_char))))))
 
 ===
 SELECT statement
@@ -375,12 +407,14 @@ USING Emp_tran ;
       (sql_statement
         (select_statement
           (select_keyword)
-          (rest_of_sql))))
+          (rest_of_sql)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (select_statement
           (selectblob_keyword)
-          (rest_of_sql))))))
+          (rest_of_sql)
+          (semi_colon_char))))))
 
 ===
 UPDATE statement
@@ -410,19 +444,22 @@ UPDATE Employee
         (update_statement
           (update_keyword)
           (identifier)
-          (rest_of_sql))))
+          (rest_of_sql)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (update_statement
           (updateblob_keyword)
           (identifier)
-          (rest_of_sql))))
+          (rest_of_sql)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (update_statement
           (update_keyword)
           (identifier)
-          (rest_of_sql))))))
+          (rest_of_sql)
+          (semi_colon_char))))))
 
 ===
 EXECUTE IMMEDIATE statement
@@ -444,33 +481,40 @@ EXECUTE IMMEDIATE 'select aijfeiajiejgf' USING My_trans ;
           (execute_keyword)
           (immediate_keyword)
           (stored_procedure_param_oracle
+            (colon_char)
             (expression
               (primary_expression
                 (identifier_expression
-                  (identifier))))))))
+                  (identifier)))))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (execute_statement
           (execute_keyword)
           (immediate_keyword)
           (stored_procedure_param_oracle
+            (colon_char)
             (expression
               (primary_expression
                 (identifier_expression
                   (identifier)))))
           (using_transaction_statement
             (using_keyword)
-            (identifier)))))
+            (identifier))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (execute_statement
           (execute_keyword)
           (immediate_keyword)
           (string_literal
-            (string_content))
+            (single_quote)
+            (string_content)
+            (single_quote))
           (using_transaction_statement
             (using_keyword)
-            (identifier)))))))
+            (identifier))
+          (semi_colon_char))))))
 
 ===
 PREPARE and EXECUTE dynamic sql format 2
@@ -497,7 +541,10 @@ EXECUTE SQLSA USING :Dept_id_var,:Dept_name_var ;
           (identifier)
           (from_keyword)
           (string_literal
-            (string_content)))))
+            (double_quote)
+            (string_content)
+            (double_quote))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (execute_statement
@@ -505,10 +552,12 @@ EXECUTE SQLSA USING :Dept_id_var,:Dept_name_var ;
           (identifier)
           (using_keyword)
           (stored_procedure_param_oracle
+            (colon_char)
             (expression
               (primary_expression
                 (identifier_expression
-                  (identifier))))))))
+                  (identifier)))))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (prepare_sql_statement
@@ -516,7 +565,10 @@ EXECUTE SQLSA USING :Dept_id_var,:Dept_name_var ;
           (identifier)
           (from_keyword)
           (string_literal
-            (string_content)))))
+            (double_quote)
+            (string_content)
+            (double_quote))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (execute_statement
@@ -524,15 +576,18 @@ EXECUTE SQLSA USING :Dept_id_var,:Dept_name_var ;
           (identifier)
           (using_keyword)
           (stored_procedure_param_oracle
+            (colon_char)
             (expression
               (primary_expression
                 (identifier_expression
                   (identifier)))))
           (stored_procedure_param_oracle
+            (colon_char)
             (expression
               (primary_expression
                 (identifier_expression
-                  (identifier))))))))))
+                  (identifier)))))
+          (semi_colon_char))))))
 
 ===
 dynamic sql format 3
@@ -569,7 +624,8 @@ CLOSE my_proc ;
           (dynamic_keyword)
           (cursor_keyword)
           (for_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (prepare_sql_statement
@@ -577,13 +633,17 @@ CLOSE my_proc ;
           (identifier)
           (from_keyword)
           (string_literal
-            (string_content)))))
+            (double_quote)
+            (string_content)
+            (double_quote))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (open_cursor_statement
           (open_keyword)
           (dynamic_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (fetch_statement
@@ -591,22 +651,27 @@ CLOSE my_proc ;
           (identifier)
           (into_keyword)
           (fetch_variable_list
-            (identifier)))))
+            (colon_char)
+            (identifier))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (close_cursor_procedure_statement
           (close_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (prepare_sql_statement
           (prepare_keyword)
           (identifier)
           (from_keyword)
+          (colon_char)
           (expression
             (primary_expression
               (identifier_expression
-                (identifier)))))))
+                (identifier))))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (open_cursor_statement
@@ -615,10 +680,12 @@ CLOSE my_proc ;
           (identifier)
           (using_keyword)
           (stored_procedure_param_oracle
+            (colon_char)
             (expression
               (primary_expression
                 (identifier_expression
-                  (identifier))))))))
+                  (identifier)))))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (fetch_statement
@@ -626,12 +693,15 @@ CLOSE my_proc ;
           (identifier)
           (into_keyword)
           (fetch_variable_list
-            (identifier)))))
+            (colon_char)
+            (identifier))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (close_cursor_procedure_statement
           (close_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (prepare_sql_statement
@@ -639,7 +709,10 @@ CLOSE my_proc ;
           (identifier)
           (from_keyword)
           (string_literal
-            (string_content)))))
+            (double_quote)
+            (string_content)
+            (double_quote))
+          (semi_colon_char))))
     (statement
       (inline_statement
         (assignment_statement
@@ -648,7 +721,9 @@ CLOSE my_proc ;
           (expression
             (primary_expression
               (string_literal
-                (string_content)))))))
+                (double_quote)
+                (string_content)
+                (double_quote)))))))
     (statement
       (sql_statement
         (execute_statement
@@ -657,10 +732,12 @@ CLOSE my_proc ;
           (identifier)
           (using_keyword)
           (stored_procedure_param_oracle
+            (colon_char)
             (expression
               (primary_expression
                 (identifier_expression
-                  (identifier))))))))
+                  (identifier)))))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (fetch_statement
@@ -668,12 +745,15 @@ CLOSE my_proc ;
           (identifier)
           (into_keyword)
           (fetch_variable_list
-            (identifier)))))
+            (colon_char)
+            (identifier))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (close_cursor_procedure_statement
           (close_keyword)
-          (identifier))))))
+          (identifier)
+          (semi_colon_char))))))
 
 ===
 dynamic sql format 4
@@ -738,24 +818,29 @@ CLOSE my_cursor ;
           (expression
             (primary_expression
               (string_literal
-                (string_content)))))))
+                (double_quote)
+                (string_content)
+                (double_quote)))))))
     (statement
       (sql_statement
         (prepare_sql_statement
           (prepare_keyword)
           (identifier)
           (from_keyword)
+          (colon_char)
           (expression
             (primary_expression
               (identifier_expression
-                (identifier)))))))
+                (identifier))))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (describe_sql_statement
           (describe_keyword)
           (identifier)
           (into_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (declare_dynamic_statement
@@ -764,7 +849,8 @@ CLOSE my_cursor ;
           (dynamic_keyword)
           (cursor_keyword)
           (for_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (open_cursor_statement
@@ -773,7 +859,8 @@ CLOSE my_cursor ;
           (identifier)
           (using_keyword)
           (descriptor_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (fetch_statement
@@ -781,7 +868,8 @@ CLOSE my_cursor ;
           (identifier)
           (using_keyword)
           (descriptor_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (choose_statement
         (choose_statement_init
@@ -795,18 +883,22 @@ CLOSE my_cursor ;
                     (primary_expression
                       (identifier_expression
                         (identifier)))
+                    (dot_char)
                     (identifier)))
+                (open_brackets)
                 (expression
                   (primary_expression
                     (number_literal
-                      (integer_literal))))))))
+                      (integer_literal))))
+                (close_brackets)))))
         (case_clause
           (case_keyword)
           (case_condition_expression
             (expression
               (primary_expression
                 (enumetation_datatype
-                  (identifier)))))
+                  (identifier)
+                  (exclamation_char)))))
           (scriptable_block
             (statement
               (local_variable_declaration
@@ -815,11 +907,13 @@ CLOSE my_cursor ;
                 (variable_declaration_list
                   (variable_declaration_identifier
                     (identifier)
+                    (equals_operator)
                     (expression
                       (primary_expression
                         (method_invocation
                           (identifier)
                           (argument_list
+                            (open_parenthesis)
                             (expression
                               (primary_expression
                                 (identifier_expression
@@ -827,14 +921,16 @@ CLOSE my_cursor ;
                             (expression
                               (primary_expression
                                 (number_literal
-                                  (integer_literal))))))))))))))
+                                  (integer_literal))))
+                            (close_parenthesis)))))))))))
         (case_clause
           (case_keyword)
           (case_condition_expression
             (expression
               (primary_expression
                 (enumetation_datatype
-                  (identifier)))))
+                  (identifier)
+                  (exclamation_char)))))
           (scriptable_block
             (statement
               (local_variable_declaration
@@ -843,11 +939,13 @@ CLOSE my_cursor ;
                 (variable_declaration_list
                   (variable_declaration_identifier
                     (identifier)
+                    (equals_operator)
                     (expression
                       (primary_expression
                         (method_invocation
                           (identifier)
                           (argument_list
+                            (open_parenthesis)
                             (expression
                               (primary_expression
                                 (identifier_expression
@@ -855,7 +953,8 @@ CLOSE my_cursor ;
                             (expression
                               (primary_expression
                                 (number_literal
-                                  (integer_literal))))))))))))))
+                                  (integer_literal))))
+                            (close_parenthesis)))))))))))
         (end_choose_statement
           (end_keyword)
           (choose_keyword))))
@@ -863,7 +962,8 @@ CLOSE my_cursor ;
       (sql_statement
         (close_cursor_procedure_statement
           (close_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (local_variable_declaration
         (datatype
@@ -881,29 +981,36 @@ CLOSE my_cursor ;
               (expression
                 (primary_expression
                   (string_literal
-                    (string_content))))
+                    (double_quote)
+                    (string_content)
+                    (double_quote))))
               (line_continuation)
               (expression
                 (primary_expression
                   (string_literal
-                    (string_content)))))))))
+                    (double_quote)
+                    (string_content)
+                    (double_quote)))))))))
     (statement
       (sql_statement
         (prepare_sql_statement
           (prepare_keyword)
           (identifier)
           (from_keyword)
+          (colon_char)
           (expression
             (primary_expression
               (identifier_expression
-                (identifier)))))))
+                (identifier))))
+          (semi_colon_char))))
     (statement
       (sql_statement
         (describe_sql_statement
           (describe_keyword)
           (identifier)
           (into_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (declare_dynamic_statement
@@ -912,13 +1019,15 @@ CLOSE my_cursor ;
           (dynamic_keyword)
           (cursor_keyword)
           (for_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (inline_statement
         (expression_statement
           (method_invocation
             (identifier)
             (argument_list
+              (open_parenthesis)
               (expression
                 (primary_expression
                   (identifier_expression
@@ -930,7 +1039,10 @@ CLOSE my_cursor ;
               (expression
                 (primary_expression
                   (string_literal
-                    (string_content)))))))))
+                    (double_quote)
+                    (string_content)
+                    (double_quote))))
+              (close_parenthesis))))))
     (statement
       (sql_statement
         (open_cursor_statement
@@ -939,7 +1051,8 @@ CLOSE my_cursor ;
           (identifier)
           (using_keyword)
           (descriptor_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (fetch_statement
@@ -947,9 +1060,11 @@ CLOSE my_cursor ;
           (identifier)
           (using_keyword)
           (descriptor_keyword)
-          (identifier))))
+          (identifier)
+          (semi_colon_char))))
     (statement
       (sql_statement
         (close_cursor_procedure_statement
           (close_keyword)
-          (identifier))))))
+          (identifier)
+          (semi_colon_char))))))
