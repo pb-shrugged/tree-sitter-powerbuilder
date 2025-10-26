@@ -153,13 +153,13 @@ end on
 ---
 
 (source_file
-  (application_file
-    (application_header_file
+  (class_file
+    (class_header_file
       (export_header_name
         (identifier))
       (application_file_extension)
       (export_comments))
-    (application_content
+    (class_content
       (forward_section
         (forward_keyword)
         (forward_section_body
@@ -307,7 +307,8 @@ end on
                   (identifier)
                   (expression
                     (primary_expression
-                      (string_literal)))))))
+                      (string_literal
+                        (string_content))))))))
           (inner_object_var_declaration
             (local_variable_declaration
               (datatype
@@ -328,7 +329,8 @@ end on
                   (identifier)
                   (expression
                     (primary_expression
-                      (string_literal)))))))
+                      (string_literal
+                        (string_content))))))))
           (inner_object_var_declaration
             (local_variable_declaration
               (datatype
@@ -338,7 +340,8 @@ end on
                   (identifier)
                   (expression
                     (primary_expression
-                      (string_literal)))))))
+                      (string_literal
+                        (string_content))))))))
           (inner_object_var_declaration
             (local_variable_declaration
               (datatype
@@ -359,7 +362,8 @@ end on
                   (identifier)
                   (expression
                     (primary_expression
-                      (string_literal)))))))
+                      (string_literal
+                        (string_content))))))))
           (inner_object_var_declaration
             (local_variable_declaration
               (datatype
@@ -444,7 +448,8 @@ end on
                     (standard_primitive_datatype))
                   (identifier)))))
           (library_keyword)
-          (string_literal))
+          (string_literal
+            (string_content)))
         (line_comment)
         (prototypes_section_end
           (end_keyword)
@@ -593,7 +598,8 @@ end on
                   (argument_list
                     (expression
                       (primary_expression
-                        (string_literal))))))))
+                        (string_literal
+                          (string_content)))))))))
           (statement
             (inline_statement
               (throw_statement
@@ -699,7 +705,8 @@ end on
                 (assignment_operator)
                 (expression
                   (primary_expression
-                    (string_literal))))))
+                    (string_literal
+                      (string_content)))))))
           (statement
             (inline_statement
               (create_statement
@@ -849,8 +856,10 @@ end on
             (within_keyword)
             (identifier)
             (descriptor_keyword)
-            (string_literal)
-            (string_literal))
+            (string_literal
+              (string_content))
+            (string_literal
+              (string_content)))
           (type_definition_body
             (event_declaration
               (event_keyword)

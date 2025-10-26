@@ -466,7 +466,8 @@ EXECUTE IMMEDIATE 'select aijfeiajiejgf' USING My_trans ;
         (execute_statement
           (execute_keyword)
           (immediate_keyword)
-          (string_literal)
+          (string_literal
+            (string_content))
           (using_transaction_statement
             (using_keyword)
             (identifier)))))))
@@ -495,7 +496,8 @@ EXECUTE SQLSA USING :Dept_id_var,:Dept_name_var ;
           (prepare_keyword)
           (identifier)
           (from_keyword)
-          (string_literal))))
+          (string_literal
+            (string_content)))))
     (statement
       (sql_statement
         (execute_statement
@@ -513,7 +515,8 @@ EXECUTE SQLSA USING :Dept_id_var,:Dept_name_var ;
           (prepare_keyword)
           (identifier)
           (from_keyword)
-          (string_literal))))
+          (string_literal
+            (string_content)))))
     (statement
       (sql_statement
         (execute_statement
@@ -573,7 +576,8 @@ CLOSE my_proc ;
           (prepare_keyword)
           (identifier)
           (from_keyword)
-          (string_literal))))
+          (string_literal
+            (string_content)))))
     (statement
       (sql_statement
         (open_cursor_statement
@@ -634,7 +638,8 @@ CLOSE my_proc ;
           (prepare_keyword)
           (identifier)
           (from_keyword)
-          (string_literal))))
+          (string_literal
+            (string_content)))))
     (statement
       (inline_statement
         (assignment_statement
@@ -642,7 +647,8 @@ CLOSE my_proc ;
           (assignment_operator)
           (expression
             (primary_expression
-              (string_literal))))))
+              (string_literal
+                (string_content)))))))
     (statement
       (sql_statement
         (execute_statement
@@ -731,7 +737,8 @@ CLOSE my_cursor ;
           (assignment_operator)
           (expression
             (primary_expression
-              (string_literal))))))
+              (string_literal
+                (string_content)))))))
     (statement
       (sql_statement
         (prepare_sql_statement
@@ -873,11 +880,13 @@ CLOSE my_cursor ;
             (binary_expression
               (expression
                 (primary_expression
-                  (string_literal)))
+                  (string_literal
+                    (string_content))))
               (line_continuation)
               (expression
                 (primary_expression
-                  (string_literal))))))))
+                  (string_literal
+                    (string_content)))))))))
     (statement
       (sql_statement
         (prepare_sql_statement
@@ -920,7 +929,8 @@ CLOSE my_cursor ;
                     (integer_literal))))
               (expression
                 (primary_expression
-                  (string_literal))))))))
+                  (string_literal
+                    (string_content)))))))))
     (statement
       (sql_statement
         (open_cursor_statement

@@ -34,7 +34,7 @@ CHOOSE CASE Weight
   CASE IS<16
     ai_Postage=Weight*0.30
     as_Method="USPS"
-  CASE 16 to 48
+  CASE -16 to 48
     ai_Postage=4.50
     as_Method="UPS"
   CASE  46, 47, 48
@@ -91,14 +91,17 @@ END CHOOSE
                   (assignment_operator)
                   (expression
                     (primary_expression
-                      (string_literal))))))))
+                      (string_literal
+                        (string_content)))))))))
         (case_clause
           (case_keyword)
           (case_to_expression
             (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal))))
+              (unary_expression
+                (expression
+                  (primary_expression
+                    (number_literal
+                      (integer_literal))))))
             (to_keyword)
             (expression
               (primary_expression
@@ -121,7 +124,8 @@ END CHOOSE
                   (assignment_operator)
                   (expression
                     (primary_expression
-                      (string_literal))))))))
+                      (string_literal
+                        (string_content)))))))))
         (case_clause
           (case_keyword)
           (case_condition_expression
@@ -154,7 +158,8 @@ END CHOOSE
                   (assignment_operator)
                   (expression
                     (primary_expression
-                      (string_literal))))))))
+                      (string_literal
+                        (string_content)))))))))
         (case_else_clause
           (case_keyword)
           (else_keyword)
@@ -175,7 +180,8 @@ END CHOOSE
                   (assignment_operator)
                   (expression
                     (primary_expression
-                      (string_literal))))))))
+                      (string_literal
+                        (string_content)))))))))
         (end_choose_statement
           (end_keyword)
           (choose_keyword))))))
@@ -215,7 +221,8 @@ lnv_fileservice = CREATE USING 'u_teste'
           (identifier)
           (create_keyword)
           (using_keyword)
-          (string_literal))))))
+          (string_literal
+            (string_content)))))))
 
 ===
 DESTROY statement
@@ -749,7 +756,8 @@ If 1=1 Then teste() else teste_2()
                     (identifier))))
               (expression
                 (primary_expression
-                  (string_literal)))))
+                  (string_literal
+                    (string_content))))))
           (then_keyword)
           (scriptable_block
             (statement
