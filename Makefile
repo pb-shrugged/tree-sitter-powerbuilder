@@ -4,7 +4,7 @@ endif
 
 LANGUAGE_NAME := tree-sitter-powerbuilder
 HOMEPAGE_URL := https://github.com/tree-sitter/tree-sitter-powerbuilder
-VERSION := 2.0.5
+VERSION := 2.0.6
 
 # repository
 SRC_DIR := src
