@@ -2349,8 +2349,13 @@
           "type": "FIELD",
           "name": "type_name",
           "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            "named": true,
+            "value": "class_name"
           }
         },
         {
@@ -2361,8 +2366,13 @@
           "type": "FIELD",
           "name": "ancestor_name",
           "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            "named": true,
+            "value": "ancenstor_name"
           }
         },
         {
@@ -2391,8 +2401,13 @@
                   "type": "FIELD",
                   "name": "parent_class",
                   "content": {
-                    "type": "SYMBOL",
-                    "name": "identifier"
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    },
+                    "named": true,
+                    "value": "parent_class"
                   }
                 },
                 {
@@ -2693,8 +2708,13 @@
           "type": "FIELD",
           "name": "var_name",
           "content": {
-            "type": "SYMBOL",
-            "name": "identifier"
+            "type": "ALIAS",
+            "content": {
+              "type": "SYMBOL",
+              "name": "identifier"
+            },
+            "named": true,
+            "value": "var_name"
           }
         },
         {
@@ -3058,8 +3078,13 @@
           ]
         },
         {
-          "type": "SYMBOL",
-          "name": "datatype"
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "datatype"
+          },
+          "named": true,
+          "value": "var_datatype"
         },
         {
           "type": "CHOICE",
@@ -6343,16 +6368,26 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "primary_expression"
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "primary_expression"
+          },
+          "named": true,
+          "value": "array_name"
         },
         {
           "type": "SYMBOL",
           "name": "open_brackets"
         },
         {
-          "type": "SYMBOL",
-          "name": "expression"
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "expression"
+          },
+          "named": true,
+          "value": "array_index"
         },
         {
           "type": "SYMBOL",
@@ -6370,17 +6405,22 @@
             "type": "FIELD",
             "name": "object",
             "content": {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "primary_expression"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "super_keyword"
-                }
-              ]
+              "type": "ALIAS",
+              "content": {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "primary_expression"
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "super_keyword"
+                  }
+                ]
+              },
+              "named": true,
+              "value": "field_object"
             }
           },
           {
@@ -6395,25 +6435,30 @@
             "type": "FIELD",
             "name": "field",
             "content": {
-              "type": "SEQ",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "identifier"
-                },
-                {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "array_suffix_ref"
-                    },
-                    {
-                      "type": "BLANK"
-                    }
-                  ]
-                }
-              ]
+              "type": "ALIAS",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "identifier"
+                  },
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "array_suffix_ref"
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "named": true,
+              "value": "field_name"
             }
           }
         ]
@@ -6432,17 +6477,22 @@
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "primary_expression"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "super_keyword"
-                    }
-                  ]
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "primary_expression"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "super_keyword"
+                      }
+                    ]
+                  },
+                  "named": true,
+                  "value": "method_object"
                 },
                 {
                   "type": "BLANK"
@@ -6482,17 +6532,22 @@
               "type": "CHOICE",
               "members": [
                 {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "function_keyword"
-                    },
-                    {
-                      "type": "SYMBOL",
-                      "name": "event_keyword"
-                    }
-                  ]
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SYMBOL",
+                        "name": "function_keyword"
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "event_keyword"
+                      }
+                    ]
+                  },
+                  "named": true,
+                  "value": "method_type"
                 },
                 {
                   "type": "BLANK"
@@ -6554,8 +6609,13 @@
             "type": "FIELD",
             "name": "method_name",
             "content": {
-              "type": "SYMBOL",
-              "name": "identifier"
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "method_name"
             }
           },
           {

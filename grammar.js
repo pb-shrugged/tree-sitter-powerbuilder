@@ -714,13 +714,13 @@ module.exports = grammar({
 
     type_declaration_init: $ => seq(
       $.type_keyword,
-      field('type_name', $.identifier),
+      field('type_name', alias($.identifier, $.class_name)),
       $.from_keyword,
-      field('ancestor_name', $.identifier),
+      field('ancestor_name', alias($.identifier, $.ancenstor_name)),
       optional($.autoinstantiate_keyword),
       optional(seq(
         $.within_keyword,
-        field('parent_class', $.identifier),
+        field('parent_class', alias($.identifier, $.parent_class)),
         optional(seq(
           $.descriptor_keyword,
           $.string_literal,
@@ -792,7 +792,7 @@ module.exports = grammar({
     variable_declaration_list: $ => commaSep1($.variable_declaration_identifier),
 
     variable_declaration_identifier: $ => seq(
-      field('var_name', $.identifier),
+      field('var_name', alias($.identifier, $.var_name)),
       optional($.array_suffix),
       optional(seq($.equals_operator, field('initial_value', $.expression))),
     ),
@@ -874,7 +874,7 @@ module.exports = grammar({
 
     local_variable_declaration: $ => seq(
       optional($.constant_keyword),
-      $.datatype,
+      alias($.datatype, $.var_datatype),
       optional($.variable_precision),
       $.variable_declaration_list,
       $._statement_separation,
@@ -1437,21 +1437,21 @@ module.exports = grammar({
 
     parenthesized_expression: $ => seq($.open_parenthesis, $.expression, $.close_parenthesis),
 
-    array_access: $ => seq($.primary_expression, $.open_brackets, $.expression, $.close_brackets),
+    array_access: $ => seq(alias($.primary_expression, $.array_name), $.open_brackets, alias($.expression, $.array_index), $.close_brackets),
 
     field_access: $ => prec(PREC.FIELD_ACCESS, seq(
-      field('object', choice($.primary_expression, $.super_keyword)),
+      field('object', alias(choice($.primary_expression, $.super_keyword), $.field_object)),
       field('operator', $.dot_char),
-      field('field', seq($.identifier, optional($.array_suffix_ref))),
+      field('field', alias(seq($.identifier, optional($.array_suffix_ref)), $.field_name)),
     )),
 
     method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
-      field('object', optional(choice($.primary_expression, $.super_keyword))),
+      field('object', optional(alias(choice($.primary_expression, $.super_keyword), $.method_object))),
       field('operator', optional(choice($.dot_char, $.double_colon_char))),
-      field('method_type', optional(choice($.function_keyword, $.event_keyword))),
+      field('method_type', optional(alias(choice($.function_keyword, $.event_keyword), $.method_type))),
       field('call_type', optional(choice($.static_keyword, $.dynamic_keyword))),
       field('when_type', optional(choice($.trigger_keyword, $.post_keyword))),
-      field('method_name', $.identifier),
+      field('method_name', alias($.identifier, $.method_name)),
       field('arguments', $.argument_list),
     )),
 
