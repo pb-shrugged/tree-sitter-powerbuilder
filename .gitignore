@@ -1,5 +1,6 @@
 # Local test dir
 local_test/
+.worktrees/
 
 # Rust artifacts
 target/
