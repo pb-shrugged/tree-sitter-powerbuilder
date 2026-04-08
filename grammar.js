@@ -47,7 +47,6 @@ module.exports = grammar({
     $._new_line,
   ],
 
-  // @ts-ignore
   reserved: {
     global: $ => {
       return [
@@ -165,10 +164,7 @@ module.exports = grammar({
 
     source_file: $ => choice(
       $.datawindow_file,
-      $.class_file, // Centralized for now the application, window, menu and userobject types in one class type
-      // $.user_object_file,
-      // $.window_file,
-      // $.menu_file,
+      $.class_file,
       $.function_file,
       $.structure_file,
       $.query_file,
@@ -195,7 +191,6 @@ module.exports = grammar({
       )),
     ),
 
-
     hashbang_script_notation: _ => '#!',
 
     datawindow_file: $ => seq(
@@ -207,21 +202,6 @@ module.exports = grammar({
       $.class_header_file,
       $.class_content,
     ),
-
-    // user_object_file: $ => seq(
-    //   $.user_object_header_file,
-    //   $.user_object_content,
-    // ),
-
-    // window_file: $ => seq(
-    //   $.window_header_file,
-    //   $.window_content,
-    // ),
-
-    // menu_file: $ => seq(
-    //   $.menu_header_file,
-    //   $.menu_content,
-    // ),
 
     function_file: $ => seq(
       $.function_header_file,
