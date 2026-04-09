@@ -8,7 +8,31 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-
+const PREC = {
+  IDENTIFIER_EXPRESSION: -10,
+  COMMENT: 0,
+  ASSIGNMENT: 1,
+  TERNARY: 2,
+  OR: 3,
+  AND: 4,
+  EQUALITY: 5,
+  RELATIONAL: 6,
+  ADDITIVE: 7,
+  MULTIPLICATIVE: 8,
+  EXPONENTIATION: 9,
+  UNARY: 10,
+  UPDATE_UNARY: 11,
+  FIELD_ACCESS: 12,
+  METHOD_INVOCATION: 13,
+  ACCESS_MODIFIER: 17,
+  CONFLICT_PARAMETER_LIST_ARGUMENT_LIST: 19,
+  CONFLICT_EVENT_DECLARATION_EVENT_IMPLEMENTATION: 20,
+  CONFLICT_EXECUTE_STATEMENT_LITERAL: 21,
+  ON_EVENT_BLOCK_LEXICAL_PREC: 22,
+  DESTROY_LEXICAL_PREC: 23,
+  STD_TYPE: 50,
+  KEYWORD: 60,
+};
 
 module.exports = grammar({
   name: "powerscript",
@@ -61,7 +85,10 @@ module.exports = grammar({
       )),
     ),
 
-    class_type_declaration_statement_body: $ => '123',
+    class_type_declaration_statement_body: $ => repeat1(choice(
+      $.event_declaration,
+      alias($.local_variable_declaration, $.inner_class_var_declaration),
+    )),
 
     class_type_declaration_statement_end: $ => seq($.end_keyword, $.type_keyword),
 
@@ -75,6 +102,17 @@ module.exports = grammar({
 
     forward_function_prototypes_statement_end: $ => seq($.end_keyword, $.prototypes_keyword),
 
+    event_declaration: $ => seq(
+      $.event_keyword,
+      optional(seq($.type_keyword, alias($.type, $.return_type))),
+      alias($.identifier, $.event_name),
+      optional($.parameter_list),
+      optional($.throws_clause),
+      optional($.event_id),
+    ),
+
+    event_id: $ => /pbm_[a-zA-Z_][a-zA-Z0-9_]*/,
+
     function_prototype: $ => choice(
       $._function_prototype,
       $._subroutine_prototype,
@@ -84,7 +122,7 @@ module.exports = grammar({
       optional($.global_keyword),
       optional($.access_modifier),
       $.function_keyword,
-      $.types,
+      alias($.type, $.return_type),
       alias($.identifier, $.function_name),
       $.parameter_list,
       optional($.throws_clause),
@@ -101,7 +139,7 @@ module.exports = grammar({
 
     throws_clause: $ => seq(
       $.throws_keyword,
-      commaSep1($.identifier),
+      commaSep1(alias($.identifier, $.throwable_name)),
     ),
 
     function_definition: $ => choice(
@@ -110,16 +148,24 @@ module.exports = grammar({
     ),
 
     _function_definition: $ => seq(
-      alias(seq($._function_prototype, $.statement_separation), $.function_definition_statement),
+      $.function_definition_statement,
       alias($.scriptable_block, $.function_definition_block),
-      alias(seq($.end_keyword, $.function_keyword), $.function_definition_statement_end),
+      $.function_definition_statement_end,
     ),
 
+    function_definition_statement: $ => seq($._function_prototype, $.statement_separation),
+
+    function_definition_statement_end: $ => seq($.end_keyword, $.function_keyword),
+
     _subroutine_definition: $ => seq(
-      alias(seq($._subroutine_prototype, $.statement_separation), $.subroutine_definition_statement),
+      $.subroutine_definition_statement,
       alias($.scriptable_block, $.subroutine_definition_block),
-      alias(seq($.end_keyword, $.subroutine_keyword), $.subroutine_definition_statement_end),
+      $.subroutine_definition_statement_end,
     ),
+
+    subroutine_definition_statement: $ => seq($._subroutine_prototype, $.statement_separation),
+
+    subroutine_definition_statement_end: $ => seq($.end_keyword, $.subroutine_keyword),
 
     parameter_list: $ => seq($.open_parenthesis, commaSep($.parameter), $.close_parenthesis),
 
@@ -128,14 +174,397 @@ module.exports = grammar({
         $.ref_keyword,
         $.readonly_keyword,
       ), $.parameter_pass_by_type)),
-      $.types,
+      $.type,
       alias($.identifier, $.parameter_name),
-      optional($.array_declaration_suffix),
+      optional($.array_parameter_declaration_suffix),
     ),
 
-    array_declaration_suffix: $ => seq($.open_brackets, $.close_brackets),
+    local_variable_declaration: $ => seq(
+      optional($.constant_keyword),
+      alias($.type, $.variable_type),
+      optional($.variable_precision),
+      $.variable_declaration_list,
+    ),
 
-    scriptable_block: $ => "123",
+    variable_precision: $ => seq($.open_curly_brackets, $.integer_literal, $.close_curly_brackets),
+
+    variable_declaration_list: $ => commaSep1($.variable_declaration),
+
+    variable_declaration: $ => seq(
+      alias($.identifier, $.variable_name),
+      optional($.array_suffix),
+      optional(seq("=", alias($.expression, $.initial_value))),
+    ),
+
+    array_suffix: $ => seq(
+      $.open_brackets,
+      choice(
+        commaSep($.expression),
+        commaSep(seq($.expression, $.to_keyword, $.expression)),
+      ),
+      $.close_brackets,
+    ),
+
+    array_parameter_declaration_suffix: $ => seq($.open_brackets, $.close_brackets),
+
+    scriptable_block: $ => repeat1($.statement),
+
+    statement: $ => choice(
+      alias($.local_variable_declaration, $.local_variable_declaration_statement),
+      $.inline_statement,
+      $.choose_statement,
+      $.loop_statement,
+      $.goto_label,
+      $._if_statement,
+      $.try_catch_statement,
+      // $.sql_statement, TODO
+    ),
+
+    inline_statement: $ => choice(
+      $.assignment_statement,
+      $.call_statement,
+      $.continue_statement,
+      $.create_statement,
+      $.destroy_statement,
+      $.exit_statement,
+      $.goto_statement,
+      $.halt_statement,
+      $.return_statement,
+      $.throw_statement,
+      $.expression_statement,
+    ),
+
+    assignment_statement: $ => seq(
+      alias($.l_value_expression, $.l_value),
+      "=",
+      alias($.expression, $.r_value),
+    ),
+
+    array_suffix_ref: $ => seq($.open_brackets, optional(/[ \t]+/), $.close_brackets),
+
+    call_statement: $ => seq(
+      $.call_keyword,
+      alias(choice($.identifier, $.super_keyword), $.ancestor_name),
+      optional(seq('`', alias($.identifier, $.control_name))),
+      "::",
+      alias($.identifier, $.event_name),
+    ),
+
+    continue_statement: $ => $.continue_keyword,
+
+    create_statement: $ => choice(
+      seq(
+        alias($.l_value_expression, $.l_value),
+        "=",
+        $.create_keyword,
+        $.type,
+      ),
+      seq(
+        alias($.l_value_expression, $.l_value),
+        "=",
+        $.create_keyword,
+        $.using_keyword,
+        alias($.primary_expression, $.dynamic_type),
+      ),
+    ),
+
+    destroy_statement: $ => choice(
+      seq($.destroy_keyword, $.open_parenthesis, alias($.primary_expression, $.variable_name), $.close_parenthesis),
+      seq($.destroy_keyword, alias($.primary_expression, $.variable_name)),
+    ),
+
+    exit_statement: $ => $.exit_keyword,
+
+    goto_statement: $ => seq($.goto_keyword, alias($.identifier, $.label)),
+
+    halt_statement: $ => seq($.halt_keyword, optional($.close_keyword)),
+
+    return_statement: $ => seq(
+      $.return_keyword,
+      optional(alias($.expression, $.return_value)),
+    ),
+
+    throw_statement: $ => seq(
+      $.throw_keyword,
+      choice(
+        seq($.create_keyword, $.type),
+        $.expression,
+      ),
+    ),
+
+    expression_statement: $ => seq(
+      choice(
+        $.update_expression,
+        $.method_invocation,
+      ),
+    ),
+
+    choose_statement: $ => seq(
+      $.choose_case_statement,
+      seq(
+        repeat1($.choose_case_clause),
+        optional($.choose_case_else_clause),
+      ),
+      $.choose_statement_end,
+    ),
+
+    choose_case_statement: $ => seq(
+      $.choose_keyword,
+      $.case_keyword,
+      alias($.expression, $.test_expression),
+    ),
+
+    choose_case_clause: $ => seq(
+      $.case_keyword,
+      alias(choice(
+        $.choose_case_to_expression,
+        $.choose_case_is_relational_expression,
+        $.choose_case_condition_expression,
+      ), $.choose_case_clause_condition),
+      optional(alias($.scriptable_block, $.choose_case_block)),
+    ),
+
+    choose_case_to_expression: $ => seq($.expression, $.to_keyword, $.expression),
+
+    choose_case_is_relational_expression: $ => seq($.is_keyword, $.relational_operator, $.expression),
+
+    choose_case_condition_expression: $ => commaSep1($.expression),
+
+    choose_case_else_clause: $ => seq(
+      $.case_keyword,
+      $.else_keyword,
+      optional(alias($.scriptable_block, $.choose_case_else_block)),
+    ),
+
+    choose_statement_end: $ => seq(
+      $.end_keyword,
+      $.choose_keyword,
+    ),
+
+    relational_operator: _ => choice('>', '<', '>=', '<='),
+
+    loop_statement: $ => choice(
+      $.while_loop,
+      $.do_loop,
+      $.for_loop,
+    ),
+
+    while_loop: $ => seq(
+      $.while_loop_statement,
+      optional(alias($.scriptable_block, $.while_loop_block)),
+      $.loop_keyword,
+    ),
+
+    while_loop_statement: $ => seq(
+      $.do_keyword,
+      choice($.until_keyword, $.while_keyword),
+      alias($.expression, $.condition),
+    ),
+
+    do_loop: $ => seq(
+      $.do_keyword,
+      alias(optional($.scriptable_block), $.do_loop_block),
+      $.do_loop_end,
+    ),
+
+    do_loop_end: $ => seq(
+      $.loop_keyword,
+      choice($.until_keyword, $.while_keyword),
+      alias($.expression, $.condition),
+    ),
+
+    for_loop: $ => seq(
+      $.for_loop_statement,
+      optional(alias($.scriptable_block, $.for_loop_block)),
+      $.next_keyword,
+    ),
+
+    for_loop_statement: $ => seq(
+      $.for_keyword,
+      alias($.l_value_expression, $.iterator_counter),
+      "=",
+      alias($.expression, $.initial_value),
+      $.to_keyword,
+      alias($.expression, $.final_value),
+      optional(seq($.step_keyword, alias($.expression, $.increment_value))),
+    ),
+
+    goto_label: $ => seq(alias($.identifier, $.label), ":"),
+
+    _if_statement: $ => choice(
+      $.inline_if_statement,
+      $.if_statement,
+    ),
+
+    inline_if_statement: $ => seq(
+      $.if_keyword,
+      alias($.expression, $.condition),
+      $.then_keyword,
+      alias($.inline_statement, $.if_case_statement),
+      optional(seq($.else_keyword, alias($.inline_statement, $.else_case_statement))),
+    ),
+
+    if_statement: $ => seq(
+      $.if_then_statement,
+      optional(alias($.scriptable_block, $.if_block)),
+      repeat($.elseif_clause),
+      optional($.else_clause),
+      $.if_then_statement_end,
+    ),
+
+    if_then_statement: $ => seq(
+      $.if_keyword,
+      alias($.expression, $.condition),
+      $.then_keyword,
+    ),
+
+    if_then_statement_end: $ => seq(
+      $.end_keyword,
+      $.if_keyword,
+    ),
+
+    elseif_clause: $ => seq(
+      $.elseif_keyword,
+      alias($.expression, $.condition),
+      $.then_keyword,
+      optional(alias($.scriptable_block, $.elseif_block)),
+    ),
+
+    else_clause: $ => seq(
+      $.else_keyword,
+      optional(alias($.scriptable_block, $.else_block)),
+    ),
+
+    try_catch_statement: $ => seq(
+      $.try_keyword,
+      optional(alias($.scriptable_block, $.try_block)),
+      repeat($.catch_clause),
+      optional($.finally_clause),
+      $.try_catch_statement_end,
+    ),
+
+    try_catch_statement_end: $ => seq(
+      $.end_keyword,
+      $.try_keyword,
+    ),
+
+    catch_clause: $ => seq(
+      $.catch_clause_statement,
+      field('catch_block', optional($.scriptable_block)),
+    ),
+
+    catch_clause_statement: $ => seq(
+      $.catch_keyword,
+      $.open_parenthesis,
+      alias($.type, $.throwable_type),
+      alias($.identifier, $.throwable_name),
+      $.close_parenthesis,
+    ),
+
+    finally_clause: $ => seq(
+      $.finally_keyword,
+      optional(alias($.scriptable_block, $.finally_block)),
+    ),
+
+    l_value_expression: $ => choice($.identifier, $.field_access, $.array_access),
+
+    expression: $ => choice(
+      $.update_expression,
+      $.binary_expression,
+      $.unary_expression,
+      $.primary_expression,
+    ),
+
+    update_expression: $ => {
+      const argument = alias($.l_value_expression, $.argument);
+      const operator = alias(choice('--', '++'), $.operator);
+      return prec.right(PREC.UPDATE_UNARY, seq(argument, operator));
+    },
+
+    binary_expression: $ => {
+      const table = [
+        { operator: '+', precedence: PREC.ADDITIVE },
+        { operator: '-', precedence: PREC.ADDITIVE },
+        { operator: '*', precedence: PREC.MULTIPLICATIVE },
+        { operator: '/', precedence: PREC.MULTIPLICATIVE },
+        { operator: '^', precedence: PREC.EXPONENTIATION },
+        { operator: $.or_keyword, precedence: PREC.OR },
+        { operator: $.and_keyword, precedence: PREC.AND },
+        { operator: '=', precedence: PREC.EQUALITY },
+        { operator: '<>', precedence: PREC.EQUALITY },
+        { operator: '>', precedence: PREC.RELATIONAL },
+        { operator: '<', precedence: PREC.RELATIONAL },
+        { operator: '>=', precedence: PREC.RELATIONAL },
+        { operator: '<=', precedence: PREC.RELATIONAL },
+      ];
+
+      return choice(...table.map(({ operator, precedence }) => {
+        return prec.left(precedence, seq(
+          alias($.expression, $.left_expression),
+          alias(operator, $.operator),
+          alias($.expression, $.right_expression),
+        ));
+      }));
+    },
+
+    unary_expression: $ => prec.left(PREC.UNARY, seq(
+      alias(choice($.not_keyword, '-', '+'), $.operator),
+      field('argument', $.expression),
+    )),
+
+    primary_expression: $ => prec.left(choice(
+      $.array_access,
+      $.array_literal,
+      $.enumetation_datatype,
+      $.identifier_expression,
+      $.field_access,
+      $.method_invocation,
+      $._literal,
+      $.parenthesized_expression,
+      $.parent_keyword,
+      $.this_keyword,
+    )),
+
+    array_access: $ => seq(
+      alias($.primary_expression, $.array_name),
+      $.open_brackets,
+      alias($.expression, $.array_index),
+      $.close_brackets
+    ),
+
+    array_literal: $ => seq(
+      $.open_curly_brackets,
+      commaSep1($.expression),
+      $.close_curly_brackets,
+    ),
+
+    enumetation_datatype: $ => seq(alias($.identifier, $.enum_name), "!"),
+
+    identifier_expression: $ => prec(PREC.IDENTIFIER_EXPRESSION, seq($.identifier, optional($.array_suffix_ref))),
+
+    field_access: $ => seq(
+      alias(choice($.primary_expression, $.super_keyword), $.object),
+      '.',
+      seq(alias($.identifier, $.field_name), optional($.array_suffix_ref)),
+    ),
+
+    method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
+      optional(alias(choice($.primary_expression, $.super_keyword), $.method_object)),
+      optional(alias(choice(".", "::"), $.operator)),
+      optional(alias(choice($.function_keyword, $.event_keyword), $.method_type)),
+      optional(alias(choice($.static_keyword, $.dynamic_keyword), $.call_type)),
+      optional(alias(choice($.trigger_keyword, $.post_keyword), $.when_type)),
+      alias($.identifier, $.method_name),
+      $.argument_list,
+    )),
+
+    argument_list: $ => seq(
+      $.open_parenthesis,
+      commaSep(seq(optional($.ref_keyword), $.expression)),
+      $.close_parenthesis,
+    ),
+
+    parenthesized_expression: $ => seq($.open_parenthesis, $.expression, $.close_parenthesis),
 
     access_modifier: $ => choice(
       $.public_keyword,
@@ -143,9 +572,19 @@ module.exports = grammar({
       $.protected_keyword,
     ),
 
-    types: $ => choice(
-      $.primitive_types,
+    type: $ => choice(
+      $.primitive_type,
       $.identifier,
+    ),
+
+    _literal: $ => choice(
+      $.integer_literal,
+      $.decimal_literal,
+      $.real_literal,
+      $.string_literal,
+      $.date_literal,
+      $.time_literal,
+      $.boolean_literal,
     ),
 
     integer_literal: _ => /\d+/,
@@ -164,7 +603,7 @@ module.exports = grammar({
       $.false_keyword,
     ),
 
-    primitive_types: _ => choice(
+    primitive_type: _ => choice(
       caseInsensitiveAlias("blob"),
       caseInsensitiveAlias("boolean"),
       caseInsensitiveAlias("byte"),
