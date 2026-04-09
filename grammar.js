@@ -44,6 +44,13 @@ module.exports = grammar({
     $.line_continuation,
   ],
 
+  conflicts: $ => [
+    [$.r_value_expression, $.type],
+    [$.expression_statement, $.r_value_expression],
+    [$.destroy_statement, $.expression],
+    [$.inline_if_statement, $.if_then_statement]
+  ],
+
   rules: {
 
     source_file: $ => seq(
@@ -240,11 +247,9 @@ module.exports = grammar({
       alias($.expression, $.r_value),
     ),
 
-    array_suffix_ref: $ => seq($.open_brackets, optional(/[ \t]+/), $.close_brackets),
-
     call_statement: $ => seq(
       $.call_keyword,
-      alias(choice($.identifier, $.super_keyword), $.ancestor_name),
+      alias($.r_value_expression, $.ancestor_name),
       optional(seq('`', alias($.identifier, $.control_name))),
       "::",
       alias($.identifier, $.event_name),
@@ -264,13 +269,13 @@ module.exports = grammar({
         "=",
         $.create_keyword,
         $.using_keyword,
-        alias($.primary_expression, $.dynamic_type),
+        alias($.r_value_expression, $.dynamic_type),
       ),
     ),
 
     destroy_statement: $ => choice(
-      seq($.destroy_keyword, $.open_parenthesis, alias($.primary_expression, $.variable_name), $.close_parenthesis),
-      seq($.destroy_keyword, alias($.primary_expression, $.variable_name)),
+      seq($.destroy_keyword, $.open_parenthesis, alias($.r_value_expression, $.variable_name), $.close_parenthesis),
+      seq($.destroy_keyword, alias($.r_value_expression, $.variable_name)),
     ),
 
     exit_statement: $ => $.exit_keyword,
@@ -279,10 +284,10 @@ module.exports = grammar({
 
     halt_statement: $ => seq($.halt_keyword, optional($.close_keyword)),
 
-    return_statement: $ => seq(
+    return_statement: $ => prec.left(seq(
       $.return_keyword,
       optional(alias($.expression, $.return_value)),
-    ),
+    )),
 
     throw_statement: $ => seq(
       $.throw_keyword,
@@ -396,13 +401,13 @@ module.exports = grammar({
       $.if_statement,
     ),
 
-    inline_if_statement: $ => seq(
+    inline_if_statement: $ => prec.left(seq(
       $.if_keyword,
       alias($.expression, $.condition),
       $.then_keyword,
       alias($.inline_statement, $.if_case_statement),
       optional(seq($.else_keyword, alias($.inline_statement, $.else_case_statement))),
-    ),
+    )),
 
     if_statement: $ => seq(
       $.if_then_statement,
@@ -472,7 +477,7 @@ module.exports = grammar({
       $.update_expression,
       $.binary_expression,
       $.unary_expression,
-      $.primary_expression,
+      $.r_value_expression,
     ),
 
     update_expression: $ => {
@@ -512,21 +517,22 @@ module.exports = grammar({
       field('argument', $.expression),
     )),
 
-    primary_expression: $ => prec.left(choice(
+    r_value_expression: $ => prec.left(choice(
       $.array_access,
       $.array_literal,
       $.enumetation_datatype,
-      $.identifier_expression,
+      seq($.identifier, optional($.array_suffix_ref)),
       $.field_access,
       $.method_invocation,
       $._literal,
       $.parenthesized_expression,
       $.parent_keyword,
       $.this_keyword,
+      $.super_keyword,
     )),
 
     array_access: $ => seq(
-      alias($.primary_expression, $.array_name),
+      alias($.r_value_expression, $.array_name),
       $.open_brackets,
       alias($.expression, $.array_index),
       $.close_brackets
@@ -540,16 +546,16 @@ module.exports = grammar({
 
     enumetation_datatype: $ => seq(alias($.identifier, $.enum_name), "!"),
 
-    identifier_expression: $ => prec(PREC.IDENTIFIER_EXPRESSION, seq($.identifier, optional($.array_suffix_ref))),
-
-    field_access: $ => seq(
-      alias(choice($.primary_expression, $.super_keyword), $.object),
+    field_access: $ => prec.left(seq(
+      alias(choice($.r_value_expression), $.object),
       '.',
       seq(alias($.identifier, $.field_name), optional($.array_suffix_ref)),
-    ),
+    )),
+
+    array_suffix_ref: $ => seq($.open_brackets, optional(/[ \t]+/), $.close_brackets),
 
     method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
-      optional(alias(choice($.primary_expression, $.super_keyword), $.method_object)),
+      optional(alias(choice($.r_value_expression), $.method_object)),
       optional(alias(choice(".", "::"), $.operator)),
       optional(alias(choice($.function_keyword, $.event_keyword), $.method_type)),
       optional(alias(choice($.static_keyword, $.dynamic_keyword), $.call_type)),
