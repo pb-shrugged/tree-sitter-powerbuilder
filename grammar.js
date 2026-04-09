@@ -28,6 +28,7 @@ module.exports = grammar({
       optional("HA"),
       optional($.export_header),
       choice(
+
         $.structure_file,
         $.function_file,
       ),
@@ -436,12 +437,11 @@ module.exports = grammar({
 
     file_extension: $ => choice(
       alias("sra", $.application_file_extension),
-      alias("srw", $.window_file_extension),
       alias("sru", $.user_object_file_extension),
-      alias("srd", $.datawindow_file_extension),
+      alias("srw", $.window_file_extension),
+      alias("srm", $.menu_file_extension),
       alias("srs", $.structure_file_extension),
       alias("srf", $.function_file_extension),
-      alias("srm", $.menu_file_extension),
     ),
 
     identifier: _ => /[a-zA-Z_][a-zA-Z0-9\-_$#%]*/,
