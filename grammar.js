@@ -9,10 +9,6 @@
 // @ts-check
 
 const PREC = {
-  IDENTIFIER_EXPRESSION: -10,
-  COMMENT: 0,
-  ASSIGNMENT: 1,
-  TERNARY: 2,
   OR: 3,
   AND: 4,
   EQUALITY: 5,
@@ -24,14 +20,6 @@ const PREC = {
   UPDATE_UNARY: 11,
   FIELD_ACCESS: 12,
   METHOD_INVOCATION: 13,
-  ACCESS_MODIFIER: 17,
-  CONFLICT_PARAMETER_LIST_ARGUMENT_LIST: 19,
-  CONFLICT_EVENT_DECLARATION_EVENT_IMPLEMENTATION: 20,
-  CONFLICT_EXECUTE_STATEMENT_LITERAL: 21,
-  ON_EVENT_BLOCK_LEXICAL_PREC: 22,
-  DESTROY_LEXICAL_PREC: 23,
-  STD_TYPE: 50,
-  KEYWORD: 60,
 };
 
 module.exports = grammar({
@@ -156,7 +144,7 @@ module.exports = grammar({
 
     _function_definition: $ => seq(
       $.function_definition_statement,
-      alias($.scriptable_block, $.function_definition_block),
+      optional(alias($.scriptable_block, $.function_definition_block)),
       $.function_definition_statement_end,
     ),
 
@@ -166,7 +154,7 @@ module.exports = grammar({
 
     _subroutine_definition: $ => seq(
       $.subroutine_definition_statement,
-      alias($.scriptable_block, $.subroutine_definition_block),
+      optional(alias($.scriptable_block, $.subroutine_definition_block)),
       $.subroutine_definition_statement_end,
     ),
 
@@ -546,7 +534,7 @@ module.exports = grammar({
 
     enumetation_datatype: $ => seq(alias($.identifier, $.enum_name), "!"),
 
-    field_access: $ => prec.left(seq(
+    field_access: $ => prec.left(PREC.FIELD_ACCESS, seq(
       alias(choice($.r_value_expression), $.object),
       '.',
       seq(alias($.identifier, $.field_name), optional($.array_suffix_ref)),
