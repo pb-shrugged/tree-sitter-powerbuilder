@@ -1031,6 +1031,7 @@ module.exports = grammar({
       $.fetch_statement,
       $.open_cursor_statement,
       $.close_cursor_procedure_statement,
+      $.execute_statement,
 
       $.delete_statement,
       $.insert_statement,
@@ -1042,10 +1043,11 @@ module.exports = grammar({
       $.declare_dynamic_statement,
       $.describe_sql_statement,
 
+
       $.prepare_sql_statement,
 
       /*
-      $.execute_statement,
+      
       */
     ),
 
@@ -1157,7 +1159,7 @@ module.exports = grammar({
 
     execute_statement: $ => choice(
       seq($.execute_keyword, alias($.identifier, $.procedure_name), $.statement_separation),
-      seq($.execute_keyword, $.immediate_keyword, choice($.stored_procedure_param_oracle, $.string_literal), optional($.using_transaction_statement), $.statement_separation),
+      //seq($.execute_keyword, $.immediate_keyword, choice($.stored_procedure_param_oracle, $.string_literal), optional($.using_transaction_statement), $.statement_separation),
       seq($.execute_keyword, alias($.identifier, $.dynamic_stage_area), $.using_keyword, commaSep1($.stored_procedure_param_oracle), $.statement_separation),
       seq($.execute_keyword, $.dynamic_keyword, alias($.identifier, $.procedure_name), optional(seq($.using_keyword, commaSep1($.stored_procedure_param_oracle))), $.statement_separation),
       seq($.execute_keyword, $.dynamic_keyword, alias($.identifier, $.procedure_name), $.using_keyword, $.descriptor_keyword, alias($.identifier, $.dynamic_description_area), $.statement_separation),

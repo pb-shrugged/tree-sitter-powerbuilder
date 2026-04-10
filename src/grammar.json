@@ -6886,6 +6886,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "execute_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "delete_statement"
         },
         {
@@ -7462,48 +7466,6 @@
               },
               "named": true,
               "value": "procedure_name"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "statement_separation"
-            }
-          ]
-        },
-        {
-          "type": "SEQ",
-          "members": [
-            {
-              "type": "SYMBOL",
-              "name": "execute_keyword"
-            },
-            {
-              "type": "SYMBOL",
-              "name": "immediate_keyword"
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "stored_procedure_param_oracle"
-                },
-                {
-                  "type": "SYMBOL",
-                  "name": "string_literal"
-                }
-              ]
-            },
-            {
-              "type": "CHOICE",
-              "members": [
-                {
-                  "type": "SYMBOL",
-                  "name": "using_transaction_statement"
-                },
-                {
-                  "type": "BLANK"
-                }
-              ]
             },
             {
               "type": "SYMBOL",

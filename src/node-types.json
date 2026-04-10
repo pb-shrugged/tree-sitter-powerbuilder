@@ -2214,6 +2214,58 @@
     "fields": {}
   },
   {
+    "type": "execute_keyword",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "execute_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "descriptor_keyword",
+          "named": true
+        },
+        {
+          "type": "dynamic_description_area",
+          "named": true
+        },
+        {
+          "type": "dynamic_keyword",
+          "named": true
+        },
+        {
+          "type": "dynamic_stage_area",
+          "named": true
+        },
+        {
+          "type": "execute_keyword",
+          "named": true
+        },
+        {
+          "type": "procedure_name",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
+          "named": true
+        },
+        {
+          "type": "stored_procedure_param_oracle",
+          "named": true
+        },
+        {
+          "type": "using_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "exit_keyword",
     "named": true,
     "fields": {}
@@ -5486,6 +5538,10 @@
           "named": true
         },
         {
+          "type": "execute_statement",
+          "named": true
+        },
+        {
           "type": "fetch_statement",
           "named": true
         },
@@ -6952,6 +7008,10 @@
   {
     "type": "event_name",
     "named": true
+  },
+  {
+    "type": "execute",
+    "named": false
   },
   {
     "type": "exit",
