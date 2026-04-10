@@ -28,10 +28,180 @@ module.exports = grammar({
       optional("HA"),
       optional($.export_header),
       choice(
-
+        $.class_file,
         $.structure_file,
         $.function_file,
       ),
+    ),
+
+    class_file: $ => seq(
+      $.forward_declaration_section,
+      repeat($.structure_definition),
+      optional($.shared_variables_section),
+      optional($.global_variables_section),
+      $.class_type_definition,
+      optional($.global_var_declaration),
+      optional($.external_function_prototypes),
+      optional($.instance_variables_section),
+      /*
+      optional($.forward_prototypes_section),
+        repeat(choice(
+        $.event_implementation,
+        $.function_implementation,
+        $.on_event_block,
+      )),
+      repeat($.inner_type_definition),
+      */
+    ),
+
+    forward_declaration_section: $ => seq(
+      alias($.forward_keyword, $.forward_declaration_statement),
+      $.forward_declaration_statement_body,
+      $.forward_declaration_statement_end,
+    ),
+
+    forward_declaration_statement_body: $ => seq(
+      repeat1($.class_type_definition),
+      repeat($.global_variable_declaration),
+    ),
+
+    class_type_definition: $ => seq(
+      $.class_type_definition_statement,
+      optional($.class_type_definition_statement_body),
+      $.end_type_declaration_statement,
+    ),
+
+    class_type_definition_statement: $ => seq(
+      optional($.global_keyword),
+      $.type_keyword,
+      alias($.identifier, $.class_type_name),
+      $.from_keyword,
+      alias($.identifier, $.ancenstor_type_name),
+      optional($.autoinstantiate_keyword),
+      optional(seq(
+        $.within_keyword,
+        alias($.identifier, $.parent_class),
+        optional(seq(
+          $.descriptor_keyword,
+          alias($.string_literal, $.descriptor_type),
+          "=",
+          alias($.string_literal, $.descriptor_value),
+        )),
+      )),
+    ),
+
+    class_type_definition_statement_body: $ => repeat1(choice(
+      $.event_declaration,
+      alias($.local_variable_declaration, $.inner_class_variable_declaration),
+    )),
+
+    global_variable_declaration: $ => seq(
+      $.global_keyword,
+      $.type,
+      alias($.identifier, $.variable_name),
+    ),
+
+    forward_declaration_statement_end: $ => seq(
+      $.end_keyword,
+      $.forward_keyword,
+    ),
+
+    shared_variables_section: $ => seq(
+      $.shared_variables_section_statement,
+      optional($.shared_variables_section_body),
+      $.end_variables_section,
+    ),
+
+    shared_variables_section_statement: $ => seq(
+      $.shared_keyword,
+      $.variables_keyword,
+    ),
+
+    shared_variables_section_body: $ => repeat1($.local_variable_declaration),
+
+    end_variables_section: $ => seq(
+      $.end_keyword,
+      $.variables_keyword,
+    ),
+
+    global_variables_section: $ => seq(
+      $.global_variables_section_statement,
+      optional($.global_variables_section_body),
+      $.end_variables_section,
+    ),
+
+    global_variables_section_statement: $ => seq(
+      $.global_keyword,
+      $.variables_keyword,
+    ),
+
+    global_variables_section_body: $ => repeat1($.local_variable_declaration),
+
+    global_var_declaration: $ => seq(
+      $.global_keyword,
+      $.type,
+      alias($.identifier, $.global_variable_name),
+    ),
+
+    external_function_prototypes: $ => seq(
+      $.external_function_prototypes_statement,
+      repeat($.external_function_prototype),
+      $.end_function_prototypes_statement,
+    ),
+
+    external_function_prototypes_statement: $ => seq(
+      $.type_keyword,
+      $.prototypes_keyword,
+    ),
+
+    external_function_prototype: $ => seq(
+      $.function_prototype,
+      $.library_keyword,
+      alias($.string_literal, $.library_name),
+      optional(seq(
+        $.alias_keyword,
+        $.for_keyword,
+        alias($.string_literal, $.alias_name),
+      )),
+    ),
+
+    instance_variables_section: $ => seq(
+      $.instance_variables_section_statement,
+      optional($.instance_variables_section_statement_body),
+      $.end_variables_section,
+    ),
+
+    instance_variables_section_statement: $ => seq(
+      $.type_keyword,
+      $.variables_keyword,
+    ),
+
+    instance_variables_section_statement_body: $ => repeat1(choice(
+      $.access_section,
+      $.instance_variable_declaration
+    )),
+
+    access_section: $ => seq(
+      $.access_modifier,
+      ":",
+    ),
+
+    instance_variable_declaration: $ => seq(
+      // optional($.constant_keyword), TODO
+      optional($.access_modifier),
+      optional($.readacess_modifier),
+      optional($.writeaccess_modifier),
+      $.local_variable_declaration,
+    ),
+
+    readacess_modifier: $ => choice(
+      $.protectedread_keyword,
+      $.privateread_keyword,
+    ),
+
+    writeaccess_modifier: $ => choice(
+      $.protectedwrite_keyword,
+      $.privatewrite_keyword,
     ),
 
     structure_file: $ => $.structure_definition,
@@ -67,52 +237,35 @@ module.exports = grammar({
     ),
 
     function_file: $ => seq(
-      $.class_type_declaration,
+      $.function_type_declaration,
       $.forward_function_prototypes,
       repeat1($.function_definition),
     ),
 
-    class_type_declaration: $ => seq(
-      $.class_type_declaration_statement,
-      optional($.class_type_declaration_statement_body),
+    function_type_declaration: $ => seq(
+      $.function_type_declaration_statement,
       $.end_type_declaration_statement
     ),
 
-    class_type_declaration_statement: $ => seq(
-      optional($.global_keyword),
+    function_type_declaration_statement: $ => seq(
+      $.global_keyword,
       $.type_keyword,
-      alias($.identifier, $.class_type_name),
+      alias($.identifier, $.function_type_name),
       $.from_keyword,
-      alias($.identifier, $.class_type_ancenstor_name),
-      optional($.autoinstantiate_keyword),
-      optional(seq(
-        $.within_keyword,
-        alias($.identifier, $.class_type_parent_class_name),
-        optional(seq(
-          $.descriptor_keyword,
-          alias($.string_literal, $.descriptor_type),
-          "=",
-          alias($.string_literal, $.descriptor_value),
-        )),
-      )),
+      alias(caseInsensitiveRegExp("function_object"), $.function_type_ancenstor_name),
     ),
-
-    class_type_declaration_statement_body: $ => repeat1(choice(
-      $.event_declaration,
-      alias($.local_variable_declaration, $.inner_class_var_declaration),
-    )),
 
     end_type_declaration_statement: $ => seq($.end_keyword, $.type_keyword),
 
     forward_function_prototypes: $ => seq(
       $.forward_function_prototypes_statement,
       repeat1($.function_prototype),
-      $.forward_function_prototypes_statement_end,
+      $.end_function_prototypes_statement,
     ),
 
     forward_function_prototypes_statement: $ => seq($.forward_keyword, $.prototypes_keyword),
 
-    forward_function_prototypes_statement_end: $ => seq($.end_keyword, $.prototypes_keyword),
+    end_function_prototypes_statement: $ => seq($.end_keyword, $.prototypes_keyword),
 
     event_declaration: $ => seq(
       $.event_keyword,
