@@ -93,6 +93,7 @@ module.exports = grammar({
       alias($.identifier, $.class_type_name),
       $.from_keyword,
       alias($.identifier, $.ancenstor_type_name),
+      optional(seq($.native_keyword, alias($.string_literal, $.dll_path))),
       optional($.autoinstantiate_keyword),
       optional(seq(
         $.within_keyword,
@@ -108,6 +109,7 @@ module.exports = grammar({
 
     class_type_definition_statement_body: $ => repeat1(choice(
       $.event_declaration,
+      $.function_prototype,
       alias($.local_variable_declaration, $.inner_class_variable_declaration),
     )),
 

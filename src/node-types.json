@@ -1046,11 +1046,19 @@
           "named": true
         },
         {
+          "type": "dll_path",
+          "named": true
+        },
+        {
           "type": "from_keyword",
           "named": true
         },
         {
           "type": "global_keyword",
+          "named": true
+        },
+        {
+          "type": "native_keyword",
           "named": true
         },
         {
@@ -1078,6 +1086,10 @@
       "types": [
         {
           "type": "event_declaration",
+          "named": true
+        },
+        {
+          "type": "function_prototype",
           "named": true
         },
         {
@@ -1322,6 +1334,29 @@
         },
         {
           "type": "variable_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "dll_path",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "double_quote",
+          "named": true
+        },
+        {
+          "type": "single_quote",
+          "named": true
+        },
+        {
+          "type": "string_content",
           "named": true
         }
       ]
@@ -4022,6 +4057,11 @@
     "fields": {}
   },
   {
+    "type": "native_keyword",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "next_keyword",
     "named": true,
     "fields": {}
@@ -6078,6 +6118,10 @@
   {
     "type": "method_name",
     "named": true
+  },
+  {
+    "type": "native",
+    "named": false
   },
   {
     "type": "next",

@@ -278,6 +278,32 @@
           "type": "CHOICE",
           "members": [
             {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "native_keyword"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "string_literal"
+                  },
+                  "named": true,
+                  "value": "dll_path"
+                }
+              ]
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
               "type": "SYMBOL",
               "name": "autoinstantiate_keyword"
             },
@@ -361,6 +387,10 @@
           {
             "type": "SYMBOL",
             "name": "event_declaration"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "function_prototype"
           },
           {
             "type": "ALIAS",
