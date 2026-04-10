@@ -22,6 +22,10 @@ module.exports = grammar({
     $.line_continuation,
   ],
 
+  conflicts: $ => [
+    [$.inline_if_statement, $.if_then_statement]
+  ],
+
   rules: {
 
     source_file: $ => seq(
@@ -415,24 +419,285 @@ module.exports = grammar({
       $.protected_keyword,
     ),
 
-
     scriptable_block: $ => repeat1($.statement),
 
     statement: $ => choice(
+      $.choose_statement,
+      $.do_loop,
+      $.for_loop,
+      $.goto_label,
+      $.if_statement,
+      $.inline_if_statement,
+      $.local_variable_declaration_statement,
+      $.try_catch_statement,
+      $.while_loop,
+      $.inline_statement,
+      /*
+      $.sql_statement, TODO
+      */
+    ),
+
+    choose_statement: $ => seq(
+      $.choose_case_statement,
+      seq(
+        repeat1($.choose_case_clause),
+        optional($.choose_case_else_clause),
+      ),
+      $.choose_statement_end,
+    ),
+
+    choose_case_statement: $ => seq(
+      $.choose_keyword,
+      $.case_keyword,
+      alias($.expression, $.test_expression),
+    ),
+
+    choose_case_clause: $ => seq(
+      $.case_keyword,
+      alias(choice(
+        $.choose_case_to_expression,
+        $.choose_case_is_relational_expression,
+        $.choose_case_condition_expression,
+      ), $.choose_case_clause_condition),
+      optional(alias($.scriptable_block, $.choose_case_block)),
+    ),
+
+    choose_case_to_expression: $ => seq($.expression, $.to_keyword, $.expression),
+
+    choose_case_is_relational_expression: $ => seq($.is_keyword, $.relational_operator, $.expression),
+
+    choose_case_condition_expression: $ => commaSep1($.expression),
+
+    choose_case_else_clause: $ => seq(
+      $.case_keyword,
+      $.else_keyword,
+      optional(alias($.scriptable_block, $.choose_case_else_block)),
+    ),
+
+    choose_statement_end: $ => seq(
+      $.end_keyword,
+      $.choose_keyword,
+    ),
+
+    relational_operator: _ => choice('>', '<', '>=', '<='),
+
+    do_loop: $ => seq(
+      $.do_keyword,
+      alias(optional($.scriptable_block), $.do_loop_block),
+      $.do_loop_end,
+    ),
+
+    do_loop_end: $ => seq(
+      $.loop_keyword,
+      choice($.until_keyword, $.while_keyword),
+      alias($.expression, $.condition),
+    ),
+
+    for_loop: $ => seq(
+      $.for_loop_statement,
+      optional(alias($.scriptable_block, $.for_loop_block)),
+      $.next_keyword,
+    ),
+
+    for_loop_statement: $ => seq(
+      $.for_keyword,
+      alias($.expression, $.iterator_counter),
+      "=",
+      alias($.expression, $.initial_value),
+      $.to_keyword,
+      alias($.expression, $.final_value),
+      optional(seq($.step_keyword, alias($.expression, $.increment_value))),
+    ),
+
+    goto_label: $ => seq(alias($.identifier, $.label), ":"),
+
+    if_statement: $ => seq(
+      $.if_then_statement,
+      optional(alias($.scriptable_block, $.if_block)),
+      repeat($.elseif_clause),
+      optional($.else_clause),
+      $.if_then_statement_end,
+    ),
+
+    if_then_statement: $ => seq(
+      $.if_keyword,
+      alias($.expression, $.condition),
+      $.then_keyword,
+    ),
+
+    if_then_statement_end: $ => seq(
+      $.end_keyword,
+      $.if_keyword,
+    ),
+
+    elseif_clause: $ => seq(
+      $.elseif_keyword,
+      alias($.expression, $.condition),
+      $.then_keyword,
+      optional(alias($.scriptable_block, $.elseif_block)),
+    ),
+
+    else_clause: $ => seq(
+      $.else_keyword,
+      optional(alias($.scriptable_block, $.else_block)),
+    ),
+
+    inline_if_statement: $ => prec.left(seq(
+      $.if_keyword,
+      alias($.expression, $.condition),
+      $.then_keyword,
+      alias($.inline_statement, $.if_case_statement),
+      optional(seq($.else_keyword, alias($.inline_statement, $.else_case_statement))),
+    )),
+
+    local_variable_declaration_statement: $ => seq(
+      $.local_variable_declaration,
+      optional($.statement_separation),
+    ),
+
+    try_catch_statement: $ => seq(
+      $.try_keyword,
+      optional(alias($.scriptable_block, $.try_block)),
+      repeat($.catch_clause),
+      optional($.finally_clause),
+      $.try_catch_statement_end,
+    ),
+
+    try_catch_statement_end: $ => seq(
+      $.end_keyword,
+      $.try_keyword,
+    ),
+
+    catch_clause: $ => seq(
+      $.catch_clause_statement,
+      optional(alias($.scriptable_block, $.catch_block)),
+    ),
+
+    catch_clause_statement: $ => seq(
+      $.catch_keyword,
+      $.open_parenthesis,
+      alias($.type, $.throwable_type),
+      alias($.identifier, $.throwable_name),
+      $.close_parenthesis,
+    ),
+
+    finally_clause: $ => seq(
+      $.finally_keyword,
+      optional(alias($.scriptable_block, $.finally_block)),
+    ),
+
+    while_loop: $ => seq(
+      $.while_loop_statement,
+      optional(alias($.scriptable_block, $.while_loop_block)),
+      $.loop_keyword,
+    ),
+
+    while_loop_statement: $ => seq(
+      $.do_keyword,
+      choice($.until_keyword, $.while_keyword),
+      alias($.expression, $.condition),
+    ),
+
+    inline_statement: $ => choice(
+      $.assignment_statement,
+      $.call_statement,
+      $.continue_statement,
+      $.create_statement,
+      $.destroy_statement,
+      $.exit_statement,
+      $.goto_statement,
+      $.halt_statement,
+      $.return_statement,
+      $.throw_statement,
       $.expression_statement,
     ),
 
-    expression_statement: $ => choice(
-      $.update_expression
+    assignment_statement: $ => seq(
+      alias($.expression, $.l_value),
+      "=",
+      alias($.expression, $.r_value),
     ),
 
-    expression: $ => 'expression',
+    call_statement: $ => seq(
+      $.call_keyword,
+      alias($.expression, $.ancestor_name),
+      optional(seq('`', alias($.identifier, $.control_name))),
+      "::",
+      alias($.identifier, $.event_name),
+    ),
+
+    continue_statement: $ => $.continue_keyword,
+
+    create_statement: $ => choice(
+      seq(
+        alias($.expression, $.l_value),
+        "=",
+        $.create_keyword,
+        $.type,
+      ),
+      seq(
+        alias($.expression, $.l_value),
+        "=",
+        $.create_keyword,
+        $.using_keyword,
+        alias($.expression, $.dynamic_type),
+      ),
+    ),
+
+    destroy_statement: $ => choice(
+      seq($.destroy_keyword, $.open_parenthesis, alias($.expression, $.variable_name), $.close_parenthesis),
+      seq($.destroy_keyword, alias($.expression, $.variable_name)),
+    ),
+
+    exit_statement: $ => $.exit_keyword,
+
+    goto_statement: $ => seq($.goto_keyword, alias($.identifier, $.label)),
+
+    halt_statement: $ => seq($.halt_keyword, optional($.close_keyword)),
+
+    return_statement: $ => prec.left(seq(
+      $.return_keyword,
+      optional(alias($.expression, $.return_value)),
+    )),
+
+    throw_statement: $ => seq(
+      $.throw_keyword,
+      choice(
+        seq($.create_keyword, $.type),
+        $.expression,
+      ),
+    ),
+
+    expression_statement: $ => seq(
+      choice(
+        $.method_invocation,
+        $.update_expression,
+      ),
+    ),
+
+    method_invocation: $ => seq(
+      optional(alias(choice($.expression), $.method_object)),
+      optional(alias(choice(".", "::"), $.operator)),
+      optional(alias(choice($.function_keyword, $.event_keyword), $.method_type)),
+      optional(alias(choice($.static_keyword, $.dynamic_keyword), $.call_type)),
+      optional(alias(choice($.trigger_keyword, $.post_keyword), $.when_type)),
+      alias($.identifier, $.method_name),
+      $.argument_list,
+    ),
+
+    argument_list: $ => seq(
+      $.open_parenthesis,
+      commaSep(seq(optional($.ref_keyword), $.expression)),
+      $.close_parenthesis,
+    ),
 
     update_expression: $ => {
       const argument = alias($.integer_literal, $.argument);
       const operator = alias(choice('--', '++'), $.operator);
       return prec.right(PREC.UPDATE_UNARY, seq(argument, operator));
     },
+
+    expression: $ => 'expression',
 
     type: $ => choice(
       $.primitive_type,
