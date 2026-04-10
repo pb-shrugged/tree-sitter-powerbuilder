@@ -43,15 +43,13 @@ module.exports = grammar({
       optional($.global_var_declaration),
       optional($.external_function_prototypes),
       optional($.instance_variables_section),
-      /*
-      optional($.forward_prototypes_section),
-        repeat(choice(
-        $.event_implementation,
-        $.function_implementation,
-        $.on_event_block,
+      optional($.forward_function_prototypes),
+      repeat(choice(
+        $.event_definition,
+        $.function_definition,
+        $.on_event_definition,
       )),
-      repeat($.inner_type_definition),
-      */
+      repeat($.inner_class_type_definition),
     ),
 
     forward_declaration_section: $ => seq(
@@ -204,6 +202,45 @@ module.exports = grammar({
       $.privatewrite_keyword,
     ),
 
+    event_definition: $ => seq(
+      $.event_definition_statement,
+      optional(alias($.scriptable_block, $.event_definition_block)),
+      $.event_definition_statement_end,
+    ),
+
+    event_definition_statement: $ => seq(
+      $.event_declaration,
+      $.statement_separation,
+    ),
+
+    event_definition_statement_end: $ => seq(
+      $.end_keyword,
+      $.event_keyword,
+    ),
+
+    on_event_definition: $ => seq(
+      $.on_event_definition_statement,
+      optional(alias($.scriptable_block, $.on_event_definition_block)),
+      $.on_event_definition_statement_end,
+    ),
+
+    on_event_definition_statement: $ => seq(
+      $.on_keyword,
+      alias($.identifier, $.class_name),
+      ".",
+      choice($.create_keyword, $.destroy_keyword)
+    ),
+
+    on_event_definition_statement_end: $ => seq($.end_keyword, $.on_keyword),
+
+    inner_class_type_definition: $ => seq(
+      $.class_type_definition,
+      repeat(choice(
+        $.event_definition,
+        $.on_event_definition,
+      )),
+    ),
+
     structure_file: $ => $.structure_definition,
 
     structure_definition: $ => seq(
@@ -259,7 +296,7 @@ module.exports = grammar({
 
     forward_function_prototypes: $ => seq(
       $.forward_function_prototypes_statement,
-      repeat1($.function_prototype),
+      repeat($.function_prototype),
       $.end_function_prototypes_statement,
     ),
 
