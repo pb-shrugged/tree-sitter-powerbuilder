@@ -37,9 +37,13 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.inline_if_statement, $.if_then_statement],
-    [$.expression_statement, $.expression],
+    [$.expression_statement, $.r_value_expression],
     [$.parenthesized_expression, $.destroy_statement],
-    [$.halt_statement]
+    [$.halt_statement],
+    [$.assignment_statement, $.create_statement, $.r_value_expression],
+    [$.call_statement, $.r_value_expression],
+    [$.for_loop_statement, $.r_value_expression],
+    [$.return_statement],
   ],
 
   rules: {
@@ -417,14 +421,14 @@ module.exports = grammar({
     variable_declaration: $ => seq(
       alias($.identifier, $.variable_name),
       optional($.array_suffix),
-      optional(seq("=", alias($.expression, $.initial_value))),
+      optional(seq("=", alias($.r_value_expression, $.initial_value))),
     ),
 
     array_suffix: $ => seq(
       $.open_brackets,
       choice(
-        commaSep($.expression),
-        commaSep(seq($.expression, $.to_keyword, $.expression)),
+        commaSep($.r_value_expression),
+        commaSep(seq($.r_value_expression, $.to_keyword, $.r_value_expression)),
       ),
       $.close_brackets,
     ),
@@ -465,7 +469,7 @@ module.exports = grammar({
     choose_case_statement: $ => seq(
       $.choose_keyword,
       $.case_keyword,
-      alias($.expression, $.test_expression),
+      alias($.r_value_expression, $.test_expression),
       optional($.statement_separation),
     ),
 
@@ -480,11 +484,11 @@ module.exports = grammar({
       optional(alias($.scriptable_block, $.choose_case_block)),
     ),
 
-    choose_case_to_expression: $ => seq($.expression, $.to_keyword, $.expression),
+    choose_case_to_expression: $ => seq($.r_value_expression, $.to_keyword, $.r_value_expression),
 
-    choose_case_is_relational_expression: $ => seq($.is_keyword, $.relational_operator, $.expression),
+    choose_case_is_relational_expression: $ => seq($.is_keyword, $.relational_operator, $.r_value_expression),
 
-    choose_case_condition_expression: $ => commaSep1($.expression),
+    choose_case_condition_expression: $ => commaSep1($.r_value_expression),
 
     choose_case_else_clause: $ => seq(
       $.case_keyword,
@@ -511,7 +515,7 @@ module.exports = grammar({
     do_loop_end: $ => seq(
       $.loop_keyword,
       choice($.until_keyword, $.while_keyword),
-      alias($.expression, $.condition),
+      alias($.r_value_expression, $.condition),
       optional($.statement_separation),
     ),
 
@@ -524,12 +528,12 @@ module.exports = grammar({
 
     for_loop_statement: $ => seq(
       $.for_keyword,
-      alias($.expression, $.iterator_counter),
+      alias($.l_value_expression, $.iterator_counter),
       "=",
-      alias($.expression, $.initial_value),
+      alias($.r_value_expression, $.initial_value),
       $.to_keyword,
-      alias($.expression, $.final_value),
-      optional(seq($.step_keyword, alias($.expression, $.increment_value))),
+      alias($.r_value_expression, $.final_value),
+      optional(seq($.step_keyword, alias($.r_value_expression, $.increment_value))),
       optional($.statement_separation),
     ),
 
@@ -545,7 +549,7 @@ module.exports = grammar({
 
     if_then_statement: $ => seq(
       $.if_keyword,
-      alias($.expression, $.condition),
+      alias($.r_value_expression, $.condition),
       $.then_keyword,
       optional($.statement_separation),
     ),
@@ -558,7 +562,7 @@ module.exports = grammar({
 
     elseif_clause: $ => seq(
       $.elseif_keyword,
-      alias($.expression, $.condition),
+      alias($.r_value_expression, $.condition),
       $.then_keyword,
       optional($.statement_separation),
       optional(alias($.scriptable_block, $.elseif_block)),
@@ -572,7 +576,7 @@ module.exports = grammar({
 
     inline_if_statement: $ => prec.left(seq(
       $.if_keyword,
-      alias($.expression, $.condition),
+      alias($.r_value_expression, $.condition),
       $.then_keyword,
       alias($.inline_statement, $.if_case_statement),
       optional(seq($.else_keyword, alias($.inline_statement, $.else_case_statement))),
@@ -629,7 +633,7 @@ module.exports = grammar({
     while_loop_statement: $ => seq(
       $.do_keyword,
       choice($.until_keyword, $.while_keyword),
-      alias($.expression, $.condition),
+      alias($.r_value_expression, $.condition),
       optional($.statement_separation),
     ),
 
@@ -648,14 +652,14 @@ module.exports = grammar({
     ),
 
     assignment_statement: $ => seq(
-      alias($.expression, $.l_value),
+      alias($.l_value_expression, $.l_value),
       "=",
-      alias($.expression, $.r_value),
+      alias($.r_value_expression, $.r_value),
     ),
 
     call_statement: $ => seq(
       $.call_keyword,
-      alias($.expression, $.ancestor_name),
+      alias($.l_value_expression, $.ancestor_name),
       optional(seq('`', alias($.identifier, $.control_name))),
       "::",
       alias($.identifier, $.event_name),
@@ -665,23 +669,23 @@ module.exports = grammar({
 
     create_statement: $ => choice(
       seq(
-        alias($.expression, $.l_value),
+        alias($.l_value_expression, $.l_value),
         "=",
         $.create_keyword,
         $.type,
       ),
       seq(
-        alias($.expression, $.l_value),
+        alias($.l_value_expression, $.l_value),
         "=",
         $.create_keyword,
         $.using_keyword,
-        alias($.expression, $.dynamic_type),
+        alias($.r_value_expression, $.dynamic_type),
       ),
     ),
 
     destroy_statement: $ => choice(
-      seq($.destroy_keyword, $.open_parenthesis, alias($.expression, $.variable_name), $.close_parenthesis),
-      seq($.destroy_keyword, alias($.expression, $.variable_name)),
+      seq($.destroy_keyword, $.open_parenthesis, alias($.r_value_expression, $.variable_name), $.close_parenthesis),
+      seq($.destroy_keyword, alias($.r_value_expression, $.variable_name)),
     ),
 
     exit_statement: $ => $.exit_keyword,
@@ -690,16 +694,16 @@ module.exports = grammar({
 
     halt_statement: $ => seq($.halt_keyword, optional($.close_keyword)),
 
-    return_statement: $ => prec.left(seq(
+    return_statement: $ => seq(
       $.return_keyword,
-      optional(alias($.expression, $.return_value)),
-    )),
+      optional(alias($.r_value_expression, $.return_value)),
+    ),
 
     throw_statement: $ => seq(
       $.throw_keyword,
       choice(
         seq($.create_keyword, $.type),
-        $.expression,
+        $.r_value_expression,
       ),
     ),
 
@@ -711,7 +715,7 @@ module.exports = grammar({
     ),
 
     method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
-      optional(alias(choice($.expression), $.method_object)),
+      optional(alias(choice($.r_value_expression), $.method_object)),
       optional(alias(choice(".", "::"), $.operator)),
       optional(alias(choice($.function_keyword, $.event_keyword), $.method_type)),
       optional(alias(choice($.static_keyword, $.dynamic_keyword), $.call_type)),
@@ -722,31 +726,34 @@ module.exports = grammar({
 
     argument_list: $ => seq(
       $.open_parenthesis,
-      commaSep(seq(optional($.ref_keyword), $.expression)),
+      commaSep(seq(optional($.ref_keyword), $.r_value_expression)),
       $.close_parenthesis,
     ),
 
     update_expression: $ => {
-      const argument = alias($.expression, $.argument);
+      const argument = alias($.l_value_expression, $.argument);
       const operator = alias(choice('--', '++'), $.operator);
       return prec.right(PREC.UPDATE_UNARY, seq(argument, operator));
     },
 
-    expression: $ => choice(
-      $.update_expression,
+    l_value_expression: $ => choice(
+      $.identifier_expression,
+      $.field_access,
+      $.array_access,
+    ),
+
+    r_value_expression: $ => choice(
+      $.l_value_expression,
+
       $.binary_expression,
       $.unary_expression,
 
-      // $.primary_expression,
       $._literal,
       $.array_literal,
       $.this_keyword,
       $.parent_keyword,
       $.super_keyword,
-      $.array_access,
       $.enumetation_datatype,
-      $.field_access,
-      $.identifier_expression,
       $.method_invocation,
       $.parenthesized_expression,
     ),
@@ -770,35 +777,35 @@ module.exports = grammar({
 
       return choice(...table.map(({ operator, precedence }) => {
         return prec.left(precedence, seq(
-          alias($.expression, $.left_expression),
+          alias($.r_value_expression, $.left_expression),
           alias(operator, $.operator),
-          alias($.expression, $.right_expression),
+          alias($.r_value_expression, $.right_expression),
         ));
       }));
     },
 
     unary_expression: $ => prec.left(PREC.UNARY, seq(
       alias(choice($.not_keyword, '-', '+'), $.operator),
-      field('argument', $.expression),
+      field('argument', $.r_value_expression),
     )),
 
     array_literal: $ => seq(
       $.open_curly_brackets,
-      commaSep1($.expression),
+      commaSep1($.r_value_expression),
       $.close_curly_brackets,
     ),
 
     array_access: $ => seq(
-      alias($.expression, $.array_name),
+      alias($.r_value_expression, $.array_name),
       $.open_brackets,
-      alias($.expression, $.array_index),
+      alias($.r_value_expression, $.array_index),
       $.close_brackets
     ),
 
     enumetation_datatype: $ => seq(alias($.identifier, $.enum_name), "!"),
 
     field_access: $ => prec(PREC.FIELD_ACCESS, seq(
-      alias(choice($.expression), $.object),
+      alias(choice($.r_value_expression), $.object),
       '.',
       alias($.identifier, $.field_name),
       optional($.array_suffix_ref),
@@ -808,7 +815,7 @@ module.exports = grammar({
 
     identifier_expression: $ => prec(PREC.IDENTIFIER_EXPRESSION, seq($.identifier, optional($.array_suffix_ref))),
 
-    parenthesized_expression: $ => seq($.open_parenthesis, $.expression, $.close_parenthesis),
+    parenthesized_expression: $ => seq($.open_parenthesis, $.r_value_expression, $.close_parenthesis),
 
     type: $ => choice(
       $.primitive_type,
@@ -1122,12 +1129,12 @@ module.exports = grammar({
       alias($.identifier, $.param_name),
       "=",
       optional(":"),
-      alias($.expression, $.variable_name),
+      alias($.r_value_expression, $.variable_name),
     ),
 
     stored_procedure_param_oracle: $ => seq(
       optional(":"),
-      alias($.expression, $.variable_name),
+      alias($.r_value_expression, $.variable_name),
     ),
 
     delete_statement: $ => choice(
@@ -1253,7 +1260,7 @@ module.exports = grammar({
       $.from_keyword,
       choice(
         alias($.string_literal, $.sql_statement),
-        seq(":", alias($.expression, $.sql_statement),),
+        seq(":", alias($.r_value_expression, $.sql_statement),),
       ),
       $.statement_separation,
     ),

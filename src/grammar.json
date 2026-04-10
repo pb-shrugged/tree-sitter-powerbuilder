@@ -1840,7 +1840,7 @@
                   "type": "ALIAS",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "expression"
+                    "name": "r_value_expression"
                   },
                   "named": true,
                   "value": "initial_value"
@@ -1872,7 +1872,7 @@
                   "members": [
                     {
                       "type": "SYMBOL",
-                      "name": "expression"
+                      "name": "r_value_expression"
                     },
                     {
                       "type": "REPEAT",
@@ -1885,7 +1885,7 @@
                           },
                           {
                             "type": "SYMBOL",
-                            "name": "expression"
+                            "name": "r_value_expression"
                           }
                         ]
                       }
@@ -1908,7 +1908,7 @@
                       "members": [
                         {
                           "type": "SYMBOL",
-                          "name": "expression"
+                          "name": "r_value_expression"
                         },
                         {
                           "type": "SYMBOL",
@@ -1916,7 +1916,7 @@
                         },
                         {
                           "type": "SYMBOL",
-                          "name": "expression"
+                          "name": "r_value_expression"
                         }
                       ]
                     },
@@ -1934,7 +1934,7 @@
                             "members": [
                               {
                                 "type": "SYMBOL",
-                                "name": "expression"
+                                "name": "r_value_expression"
                               },
                               {
                                 "type": "SYMBOL",
@@ -1942,7 +1942,7 @@
                               },
                               {
                                 "type": "SYMBOL",
-                                "name": "expression"
+                                "name": "r_value_expression"
                               }
                             ]
                           }
@@ -2119,7 +2119,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "test_expression"
@@ -2203,7 +2203,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "expression"
+          "name": "r_value_expression"
         },
         {
           "type": "SYMBOL",
@@ -2211,7 +2211,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "expression"
+          "name": "r_value_expression"
         }
       ]
     },
@@ -2228,7 +2228,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "expression"
+          "name": "r_value_expression"
         }
       ]
     },
@@ -2237,7 +2237,7 @@
       "members": [
         {
           "type": "SYMBOL",
-          "name": "expression"
+          "name": "r_value_expression"
         },
         {
           "type": "REPEAT",
@@ -2250,7 +2250,7 @@
               },
               {
                 "type": "SYMBOL",
-                "name": "expression"
+                "name": "r_value_expression"
               }
             ]
           }
@@ -2411,7 +2411,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "condition"
@@ -2483,7 +2483,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "l_value_expression"
           },
           "named": true,
           "value": "iterator_counter"
@@ -2496,7 +2496,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "initial_value"
@@ -2509,7 +2509,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "final_value"
@@ -2528,7 +2528,7 @@
                   "type": "ALIAS",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "expression"
+                    "name": "r_value_expression"
                   },
                   "named": true,
                   "value": "increment_value"
@@ -2644,7 +2644,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "condition"
@@ -2703,7 +2703,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "condition"
@@ -2795,7 +2795,7 @@
             "type": "ALIAS",
             "content": {
               "type": "SYMBOL",
-              "name": "expression"
+              "name": "r_value_expression"
             },
             "named": true,
             "value": "condition"
@@ -3138,7 +3138,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "condition"
@@ -3213,7 +3213,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "l_value_expression"
           },
           "named": true,
           "value": "l_value"
@@ -3226,7 +3226,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "r_value"
@@ -3244,7 +3244,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "l_value_expression"
           },
           "named": true,
           "value": "ancestor_name"
@@ -3304,7 +3304,7 @@
               "type": "ALIAS",
               "content": {
                 "type": "SYMBOL",
-                "name": "expression"
+                "name": "l_value_expression"
               },
               "named": true,
               "value": "l_value"
@@ -3330,7 +3330,7 @@
               "type": "ALIAS",
               "content": {
                 "type": "SYMBOL",
-                "name": "expression"
+                "name": "l_value_expression"
               },
               "named": true,
               "value": "l_value"
@@ -3351,7 +3351,7 @@
               "type": "ALIAS",
               "content": {
                 "type": "SYMBOL",
-                "name": "expression"
+                "name": "r_value_expression"
               },
               "named": true,
               "value": "dynamic_type"
@@ -3378,7 +3378,7 @@
               "type": "ALIAS",
               "content": {
                 "type": "SYMBOL",
-                "name": "expression"
+                "name": "r_value_expression"
               },
               "named": true,
               "value": "variable_name"
@@ -3400,7 +3400,7 @@
               "type": "ALIAS",
               "content": {
                 "type": "SYMBOL",
-                "name": "expression"
+                "name": "r_value_expression"
               },
               "named": true,
               "value": "variable_name"
@@ -3453,34 +3453,30 @@
       ]
     },
     "return_statement": {
-      "type": "PREC_LEFT",
-      "value": 0,
-      "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "SYMBOL",
-            "name": "return_keyword"
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "ALIAS",
-                "content": {
-                  "type": "SYMBOL",
-                  "name": "expression"
-                },
-                "named": true,
-                "value": "return_value"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "return_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "r_value_expression"
               },
-              {
-                "type": "BLANK"
-              }
-            ]
-          }
-        ]
-      }
+              "named": true,
+              "value": "return_value"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
     },
     "throw_statement": {
       "type": "SEQ",
@@ -3507,7 +3503,7 @@
             },
             {
               "type": "SYMBOL",
-              "name": "expression"
+              "name": "r_value_expression"
             }
           ]
         }
@@ -3547,7 +3543,7 @@
                   "members": [
                     {
                       "type": "SYMBOL",
-                      "name": "expression"
+                      "name": "r_value_expression"
                     }
                   ]
                 },
@@ -3709,7 +3705,7 @@
                     },
                     {
                       "type": "SYMBOL",
-                      "name": "expression"
+                      "name": "r_value_expression"
                     }
                   ]
                 },
@@ -3739,7 +3735,7 @@
                           },
                           {
                             "type": "SYMBOL",
-                            "name": "expression"
+                            "name": "r_value_expression"
                           }
                         ]
                       }
@@ -3769,7 +3765,7 @@
             "type": "ALIAS",
             "content": {
               "type": "SYMBOL",
-              "name": "expression"
+              "name": "l_value_expression"
             },
             "named": true,
             "value": "argument"
@@ -3795,12 +3791,29 @@
         ]
       }
     },
-    "expression": {
+    "l_value_expression": {
       "type": "CHOICE",
       "members": [
         {
           "type": "SYMBOL",
-          "name": "update_expression"
+          "name": "identifier_expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "field_access"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "array_access"
+        }
+      ]
+    },
+    "r_value_expression": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "l_value_expression"
         },
         {
           "type": "SYMBOL",
@@ -3832,19 +3845,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "array_access"
-        },
-        {
-          "type": "SYMBOL",
           "name": "enumetation_datatype"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "field_access"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "identifier_expression"
         },
         {
           "type": "SYMBOL",
@@ -3869,7 +3870,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -3887,7 +3888,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -3905,7 +3906,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -3923,7 +3924,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -3941,7 +3942,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -3959,7 +3960,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -3977,7 +3978,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -3995,7 +3996,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4013,7 +4014,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4031,7 +4032,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4049,7 +4050,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4067,7 +4068,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4085,7 +4086,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4103,7 +4104,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4121,7 +4122,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4139,7 +4140,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4157,7 +4158,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4175,7 +4176,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4193,7 +4194,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4211,7 +4212,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4229,7 +4230,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4247,7 +4248,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4265,7 +4266,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4283,7 +4284,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4301,7 +4302,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "left_expression"
@@ -4319,7 +4320,7 @@
                 "type": "ALIAS",
                 "content": {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 },
                 "named": true,
                 "value": "right_expression"
@@ -4362,7 +4363,7 @@
             "name": "argument",
             "content": {
               "type": "SYMBOL",
-              "name": "expression"
+              "name": "r_value_expression"
             }
           }
         ]
@@ -4380,7 +4381,7 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "expression"
+              "name": "r_value_expression"
             },
             {
               "type": "REPEAT",
@@ -4393,7 +4394,7 @@
                   },
                   {
                     "type": "SYMBOL",
-                    "name": "expression"
+                    "name": "r_value_expression"
                   }
                 ]
               }
@@ -4413,7 +4414,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "array_name"
@@ -4426,7 +4427,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "array_index"
@@ -4468,7 +4469,7 @@
               "members": [
                 {
                   "type": "SYMBOL",
-                  "name": "expression"
+                  "name": "r_value_expression"
                 }
               ]
             },
@@ -4541,7 +4542,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "expression"
+          "name": "r_value_expression"
         },
         {
           "type": "SYMBOL",
@@ -7300,7 +7301,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "variable_name"
@@ -7326,7 +7327,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "variable_name"
@@ -8150,7 +8151,7 @@
                   "type": "ALIAS",
                   "content": {
                     "type": "SYMBOL",
-                    "name": "expression"
+                    "name": "r_value_expression"
                   },
                   "named": true,
                   "value": "sql_statement"
@@ -8202,7 +8203,7 @@
     ],
     [
       "expression_statement",
-      "expression"
+      "r_value_expression"
     ],
     [
       "parenthesized_expression",
@@ -8210,6 +8211,22 @@
     ],
     [
       "halt_statement"
+    ],
+    [
+      "assignment_statement",
+      "create_statement",
+      "r_value_expression"
+    ],
+    [
+      "call_statement",
+      "r_value_expression"
+    ],
+    [
+      "for_loop_statement",
+      "r_value_expression"
+    ],
+    [
+      "return_statement"
     ]
   ],
   "precedences": [],
