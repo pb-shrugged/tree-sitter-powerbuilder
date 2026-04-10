@@ -1100,6 +1100,29 @@
     }
   },
   {
+    "type": "close_cursor_procedure_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "close_keyword",
+          "named": true
+        },
+        {
+          "type": "cursor_procedure_name",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "close_keyword",
     "named": true,
     "fields": {}
@@ -5408,6 +5431,10 @@
         },
         {
           "type": "boolean_literal",
+          "named": true
+        },
+        {
+          "type": "close_cursor_procedure_statement",
           "named": true
         },
         {

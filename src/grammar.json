@@ -6882,6 +6882,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "close_cursor_procedure_statement"
+        },
+        {
+          "type": "SYMBOL",
           "name": "delete_statement"
         },
         {
@@ -8191,6 +8195,9 @@
     [
       "parenthesized_expression",
       "destroy_statement"
+    ],
+    [
+      "halt_statement"
     ]
   ],
   "precedences": [],

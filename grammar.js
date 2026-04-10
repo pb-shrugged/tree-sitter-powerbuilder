@@ -38,6 +38,7 @@ module.exports = grammar({
     [$.inline_if_statement, $.if_then_statement],
     [$.expression_statement, $.expression],
     [$.parenthesized_expression, $.destroy_statement],
+    [$.halt_statement]
   ],
 
   rules: {
@@ -1029,6 +1030,7 @@ module.exports = grammar({
       $.rollback_statement,
       $.fetch_statement,
       $.open_cursor_statement,
+      $.close_cursor_procedure_statement,
 
       $.delete_statement,
       $.insert_statement,
@@ -1044,7 +1046,6 @@ module.exports = grammar({
 
       /*
       $.execute_statement,
-      $.close_cursor_procedure_statement,
       */
     ),
 
