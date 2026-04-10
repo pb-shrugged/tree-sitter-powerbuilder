@@ -448,9 +448,7 @@ module.exports = grammar({
       $.try_catch_statement,
       $.while_loop,
       seq($.inline_statement, optional($.statement_separation)),
-      /*
-      $.sql_statement, TODO
-      */
+      $.sql_statement,
     ),
 
     choose_statement: $ => seq(
@@ -1015,6 +1013,248 @@ module.exports = grammar({
     line_comment: _ => seq("//", token.immediate(prec(1, /.*/))),
     block_comment: _ => token(seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")),
     line_continuation: _ => "&",
+
+
+
+
+
+
+
+
+
+    sql_statement: $ => choice(
+      $.connect_statement,
+      $.disconnect_statement,
+      $.commit_statement,
+      $.rollback_statement,
+      $.fetch_statement,
+      $.open_cursor_statement,
+
+      $.delete_statement,
+      $.insert_statement,
+      $.select_statement,
+      $.update_statement,
+
+      $.declare_cursor_statement,
+      $.declare_procedure_statement,
+      $.declare_dynamic_statement,
+      $.describe_sql_statement,
+
+      $.prepare_sql_statement,
+
+      /*
+      $.execute_statement,
+      $.close_cursor_procedure_statement,
+      */
+    ),
+
+    close_cursor_procedure_statement: $ => seq(
+      $.close_keyword,
+      alias($.identifier, $.cursor_procedure_name),
+      $.statement_separation,
+    ),
+
+    using_transaction_statement: $ => seq(
+      $.using_keyword,
+      alias($.identifier, $.transaction_name),
+    ),
+
+    commit_statement: $ => seq(
+      $.commit_keyword,
+      optional($.using_transaction_statement),
+      $.statement_separation,
+    ),
+
+    connect_statement: $ => seq(
+      $.connect_keyword,
+      optional($.using_transaction_statement),
+      $.statement_separation,
+    ),
+
+    declare_cursor_statement: $ => seq(
+      $.declare_keyword,
+      alias($.identifier, $.cursor_name),
+      $.cursor_keyword,
+      $.for_keyword,
+      $.select_statement,
+    ),
+
+    declare_procedure_statement: $ => seq(
+      $.declare_keyword,
+      alias($.identifier, $.procedure_name),
+      $.procedure_keyword,
+      $.for_keyword,
+      alias($.identifier, $.store_procedure_name),
+      optional($.stored_procedure_param_list),
+      optional($.using_transaction_statement),
+      $.statement_separation,
+    ),
+
+    declare_dynamic_statement: $ => seq(
+      $.declare_keyword,
+      alias($.identifier, $.cursor_procedure_name),
+      $.dynamic_keyword,
+      choice($.cursor_keyword, $.procedure_keyword),
+      $.for_keyword,
+      alias($.identifier, $.dynamic_stage_area),
+      $.statement_separation,
+    ),
+
+    describe_sql_statement: $ => seq(
+      $.describe_keyword,
+      alias($.identifier, $.dynamic_stage_area),
+      $.into_keyword,
+      alias($.identifier, $.dynamic_description_area),
+      $.statement_separation,
+    ),
+
+    stored_procedure_param_list: $ => choice(
+      commaSep1($.stored_procedure_param_ase),
+      seq($.open_parenthesis, commaSep1($.stored_procedure_param_oracle), $.close_parenthesis),
+    ),
+
+    stored_procedure_param_ase: $ => seq(
+      "@",
+      alias($.identifier, $.param_name),
+      "=",
+      optional(":"),
+      alias($.expression, $.variable_name),
+    ),
+
+    stored_procedure_param_oracle: $ => seq(
+      optional(":"),
+      alias($.expression, $.variable_name),
+    ),
+
+    delete_statement: $ => choice(
+      seq(
+        $.delete_keyword,
+        $.from_keyword,
+        alias($.identifier, $.table_name),
+        $.where_keyword,
+        $.where_criteria,
+        $.rest_of_sql,
+        $.statement_separation,
+      ),
+      seq(
+        $.delete_keyword,
+        $.from_keyword,
+        alias($.identifier, $.table_name),
+        $.where_keyword,
+        $.current_keyword,
+        $.of_keyword,
+        alias($.identifier, $.cursor_name),
+        $.statement_separation,
+      ),
+    ),
+
+    disconnect_statement: $ => seq(
+      $.disconnect_keyword,
+      optional($.using_transaction_statement),
+      $.statement_separation,
+    ),
+
+    execute_statement: $ => choice(
+      seq($.execute_keyword, alias($.identifier, $.procedure_name), $.statement_separation),
+      seq($.execute_keyword, $.immediate_keyword, choice($.stored_procedure_param_oracle, $.string_literal), optional($.using_transaction_statement), $.statement_separation),
+      seq($.execute_keyword, alias($.identifier, $.dynamic_stage_area), $.using_keyword, commaSep1($.stored_procedure_param_oracle), $.statement_separation),
+      seq($.execute_keyword, $.dynamic_keyword, alias($.identifier, $.procedure_name), optional(seq($.using_keyword, commaSep1($.stored_procedure_param_oracle))), $.statement_separation),
+      seq($.execute_keyword, $.dynamic_keyword, alias($.identifier, $.procedure_name), $.using_keyword, $.descriptor_keyword, alias($.identifier, $.dynamic_description_area), $.statement_separation),
+    ),
+
+    fetch_statement: $ => choice(
+      seq(
+        $.fetch_keyword,
+        alias($.identifier, $.cursor_procedure_name),
+        $.into_keyword,
+        $.fetch_variable_list,
+        $.statement_separation,
+      ),
+      seq(
+        $.fetch_keyword,
+        alias($.identifier, $.cursor_procedure_name),
+        $.using_keyword,
+        $.descriptor_keyword,
+        alias($.identifier, $.dynamic_stage_area),
+        $.statement_separation,
+      ),
+    ),
+
+    fetch_variable_list: $ => commaSep1(seq(
+      ":",
+      alias($.identifier, $.variable_name),
+      optional(seq(
+        ":",
+        alias($.identifier, $.indicator_var)
+      ))
+    )),
+
+    insert_statement: $ => seq(
+      $.insert_keyword,
+      $.rest_of_sql,
+      $.statement_separation,
+    ),
+
+    open_cursor_statement: $ => choice(
+      seq(
+        $.open_keyword,
+        alias($.identifier, $.cursor_name),
+        $.statement_separation,
+      ),
+      seq(
+        $.open_keyword,
+        $.dynamic_keyword,
+        alias($.identifier, $.cursor_name),
+        optional(seq(
+          $.using_keyword,
+          commaSep1($.stored_procedure_param_oracle),
+        )),
+        $.statement_separation,
+      ),
+      seq(
+        $.open_keyword,
+        $.dynamic_keyword,
+        alias($.identifier, $.cursor_name),
+        $.using_keyword,
+        $.descriptor_keyword,
+        alias($.identifier, $.dynamic_staging_area),
+        $.statement_separation,
+      ),
+    ),
+
+    rollback_statement: $ => seq(
+      $.rollback_keyword,
+      optional($.using_transaction_statement),
+      $.statement_separation,
+    ),
+
+    select_statement: $ => seq(
+      choice($.select_keyword, $.selectblob_keyword),
+      $.rest_of_sql,
+      $.statement_separation,
+    ),
+
+    update_statement: $ => seq(
+      choice($.update_keyword, $.updateblob_keyword),
+      alias($.identifier, $.table_name),
+      $.rest_of_sql,
+      $.statement_separation,
+    ),
+
+    prepare_sql_statement: $ => seq(
+      $.prepare_keyword,
+      alias($.identifier, $.dynamic_staging_area),
+      $.from_keyword,
+      choice(
+        alias($.string_literal, $.sql_statement),
+        seq(":", alias($.expression, $.sql_statement),),
+      ),
+      $.statement_separation,
+    ),
+
+    rest_of_sql: $ => token(/[^;]*/),
+
+    where_criteria: $ => $.rest_of_sql,
 
   },
 });

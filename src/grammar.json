@@ -2060,6 +2060,10 @@
               ]
             }
           ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sql_statement"
         }
       ]
     },
@@ -6848,6 +6852,1313 @@
     "line_continuation": {
       "type": "STRING",
       "value": "&"
+    },
+    "sql_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "connect_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "disconnect_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "commit_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rollback_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "fetch_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "open_cursor_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "delete_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "insert_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "select_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "update_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declare_cursor_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declare_procedure_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "declare_dynamic_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "describe_sql_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "prepare_sql_statement"
+        }
+      ]
+    },
+    "close_cursor_procedure_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "close_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "cursor_procedure_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "using_transaction_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "using_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "transaction_name"
+        }
+      ]
+    },
+    "commit_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "commit_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "connect_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "connect_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "declare_cursor_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "declare_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "cursor_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "cursor_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "for_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "select_statement"
+        }
+      ]
+    },
+    "declare_procedure_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "declare_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "procedure_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "procedure_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "for_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "store_procedure_name"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "stored_procedure_param_list"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "declare_dynamic_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "declare_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "cursor_procedure_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "dynamic_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "cursor_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "procedure_keyword"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "for_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "dynamic_stage_area"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "describe_sql_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "describe_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "dynamic_stage_area"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "into_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "dynamic_description_area"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "stored_procedure_param_list": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "stored_procedure_param_ase"
+            },
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ","
+                  },
+                  {
+                    "type": "SYMBOL",
+                    "name": "stored_procedure_param_ase"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "open_parenthesis"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "stored_procedure_param_oracle"
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "stored_procedure_param_oracle"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "close_parenthesis"
+            }
+          ]
+        }
+      ]
+    },
+    "stored_procedure_param_ase": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "@"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "param_name"
+        },
+        {
+          "type": "STRING",
+          "value": "="
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "expression"
+          },
+          "named": true,
+          "value": "variable_name"
+        }
+      ]
+    },
+    "stored_procedure_param_oracle": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "expression"
+          },
+          "named": true,
+          "value": "variable_name"
+        }
+      ]
+    },
+    "delete_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "delete_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "from_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "table_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "where_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "where_criteria"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "rest_of_sql"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "delete_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "from_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "table_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "where_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "current_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "of_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "cursor_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        }
+      ]
+    },
+    "disconnect_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "disconnect_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "execute_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "procedure_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "immediate_keyword"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "stored_procedure_param_oracle"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "string_literal"
+                }
+              ]
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "using_transaction_statement"
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "dynamic_stage_area"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "using_keyword"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "stored_procedure_param_oracle"
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SEQ",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "SYMBOL",
+                        "name": "stored_procedure_param_oracle"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "dynamic_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "procedure_name"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "using_keyword"
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "stored_procedure_param_oracle"
+                        },
+                        {
+                          "type": "REPEAT",
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "stored_procedure_param_oracle"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "execute_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "dynamic_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "procedure_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "using_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "descriptor_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "dynamic_description_area"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        }
+      ]
+    },
+    "fetch_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "fetch_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "cursor_procedure_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "into_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "fetch_variable_list"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "fetch_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "cursor_procedure_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "using_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "descriptor_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "dynamic_stage_area"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        }
+      ]
+    },
+    "fetch_variable_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "variable_name"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ":"
+                    },
+                    {
+                      "type": "ALIAS",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "identifier"
+                      },
+                      "named": true,
+                      "value": "indicator_var"
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": ","
+              },
+              {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ":"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "SYMBOL",
+                      "name": "identifier"
+                    },
+                    "named": true,
+                    "value": "variable_name"
+                  },
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "SEQ",
+                        "members": [
+                          {
+                            "type": "STRING",
+                            "value": ":"
+                          },
+                          {
+                            "type": "ALIAS",
+                            "content": {
+                              "type": "SYMBOL",
+                              "name": "identifier"
+                            },
+                            "named": true,
+                            "value": "indicator_var"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "insert_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "insert_keyword"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rest_of_sql"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "open_cursor_statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "open_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "cursor_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "open_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "dynamic_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "cursor_name"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "using_keyword"
+                    },
+                    {
+                      "type": "SEQ",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "stored_procedure_param_oracle"
+                        },
+                        {
+                          "type": "REPEAT",
+                          "content": {
+                            "type": "SEQ",
+                            "members": [
+                              {
+                                "type": "STRING",
+                                "value": ","
+                              },
+                              {
+                                "type": "SYMBOL",
+                                "name": "stored_procedure_param_oracle"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "open_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "dynamic_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "cursor_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "using_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "descriptor_keyword"
+            },
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "identifier"
+              },
+              "named": true,
+              "value": "dynamic_staging_area"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "statement_separation"
+            }
+          ]
+        }
+      ]
+    },
+    "rollback_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "rollback_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "using_transaction_statement"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "select_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "select_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "selectblob_keyword"
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rest_of_sql"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "update_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "update_keyword"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "updateblob_keyword"
+            }
+          ]
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "table_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "rest_of_sql"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "prepare_sql_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "prepare_keyword"
+        },
+        {
+          "type": "ALIAS",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          },
+          "named": true,
+          "value": "dynamic_staging_area"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "from_keyword"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "ALIAS",
+              "content": {
+                "type": "SYMBOL",
+                "name": "string_literal"
+              },
+              "named": true,
+              "value": "sql_statement"
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "STRING",
+                  "value": ":"
+                },
+                {
+                  "type": "ALIAS",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "expression"
+                  },
+                  "named": true,
+                  "value": "sql_statement"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SYMBOL",
+          "name": "statement_separation"
+        }
+      ]
+    },
+    "rest_of_sql": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[^;]*"
+      }
+    },
+    "where_criteria": {
+      "type": "SYMBOL",
+      "name": "rest_of_sql"
     }
   },
   "extras": [
