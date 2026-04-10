@@ -259,6 +259,10 @@
           "named": true
         },
         {
+          "type": "statement_separation",
+          "named": true
+        },
+        {
           "type": "throwable_name",
           "named": true
         },
@@ -307,6 +311,10 @@
         },
         {
           "type": "choose_case_clause_condition",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         }
       ]
@@ -373,6 +381,10 @@
         {
           "type": "else_keyword",
           "named": true
+        },
+        {
+          "type": "statement_separation",
+          "named": true
         }
       ]
     }
@@ -391,6 +403,10 @@
         },
         {
           "type": "choose_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         },
         {
@@ -446,6 +462,10 @@
         },
         {
           "type": "end_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         }
       ]
@@ -784,6 +804,10 @@
         {
           "type": "do_loop_end",
           "named": true
+        },
+        {
+          "type": "statement_separation",
+          "named": true
         }
       ]
     }
@@ -817,6 +841,10 @@
         },
         {
           "type": "loop_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         },
         {
@@ -915,6 +943,10 @@
         {
           "type": "else_keyword",
           "named": true
+        },
+        {
+          "type": "statement_separation",
+          "named": true
         }
       ]
     }
@@ -957,6 +989,10 @@
         },
         {
           "type": "elseif_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         },
         {
@@ -1402,6 +1438,10 @@
         {
           "type": "finally_keyword",
           "named": true
+        },
+        {
+          "type": "statement_separation",
+          "named": true
         }
       ]
     }
@@ -1434,6 +1474,10 @@
         },
         {
           "type": "next_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         }
       ]
@@ -1480,6 +1524,10 @@
         },
         {
           "type": "iterator_counter",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         },
         {
@@ -1966,11 +2014,15 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "label",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         }
       ]
@@ -2142,6 +2194,10 @@
           "named": true
         },
         {
+          "type": "statement_separation",
+          "named": true
+        },
+        {
           "type": "then_keyword",
           "named": true
         }
@@ -2162,6 +2218,10 @@
         },
         {
           "type": "if_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         }
       ]
@@ -2193,6 +2253,10 @@
         },
         {
           "type": "if_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         },
         {
@@ -2890,7 +2954,7 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
@@ -2923,6 +2987,10 @@
         },
         {
           "type": "local_variable_declaration_statement",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         },
         {
@@ -3271,6 +3339,10 @@
           "named": true
         },
         {
+          "type": "statement_separation",
+          "named": true
+        },
+        {
           "type": "try_block",
           "named": true
         },
@@ -3295,6 +3367,10 @@
       "types": [
         {
           "type": "end_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         },
         {
@@ -3470,6 +3546,10 @@
           "named": true
         },
         {
+          "type": "statement_separation",
+          "named": true
+        },
+        {
           "type": "while_loop_block",
           "named": true
         },
@@ -3509,6 +3589,10 @@
         },
         {
           "type": "do_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
           "named": true
         },
         {

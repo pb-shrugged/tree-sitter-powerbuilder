@@ -10,6 +10,7 @@
 
 const PREC = {
   UPDATE_UNARY: 1,
+  KEYWORD: 10
 }
 
 module.exports = grammar({
@@ -431,7 +432,7 @@ module.exports = grammar({
       $.local_variable_declaration_statement,
       $.try_catch_statement,
       $.while_loop,
-      $.inline_statement,
+      seq($.inline_statement, optional($.statement_separation)),
       /*
       $.sql_statement, TODO
       */
@@ -450,6 +451,7 @@ module.exports = grammar({
       $.choose_keyword,
       $.case_keyword,
       alias($.expression, $.test_expression),
+      optional($.statement_separation),
     ),
 
     choose_case_clause: $ => seq(
@@ -459,6 +461,7 @@ module.exports = grammar({
         $.choose_case_is_relational_expression,
         $.choose_case_condition_expression,
       ), $.choose_case_clause_condition),
+      optional($.statement_separation),
       optional(alias($.scriptable_block, $.choose_case_block)),
     ),
 
@@ -471,18 +474,21 @@ module.exports = grammar({
     choose_case_else_clause: $ => seq(
       $.case_keyword,
       $.else_keyword,
+      optional($.statement_separation),
       optional(alias($.scriptable_block, $.choose_case_else_block)),
     ),
 
     choose_statement_end: $ => seq(
       $.end_keyword,
       $.choose_keyword,
+      optional($.statement_separation),
     ),
 
     relational_operator: _ => choice('>', '<', '>=', '<='),
 
     do_loop: $ => seq(
       $.do_keyword,
+      optional($.statement_separation),
       alias(optional($.scriptable_block), $.do_loop_block),
       $.do_loop_end,
     ),
@@ -491,12 +497,14 @@ module.exports = grammar({
       $.loop_keyword,
       choice($.until_keyword, $.while_keyword),
       alias($.expression, $.condition),
+      optional($.statement_separation),
     ),
 
     for_loop: $ => seq(
       $.for_loop_statement,
       optional(alias($.scriptable_block, $.for_loop_block)),
       $.next_keyword,
+      optional($.statement_separation),
     ),
 
     for_loop_statement: $ => seq(
@@ -507,9 +515,10 @@ module.exports = grammar({
       $.to_keyword,
       alias($.expression, $.final_value),
       optional(seq($.step_keyword, alias($.expression, $.increment_value))),
+      optional($.statement_separation),
     ),
 
-    goto_label: $ => seq(alias($.identifier, $.label), ":"),
+    goto_label: $ => seq(alias($.identifier, $.label), ":", optional($.statement_separation)),
 
     if_statement: $ => seq(
       $.if_then_statement,
@@ -523,22 +532,26 @@ module.exports = grammar({
       $.if_keyword,
       alias($.expression, $.condition),
       $.then_keyword,
+      optional($.statement_separation),
     ),
 
     if_then_statement_end: $ => seq(
       $.end_keyword,
       $.if_keyword,
+      optional($.statement_separation),
     ),
 
     elseif_clause: $ => seq(
       $.elseif_keyword,
       alias($.expression, $.condition),
       $.then_keyword,
+      optional($.statement_separation),
       optional(alias($.scriptable_block, $.elseif_block)),
     ),
 
     else_clause: $ => seq(
       $.else_keyword,
+      optional($.statement_separation),
       optional(alias($.scriptable_block, $.else_block)),
     ),
 
@@ -548,6 +561,7 @@ module.exports = grammar({
       $.then_keyword,
       alias($.inline_statement, $.if_case_statement),
       optional(seq($.else_keyword, alias($.inline_statement, $.else_case_statement))),
+      optional($.statement_separation),
     )),
 
     local_variable_declaration_statement: $ => seq(
@@ -557,6 +571,7 @@ module.exports = grammar({
 
     try_catch_statement: $ => seq(
       $.try_keyword,
+      optional($.statement_separation),
       optional(alias($.scriptable_block, $.try_block)),
       repeat($.catch_clause),
       optional($.finally_clause),
@@ -566,6 +581,7 @@ module.exports = grammar({
     try_catch_statement_end: $ => seq(
       $.end_keyword,
       $.try_keyword,
+      optional($.statement_separation),
     ),
 
     catch_clause: $ => seq(
@@ -579,10 +595,12 @@ module.exports = grammar({
       alias($.type, $.throwable_type),
       alias($.identifier, $.throwable_name),
       $.close_parenthesis,
+      optional($.statement_separation),
     ),
 
     finally_clause: $ => seq(
       $.finally_keyword,
+      optional($.statement_separation),
       optional(alias($.scriptable_block, $.finally_block)),
     ),
 
@@ -590,12 +608,14 @@ module.exports = grammar({
       $.while_loop_statement,
       optional(alias($.scriptable_block, $.while_loop_block)),
       $.loop_keyword,
+      optional($.statement_separation),
     ),
 
     while_loop_statement: $ => seq(
       $.do_keyword,
       choice($.until_keyword, $.while_keyword),
       alias($.expression, $.condition),
+      optional($.statement_separation),
     ),
 
     inline_statement: $ => choice(
@@ -692,7 +712,7 @@ module.exports = grammar({
     ),
 
     update_expression: $ => {
-      const argument = alias($.integer_literal, $.argument);
+      const argument = alias($.expression, $.argument);
       const operator = alias(choice('--', '++'), $.operator);
       return prec.right(PREC.UPDATE_UNARY, seq(argument, operator));
     },
@@ -927,7 +947,7 @@ function reservedWord(word) {
  * @returns {TokenRule}
  */
 function reserved(regex) {
-  return token(prec(1, regex))
+  return token(prec(PREC.KEYWORD, regex))
 }
 
 /**
