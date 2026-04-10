@@ -9,8 +9,19 @@
 // @ts-check
 
 const PREC = {
-  UPDATE_UNARY: 1,
-  KEYWORD: 10
+  OR: 1,
+  AND: 2,
+  EQUALITY: 3,
+  RELATIONAL: 4,
+  ADDITIVE: 5,
+  MULTIPLICATIVE: 6,
+  EXPONENTIATION: 7,
+  UNARY: 8,
+  UPDATE_UNARY: 9,
+  FIELD_ACCESS: 10,
+  METHOD_INVOCATION: 11,
+  KEYWORD: 20,
+  IDENTIFIER_EXPRESSION: -1,
 }
 
 module.exports = grammar({
@@ -24,7 +35,9 @@ module.exports = grammar({
   ],
 
   conflicts: $ => [
-    [$.inline_if_statement, $.if_then_statement]
+    [$.inline_if_statement, $.if_then_statement],
+    [$.expression_statement, $.expression],
+    [$.parenthesized_expression, $.destroy_statement],
   ],
 
   rules: {
@@ -695,7 +708,7 @@ module.exports = grammar({
       ),
     ),
 
-    method_invocation: $ => seq(
+    method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
       optional(alias(choice($.expression), $.method_object)),
       optional(alias(choice(".", "::"), $.operator)),
       optional(alias(choice($.function_keyword, $.event_keyword), $.method_type)),
@@ -703,7 +716,7 @@ module.exports = grammar({
       optional(alias(choice($.trigger_keyword, $.post_keyword), $.when_type)),
       alias($.identifier, $.method_name),
       $.argument_list,
-    ),
+    )),
 
     argument_list: $ => seq(
       $.open_parenthesis,
@@ -717,11 +730,87 @@ module.exports = grammar({
       return prec.right(PREC.UPDATE_UNARY, seq(argument, operator));
     },
 
-    expression: $ => 'expression',
+    expression: $ => choice(
+      $.update_expression,
+      $.binary_expression,
+      $.unary_expression,
+
+      // $.primary_expression,
+      $._literal,
+      $.array_literal,
+      $.this_keyword,
+      $.parent_keyword,
+      $.super_keyword,
+      $.array_access,
+      $.enumetation_datatype,
+      $.field_access,
+      $.identifier_expression,
+      $.method_invocation,
+      $.parenthesized_expression,
+    ),
+
+    binary_expression: $ => {
+      const table = [
+        { operator: '+', precedence: PREC.ADDITIVE },
+        { operator: '-', precedence: PREC.ADDITIVE },
+        { operator: '*', precedence: PREC.MULTIPLICATIVE },
+        { operator: '/', precedence: PREC.MULTIPLICATIVE },
+        { operator: '^', precedence: PREC.EXPONENTIATION },
+        { operator: $.or_keyword, precedence: PREC.OR },
+        { operator: $.and_keyword, precedence: PREC.AND },
+        { operator: '=', precedence: PREC.EQUALITY },
+        { operator: '<>', precedence: PREC.EQUALITY },
+        { operator: '>', precedence: PREC.RELATIONAL },
+        { operator: '<', precedence: PREC.RELATIONAL },
+        { operator: '>=', precedence: PREC.RELATIONAL },
+        { operator: '<=', precedence: PREC.RELATIONAL },
+      ];
+
+      return choice(...table.map(({ operator, precedence }) => {
+        return prec.left(precedence, seq(
+          alias($.expression, $.left_expression),
+          alias(operator, $.operator),
+          alias($.expression, $.right_expression),
+        ));
+      }));
+    },
+
+    unary_expression: $ => prec.left(PREC.UNARY, seq(
+      alias(choice($.not_keyword, '-', '+'), $.operator),
+      field('argument', $.expression),
+    )),
+
+    array_literal: $ => seq(
+      $.open_curly_brackets,
+      commaSep1($.expression),
+      $.close_curly_brackets,
+    ),
+
+    array_access: $ => seq(
+      alias($.expression, $.array_name),
+      $.open_brackets,
+      alias($.expression, $.array_index),
+      $.close_brackets
+    ),
+
+    enumetation_datatype: $ => seq(alias($.identifier, $.enum_name), "!"),
+
+    field_access: $ => prec(PREC.FIELD_ACCESS, seq(
+      alias(choice($.expression), $.object),
+      '.',
+      alias($.identifier, $.field_name),
+      optional($.array_suffix_ref),
+    )),
+
+    array_suffix_ref: _ => /\[[ \t]*\]/,
+
+    identifier_expression: $ => prec(PREC.IDENTIFIER_EXPRESSION, seq($.identifier, optional($.array_suffix_ref))),
+
+    parenthesized_expression: $ => seq($.open_parenthesis, $.expression, $.close_parenthesis),
 
     type: $ => choice(
       $.primitive_type,
-      $.identifier,
+      alias($.identifier, $.custom_type),
     ),
 
     _literal: $ => choice(
