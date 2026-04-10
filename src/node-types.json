@@ -2247,6 +2247,10 @@
           "named": true
         },
         {
+          "type": "execute_statement_immediate_case",
+          "named": true
+        },
+        {
           "type": "procedure_name",
           "named": true
         },
@@ -2260,6 +2264,41 @@
         },
         {
           "type": "using_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "execute_statement_immediate_case",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "execute_keyword",
+          "named": true
+        },
+        {
+          "type": "immediate_keyword",
+          "named": true
+        },
+        {
+          "type": "statement_separation",
+          "named": true
+        },
+        {
+          "type": "stored_procedure_param_oracle",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        },
+        {
+          "type": "using_transaction_statement",
           "named": true
         }
       ]
@@ -3598,6 +3637,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "immediate_keyword",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "increment_value",
@@ -7095,6 +7139,10 @@
   },
   {
     "type": "if",
+    "named": false
+  },
+  {
+    "type": "immediate",
     "named": false
   },
   {

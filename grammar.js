@@ -20,6 +20,7 @@ const PREC = {
   UPDATE_UNARY: 9,
   FIELD_ACCESS: 10,
   METHOD_INVOCATION: 11,
+  IMMEDIATE_CASE: 12,
   KEYWORD: 20,
   IDENTIFIER_EXPRESSION: -1,
 }
@@ -1159,11 +1160,13 @@ module.exports = grammar({
 
     execute_statement: $ => choice(
       seq($.execute_keyword, alias($.identifier, $.procedure_name), $.statement_separation),
-      //seq($.execute_keyword, $.immediate_keyword, choice($.stored_procedure_param_oracle, $.string_literal), optional($.using_transaction_statement), $.statement_separation),
+      $.execute_statement_immediate_case,
       seq($.execute_keyword, alias($.identifier, $.dynamic_stage_area), $.using_keyword, commaSep1($.stored_procedure_param_oracle), $.statement_separation),
       seq($.execute_keyword, $.dynamic_keyword, alias($.identifier, $.procedure_name), optional(seq($.using_keyword, commaSep1($.stored_procedure_param_oracle))), $.statement_separation),
       seq($.execute_keyword, $.dynamic_keyword, alias($.identifier, $.procedure_name), $.using_keyword, $.descriptor_keyword, alias($.identifier, $.dynamic_description_area), $.statement_separation),
     ),
+
+    execute_statement_immediate_case: $ => prec(PREC.IMMEDIATE_CASE, seq($.execute_keyword, $.immediate_keyword, choice($.stored_procedure_param_oracle, $.string_literal), optional($.using_transaction_statement), $.statement_separation)),
 
     fetch_statement: $ => choice(
       seq(

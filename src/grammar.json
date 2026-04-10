@@ -7474,6 +7474,10 @@
           ]
         },
         {
+          "type": "SYMBOL",
+          "name": "execute_statement_immediate_case"
+        },
+        {
           "type": "SEQ",
           "members": [
             {
@@ -7636,6 +7640,52 @@
           ]
         }
       ]
+    },
+    "execute_statement_immediate_case": {
+      "type": "PREC",
+      "value": 12,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "execute_keyword"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "immediate_keyword"
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "stored_procedure_param_oracle"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "string_literal"
+              }
+            ]
+          },
+          {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "using_transaction_statement"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
+          },
+          {
+            "type": "SYMBOL",
+            "name": "statement_separation"
+          }
+        ]
+      }
     },
     "fetch_statement": {
       "type": "CHOICE",
