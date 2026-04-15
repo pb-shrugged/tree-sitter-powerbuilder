@@ -53,8 +53,8 @@ module.exports = grammar({
       optional($.export_header),
       choice(
         $.class_file,
-        $.structure_file,
         $.function_file,
+        $.structure_file,
       ),
     ),
 
@@ -315,7 +315,7 @@ module.exports = grammar({
       $.type_keyword,
       alias($.identifier, $.function_type_name),
       $.from_keyword,
-      alias(caseInsensitiveRegExp('function_object'), $.function_type_ancenstor_name),
+      caseInsensitiveAlias('function_object'),
     ),
 
     end_type_declaration_statement: $ => seq($.end_keyword, $.type_keyword),
@@ -999,7 +999,7 @@ module.exports = grammar({
     ),
 
     export_header_identifier: $ => seq(
-      alias(/(HA)?(\s)?\$PBExportHeader\$/, $.export_header_identifier_text),
+      alias(/(HA)?\$PBExportHeader\$/, $.export_header_identifier_text),
       $.export_header_identifier_content,
     ),
 

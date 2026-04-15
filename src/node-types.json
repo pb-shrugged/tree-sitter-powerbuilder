@@ -3051,10 +3051,6 @@
           "named": true
         },
         {
-          "type": "function_type_ancenstor_name",
-          "named": true
-        },
-        {
           "type": "function_type_name",
           "named": true
         },
@@ -6721,8 +6717,8 @@
     "named": true
   },
   {
-    "type": "function_type_ancenstor_name",
-    "named": true
+    "type": "function_object",
+    "named": false
   },
   {
     "type": "function_type_name",
