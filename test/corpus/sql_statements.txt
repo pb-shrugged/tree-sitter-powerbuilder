@@ -2,109 +2,170 @@
 CLOSE statement
 ===
 
-#!
+global subroutine test ();
+
 CLOSE Emp_cursor ;
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (close_cursor_procedure_statement
-          (close_keyword)
-          (identifier)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (close_cursor_procedure_statement
+              (close_keyword)
+              (cursor_procedure_name)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 COMMIT statement
 ===
 
-#!
+global subroutine test ();
+
 COMMIT USING Emp_tran ;
 
 COMMIT ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (commit_statement
-          (commit_keyword)
-          (using_transaction_statement
-            (using_keyword)
-            (identifier))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (commit_statement
-          (commit_keyword)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (commit_statement
+              (commit_keyword)
+              (using_transaction_statement
+                (using_keyword)
+                (transaction_name))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (commit_statement
+              (commit_keyword)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 CONNECT statement
 ===
 
-#!
+global subroutine test ();
+
 CONNECT ;
 
 CONNECT USING Emp_tran ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (connect_statement
-          (connect_keyword)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (connect_statement
-          (connect_keyword)
-          (using_transaction_statement
-            (using_keyword)
-            (identifier))
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (connect_statement
+              (connect_keyword)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (connect_statement
+              (connect_keyword)
+              (using_transaction_statement
+                (using_keyword)
+                (transaction_name))
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 DECLARE CURSOR statement
 ===
 
-#!
+global subroutine test ();
+
 DECLARE Emp_cur CURSOR FOR
     SELECT employee.emp_number, employee.emp_name
     FROM employee
     WHERE employee.emp_salary > :Sal_var ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (declare_cursor_statement
-          (declare_keyword)
-          (identifier)
-          (cursor_keyword)
-          (for_keyword)
-          (select_statement
-            (select_keyword)
-            (rest_of_sql)
-            (semi_colon_char)))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (declare_cursor_statement
+              (declare_keyword)
+              (cursor_name)
+              (cursor_keyword)
+              (for_keyword)
+              (select_statement
+                (select_keyword)
+                (rest_of_sql)
+                (statement_separation))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 DECLARE PROCEDURE statement
 ===
 
-#!
+global subroutine test ();
+
 DECLARE Emp_proc procedure for GetName
     @emp_name = :Emp_name_var,
     @emp_salary = :Emp_sal_var ;
@@ -112,202 +173,282 @@ DECLARE Emp_proc procedure for GetName
 DECLARE Emp_proc procedure for GetName
     (:Emp_name_var, :Emp_sal_var) ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (declare_procedure_statement
-          (declare_keyword)
-          (identifier)
-          (procedure_keyword)
-          (for_keyword)
-          (identifier)
-          (stored_procedure_param_list
-            (stored_procedure_param_ase
-              (at_char)
-              (identifier)
-              (equals_operator)
-              (colon_char)
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier)))))
-            (stored_procedure_param_ase
-              (at_char)
-              (identifier)
-              (equals_operator)
-              (colon_char)
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier))))))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (declare_procedure_statement
-          (declare_keyword)
-          (identifier)
-          (procedure_keyword)
-          (for_keyword)
-          (identifier)
-          (stored_procedure_param_list
-            (open_parenthesis)
-            (stored_procedure_param_oracle
-              (colon_char)
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier)))))
-            (stored_procedure_param_oracle
-              (colon_char)
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier)))))
-            (close_parenthesis))
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (declare_procedure_statement
+              (declare_keyword)
+              (procedure_name)
+              (procedure_keyword)
+              (for_keyword)
+              (store_procedure_name)
+              (stored_procedure_param_list
+                (stored_procedure_param_ase
+                  (param_name)
+                  (variable_name
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier)))))
+                (stored_procedure_param_ase
+                  (param_name)
+                  (variable_name
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (declare_procedure_statement
+              (declare_keyword)
+              (procedure_name)
+              (procedure_keyword)
+              (for_keyword)
+              (store_procedure_name)
+              (stored_procedure_param_list
+                (open_parenthesis)
+                (stored_procedure_param_oracle
+                  (variable_name
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier)))))
+                (stored_procedure_param_oracle
+                  (variable_name
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier)))))
+                (close_parenthesis))
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 DELETE statement
 ===
 
-#!
+global subroutine test ();
+
 DELETE FROM Employee WHERE Emp_num < 100 ;
 
 DELETE FROM Employee
     WHERE Employee.Emp_num = :Emp_num ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (delete_statement
-          (delete_keyword)
-          (from_keyword)
-          (identifier)
-          (where_keyword)
-          (where_criteria
-            (rest_of_sql))
-          (rest_of_sql)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (delete_statement
-          (delete_keyword)
-          (from_keyword)
-          (identifier)
-          (where_keyword)
-          (where_criteria
-            (rest_of_sql))
-          (rest_of_sql)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (delete_statement
+              (delete_keyword)
+              (from_keyword)
+              (table_name)
+              (where_keyword)
+              (where_criteria
+                (rest_of_sql))
+              (rest_of_sql)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (delete_statement
+              (delete_keyword)
+              (from_keyword)
+              (table_name)
+              (where_keyword)
+              (where_criteria
+                (rest_of_sql))
+              (rest_of_sql)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 DELETE WITH CURSOR statement
 ===
 
-#!
+global subroutine test ();
+
 DELETE FROM Employee WHERE current of Emp_curs ;
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (delete_statement
-          (delete_keyword)
-          (from_keyword)
-          (identifier)
-          (where_keyword)
-          (current_keyword)
-          (of_keyword)
-          (identifier)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (delete_statement
+              (delete_keyword)
+              (from_keyword)
+              (table_name)
+              (where_keyword)
+              (current_keyword)
+              (of_keyword)
+              (cursor_name)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 DISCONNECT statement
 ===
 
-#!
+global subroutine test ();
+
 DISCONNECT ;
 DISCONNECT USING Emp_tran ;
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (disconnect_statement
-          (disconnect_keyword)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (disconnect_statement
-          (disconnect_keyword)
-          (using_transaction_statement
-            (using_keyword)
-            (identifier))
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (disconnect_statement
+              (disconnect_keyword)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (disconnect_statement
+              (disconnect_keyword)
+              (using_transaction_statement
+                (using_keyword)
+                (transaction_name))
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 EXECUTE statement
 ===
 
-#!
+global subroutine test ();
+
 EXECUTE Emp_proc ;
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (execute_statement
-          (execute_keyword)
-          (identifier)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (execute_statement
+              (execute_keyword)
+              (procedure_name)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 FETCH statement
 ===
 
-#!
+global subroutine test ();
+
 FETCH Emp_cur INTO :Emp_num, :Emp_name ;
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (fetch_statement
-          (fetch_keyword)
-          (identifier)
-          (into_keyword)
-          (fetch_variable_list
-            (colon_char)
-            (identifier)
-            (colon_char)
-            (identifier))
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (fetch_statement
+              (fetch_keyword)
+              (cursor_procedure_name)
+              (into_keyword)
+              (fetch_variable_list
+                (variable_name)
+                (variable_name))
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 INSERT statement
 ===
 
-#!
+global subroutine test ();
+
 INSERT INTO Employee (employee.Emp_nbr,
     employee.Emp_name)
     VALUES (:EmpNbr, :EmpName) ;
@@ -316,76 +457,121 @@ INSERT INTO Employee (employee.Emp_nbr,
     employee.Emp_name)
     VALUES (:EmpNbr, :EmpName) USING Emp_tran ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (insert_statement
-          (insert_keyword)
-          (rest_of_sql)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (insert_statement
-          (insert_keyword)
-          (rest_of_sql)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (insert_statement
+              (insert_keyword)
+              (rest_of_sql)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (insert_statement
+              (insert_keyword)
+              (rest_of_sql)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 OPEN statement
 ===
 
-#!
+global subroutine test ();
+
 OPEN Emp_curs ;
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (open_cursor_statement
-          (open_keyword)
-          (identifier)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (open_cursor_statement
+              (open_keyword)
+              (cursor_name)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 ROLLBACK statement
 ===
 
-#!
+global subroutine test ();
+
 ROLLBACK ;
 
 ROLLBACK USING emp_tran ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (rollback_statement
-          (rollback_keyword)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (rollback_statement
-          (rollback_keyword)
-          (using_transaction_statement
-            (using_keyword)
-            (identifier))
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (rollback_statement
+              (rollback_keyword)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (rollback_statement
+              (rollback_keyword)
+              (using_transaction_statement
+                (using_keyword)
+                (transaction_name))
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 SELECT statement
 ===
 
-#!
+global subroutine test ();
+
 SELECT employee.Emp_LName, employee.Emp_FName
 INTO :Emp_lname, :Emp_fname
 FROM Employee
@@ -398,29 +584,44 @@ FROM Employee
 WHERE Employee.Emp_Num = 100
 USING Emp_tran ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (select_statement
-          (select_keyword)
-          (rest_of_sql)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (select_statement
-          (selectblob_keyword)
-          (rest_of_sql)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (select_statement
+              (select_keyword)
+              (rest_of_sql)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (select_statement
+              (selectblob_keyword)
+              (rest_of_sql)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 UPDATE statement
 ===
 
-#!
+global subroutine test ();
+
 UPDATE Employee
     SET emp_name = :sle_Name.Text
     WHERE Employee.emp_num = :Emp_num
@@ -434,93 +635,124 @@ UPDATE Employee
     SET salary = 17800
     WHERE CURRENT of Emp_curs ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (update_statement
-          (update_keyword)
-          (identifier)
-          (rest_of_sql)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (update_statement
-          (updateblob_keyword)
-          (identifier)
-          (rest_of_sql)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (update_statement
-          (update_keyword)
-          (identifier)
-          (rest_of_sql)
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (update_statement
+              (update_keyword)
+              (table_name)
+              (rest_of_sql)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (update_statement
+              (updateblob_keyword)
+              (table_name)
+              (rest_of_sql)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (update_statement
+              (update_keyword)
+              (table_name)
+              (rest_of_sql)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 EXECUTE IMMEDIATE statement
 ===
 
-#!
+global subroutine test ();
+
 EXECUTE IMMEDIATE :Mysql ;
 EXECUTE IMMEDIATE :Mysql USING My_trans ;
 EXECUTE IMMEDIATE 'select aijfeiajiejgf' USING My_trans ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (execute_statement
-          (execute_keyword)
-          (immediate_keyword)
-          (stored_procedure_param_oracle
-            (colon_char)
-            (expression
-              (primary_expression
-                (identifier_expression
-                  (identifier)))))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (execute_statement
-          (execute_keyword)
-          (immediate_keyword)
-          (stored_procedure_param_oracle
-            (colon_char)
-            (expression
-              (primary_expression
-                (identifier_expression
-                  (identifier)))))
-          (using_transaction_statement
-            (using_keyword)
-            (identifier))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (execute_statement
-          (execute_keyword)
-          (immediate_keyword)
-          (string_literal
-            (single_quote)
-            (string_content)
-            (single_quote))
-          (using_transaction_statement
-            (using_keyword)
-            (identifier))
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (execute_statement
+              (execute_statement_immediate_case
+                (execute_keyword)
+                (immediate_keyword)
+                (stored_procedure_param_oracle
+                  (variable_name
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier)))))
+                (statement_separation)))))
+        (statement
+          (sql_statement
+            (execute_statement
+              (execute_statement_immediate_case
+                (execute_keyword)
+                (immediate_keyword)
+                (stored_procedure_param_oracle
+                  (variable_name
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier)))))
+                (using_transaction_statement
+                  (using_keyword)
+                  (transaction_name))
+                (statement_separation)))))
+        (statement
+          (sql_statement
+            (execute_statement
+              (execute_statement_immediate_case
+                (execute_keyword)
+                (immediate_keyword)
+                (string_literal
+                  (single_quote)
+                  (string_content)
+                  (single_quote))
+                (using_transaction_statement
+                  (using_keyword)
+                  (transaction_name))
+                (statement_separation))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 PREPARE and EXECUTE dynamic sql format 2
 ===
 
-#!
+global subroutine test ();
+
 PREPARE SQLSA
 FROM "DELETE FROM employee WHERE emp_id=?" ;
 EXECUTE SQLSA USING :Emp_id_var ;
@@ -529,71 +761,83 @@ PREPARE SQLSA
 FROM "INSERT INTO dept VALUES (?,?)" ;
 EXECUTE SQLSA USING :Dept_id_var,:Dept_name_var ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (prepare_sql_statement
-          (prepare_keyword)
-          (identifier)
-          (from_keyword)
-          (string_literal
-            (double_quote)
-            (string_content)
-            (double_quote))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (execute_statement
-          (execute_keyword)
-          (identifier)
-          (using_keyword)
-          (stored_procedure_param_oracle
-            (colon_char)
-            (expression
-              (primary_expression
-                (identifier_expression
-                  (identifier)))))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (prepare_sql_statement
-          (prepare_keyword)
-          (identifier)
-          (from_keyword)
-          (string_literal
-            (double_quote)
-            (string_content)
-            (double_quote))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (execute_statement
-          (execute_keyword)
-          (identifier)
-          (using_keyword)
-          (stored_procedure_param_oracle
-            (colon_char)
-            (expression
-              (primary_expression
-                (identifier_expression
-                  (identifier)))))
-          (stored_procedure_param_oracle
-            (colon_char)
-            (expression
-              (primary_expression
-                (identifier_expression
-                  (identifier)))))
-          (semi_colon_char))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (prepare_sql_statement
+              (prepare_keyword)
+              (dynamic_staging_area)
+              (from_keyword)
+              (sql_statement
+                (double_quote)
+                (string_content)
+                (double_quote))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (execute_statement
+              (execute_keyword)
+              (dynamic_stage_area)
+              (using_keyword)
+              (stored_procedure_param_oracle
+                (variable_name
+                  (l_value_expression
+                    (identifier_expression
+                      (identifier)))))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (prepare_sql_statement
+              (prepare_keyword)
+              (dynamic_staging_area)
+              (from_keyword)
+              (sql_statement
+                (double_quote)
+                (string_content)
+                (double_quote))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (execute_statement
+              (execute_keyword)
+              (dynamic_stage_area)
+              (using_keyword)
+              (stored_procedure_param_oracle
+                (variable_name
+                  (l_value_expression
+                    (identifier_expression
+                      (identifier)))))
+              (stored_procedure_param_oracle
+                (variable_name
+                  (l_value_expression
+                    (identifier_expression
+                      (identifier)))))
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 dynamic sql format 3
 ===
 
-#!
+global subroutine test ();
+
 DECLARE my_cursor DYNAMIC CURSOR FOR SQLSA ;
 PREPARE SQLSA FROM "SELECT emp_id FROM employee" ;
 OPEN DYNAMIC my_cursor ;
@@ -611,155 +855,165 @@ EXECUTE DYNAMIC my_proc USING :Emp_state_var ;
 FETCH my_proc INTO :Emp_id_var ;
 CLOSE my_proc ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (sql_statement
-        (declare_dynamic_statement
-          (declare_keyword)
-          (identifier)
-          (dynamic_keyword)
-          (cursor_keyword)
-          (for_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (prepare_sql_statement
-          (prepare_keyword)
-          (identifier)
-          (from_keyword)
-          (string_literal
-            (double_quote)
-            (string_content)
-            (double_quote))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (open_cursor_statement
-          (open_keyword)
-          (dynamic_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (fetch_statement
-          (fetch_keyword)
-          (identifier)
-          (into_keyword)
-          (fetch_variable_list
-            (colon_char)
-            (identifier))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (close_cursor_procedure_statement
-          (close_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (prepare_sql_statement
-          (prepare_keyword)
-          (identifier)
-          (from_keyword)
-          (colon_char)
-          (expression
-            (primary_expression
-              (identifier_expression
-                (identifier))))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (open_cursor_statement
-          (open_keyword)
-          (dynamic_keyword)
-          (identifier)
-          (using_keyword)
-          (stored_procedure_param_oracle
-            (colon_char)
-            (expression
-              (primary_expression
-                (identifier_expression
-                  (identifier)))))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (fetch_statement
-          (fetch_keyword)
-          (identifier)
-          (into_keyword)
-          (fetch_variable_list
-            (colon_char)
-            (identifier))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (close_cursor_procedure_statement
-          (close_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (prepare_sql_statement
-          (prepare_keyword)
-          (identifier)
-          (from_keyword)
-          (string_literal
-            (double_quote)
-            (string_content)
-            (double_quote))
-          (semi_colon_char))))
-    (statement
-      (inline_statement
-        (assignment_statement
-          (identifier)
-          (assignment_operator)
-          (expression
-            (primary_expression
-              (string_literal
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (sql_statement
+            (declare_dynamic_statement
+              (declare_keyword)
+              (cursor_procedure_name)
+              (dynamic_keyword)
+              (cursor_keyword)
+              (for_keyword)
+              (dynamic_stage_area)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (prepare_sql_statement
+              (prepare_keyword)
+              (dynamic_staging_area)
+              (from_keyword)
+              (sql_statement
                 (double_quote)
                 (string_content)
-                (double_quote)))))))
-    (statement
-      (sql_statement
-        (execute_statement
-          (execute_keyword)
-          (dynamic_keyword)
-          (identifier)
-          (using_keyword)
-          (stored_procedure_param_oracle
-            (colon_char)
-            (expression
-              (primary_expression
+                (double_quote))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (open_cursor_statement
+              (open_keyword)
+              (dynamic_keyword)
+              (cursor_name)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (fetch_statement
+              (fetch_keyword)
+              (cursor_procedure_name)
+              (into_keyword)
+              (fetch_variable_list
+                (variable_name))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (close_cursor_procedure_statement
+              (close_keyword)
+              (cursor_procedure_name)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (prepare_sql_statement
+              (prepare_keyword)
+              (dynamic_staging_area)
+              (from_keyword)
+              (sql_statement
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (open_cursor_statement
+              (open_keyword)
+              (dynamic_keyword)
+              (cursor_name)
+              (using_keyword)
+              (stored_procedure_param_oracle
+                (variable_name
+                  (l_value_expression
+                    (identifier_expression
+                      (identifier)))))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (fetch_statement
+              (fetch_keyword)
+              (cursor_procedure_name)
+              (into_keyword)
+              (fetch_variable_list
+                (variable_name))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (close_cursor_procedure_statement
+              (close_keyword)
+              (cursor_procedure_name)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (prepare_sql_statement
+              (prepare_keyword)
+              (dynamic_staging_area)
+              (from_keyword)
+              (sql_statement
+                (double_quote)
+                (string_content)
+                (double_quote))
+              (statement_separation))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
                 (identifier_expression
-                  (identifier)))))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (fetch_statement
-          (fetch_keyword)
-          (identifier)
-          (into_keyword)
-          (fetch_variable_list
-            (colon_char)
-            (identifier))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (close_cursor_procedure_statement
-          (close_keyword)
-          (identifier)
-          (semi_colon_char))))))
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (double_quote)
+                  (string_content)
+                  (double_quote))))))
+        (statement
+          (sql_statement
+            (execute_statement
+              (execute_keyword)
+              (dynamic_keyword)
+              (procedure_name)
+              (using_keyword)
+              (stored_procedure_param_oracle
+                (variable_name
+                  (l_value_expression
+                    (identifier_expression
+                      (identifier)))))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (fetch_statement
+              (fetch_keyword)
+              (cursor_procedure_name)
+              (into_keyword)
+              (fetch_variable_list
+                (variable_name))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (close_cursor_procedure_statement
+              (close_keyword)
+              (cursor_procedure_name)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 dynamic sql format 4
 ===
 
-#!
+global subroutine test ();
+
 string Stringvar, Sqlstatement
 integer Intvar
 Sqlstatement = "SELECT emp_id FROM employee"
@@ -789,282 +1043,283 @@ FETCH my_cursor USING DESCRIPTOR SQLDA ;
 
 CLOSE my_cursor ;
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (local_variable_declaration
-        (datatype
-          (standard_primitive_datatype))
-        (variable_declaration_list
-          (variable_declaration_identifier
-            (identifier))
-          (variable_declaration_identifier
-            (identifier)))))
-    (statement
-      (local_variable_declaration
-        (datatype
-          (standard_primitive_datatype))
-        (variable_declaration_list
-          (variable_declaration_identifier
-            (identifier)))))
-    (statement
-      (inline_statement
-        (assignment_statement
-          (identifier)
-          (assignment_operator)
-          (expression
-            (primary_expression
-              (string_literal
-                (double_quote)
-                (string_content)
-                (double_quote)))))))
-    (statement
-      (sql_statement
-        (prepare_sql_statement
-          (prepare_keyword)
-          (identifier)
-          (from_keyword)
-          (colon_char)
-          (expression
-            (primary_expression
-              (identifier_expression
-                (identifier))))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (describe_sql_statement
-          (describe_keyword)
-          (identifier)
-          (into_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (declare_dynamic_statement
-          (declare_keyword)
-          (identifier)
-          (dynamic_keyword)
-          (cursor_keyword)
-          (for_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (open_cursor_statement
-          (open_keyword)
-          (dynamic_keyword)
-          (identifier)
-          (using_keyword)
-          (descriptor_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (fetch_statement
-          (fetch_keyword)
-          (identifier)
-          (using_keyword)
-          (descriptor_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (choose_statement
-        (choose_statement_init
-          (choose_keyword)
-          (case_keyword)
-          (expression
-            (primary_expression
-              (array_access
-                (primary_expression
-                  (field_access
-                    (primary_expression
-                      (identifier_expression
-                        (identifier)))
-                    (dot_char)
-                    (identifier)))
-                (open_brackets)
-                (expression
-                  (primary_expression
-                    (number_literal
-                      (integer_literal))))
-                (close_brackets)))))
-        (case_clause
-          (case_keyword)
-          (case_condition_expression
-            (expression
-              (primary_expression
-                (enumetation_datatype
-                  (identifier)
-                  (exclamation_char)))))
-          (scriptable_block
-            (statement
-              (local_variable_declaration
-                (datatype
-                  (standard_primitive_datatype))
-                (variable_declaration_list
-                  (variable_declaration_identifier
-                    (identifier)
-                    (equals_operator)
-                    (expression
-                      (primary_expression
-                        (method_invocation
-                          (identifier)
-                          (argument_list
-                            (open_parenthesis)
-                            (expression
-                              (primary_expression
-                                (identifier_expression
-                                  (identifier))))
-                            (expression
-                              (primary_expression
-                                (number_literal
-                                  (integer_literal))))
-                            (close_parenthesis)))))))))))
-        (case_clause
-          (case_keyword)
-          (case_condition_expression
-            (expression
-              (primary_expression
-                (enumetation_datatype
-                  (identifier)
-                  (exclamation_char)))))
-          (scriptable_block
-            (statement
-              (local_variable_declaration
-                (datatype
-                  (standard_primitive_datatype))
-                (variable_declaration_list
-                  (variable_declaration_identifier
-                    (identifier)
-                    (equals_operator)
-                    (expression
-                      (primary_expression
-                        (method_invocation
-                          (identifier)
-                          (argument_list
-                            (open_parenthesis)
-                            (expression
-                              (primary_expression
-                                (identifier_expression
-                                  (identifier))))
-                            (expression
-                              (primary_expression
-                                (number_literal
-                                  (integer_literal))))
-                            (close_parenthesis)))))))))))
-        (end_choose_statement
-          (end_keyword)
-          (choose_keyword))))
-    (statement
-      (sql_statement
-        (close_cursor_procedure_statement
-          (close_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (local_variable_declaration
-        (datatype
-          (standard_primitive_datatype))
-        (variable_declaration_list
-          (variable_declaration_identifier
-            (identifier)))))
-    (statement
-      (inline_statement
-        (assignment_statement
-          (identifier)
-          (assignment_operator)
-          (expression
-            (binary_expression
-              (expression
-                (primary_expression
-                  (string_literal
-                    (double_quote)
-                    (string_content)
-                    (double_quote))))
-              (line_continuation)
-              (expression
-                (primary_expression
-                  (string_literal
-                    (double_quote)
-                    (string_content)
-                    (double_quote)))))))))
-    (statement
-      (sql_statement
-        (prepare_sql_statement
-          (prepare_keyword)
-          (identifier)
-          (from_keyword)
-          (colon_char)
-          (expression
-            (primary_expression
-              (identifier_expression
-                (identifier))))
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (describe_sql_statement
-          (describe_keyword)
-          (identifier)
-          (into_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (declare_dynamic_statement
-          (declare_keyword)
-          (identifier)
-          (dynamic_keyword)
-          (cursor_keyword)
-          (for_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (inline_statement
-        (expression_statement
-          (method_invocation
-            (identifier)
-            (argument_list
-              (open_parenthesis)
-              (expression
-                (primary_expression
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (local_variable_declaration_statement
+            (local_variable_declaration
+              (variable_type
+                (primitive_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name))
+                (variable_declaration
+                  (variable_name))))))
+        (statement
+          (local_variable_declaration_statement
+            (local_variable_declaration
+              (variable_type
+                (primitive_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name))))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (double_quote)
+                  (string_content)
+                  (double_quote))))))
+        (statement
+          (sql_statement
+            (prepare_sql_statement
+              (prepare_keyword)
+              (dynamic_staging_area)
+              (from_keyword)
+              (sql_statement
+                (l_value_expression
                   (identifier_expression
                     (identifier))))
-              (expression
-                (primary_expression
-                  (number_literal
-                    (integer_literal))))
-              (expression
-                (primary_expression
-                  (string_literal
-                    (double_quote)
-                    (string_content)
-                    (double_quote))))
-              (close_parenthesis))))))
-    (statement
-      (sql_statement
-        (open_cursor_statement
-          (open_keyword)
-          (dynamic_keyword)
-          (identifier)
-          (using_keyword)
-          (descriptor_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (fetch_statement
-          (fetch_keyword)
-          (identifier)
-          (using_keyword)
-          (descriptor_keyword)
-          (identifier)
-          (semi_colon_char))))
-    (statement
-      (sql_statement
-        (close_cursor_procedure_statement
-          (close_keyword)
-          (identifier)
-          (semi_colon_char))))))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (describe_sql_statement
+              (describe_keyword)
+              (dynamic_stage_area)
+              (into_keyword)
+              (dynamic_description_area)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (declare_dynamic_statement
+              (declare_keyword)
+              (cursor_procedure_name)
+              (dynamic_keyword)
+              (cursor_keyword)
+              (for_keyword)
+              (dynamic_stage_area)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (open_cursor_statement
+              (open_keyword)
+              (dynamic_keyword)
+              (cursor_name)
+              (using_keyword)
+              (descriptor_keyword)
+              (dynamic_staging_area)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (fetch_statement
+              (fetch_keyword)
+              (cursor_procedure_name)
+              (using_keyword)
+              (descriptor_keyword)
+              (dynamic_stage_area)
+              (statement_separation))))
+        (statement
+          (choose_statement
+            (choose_case_statement
+              (choose_keyword)
+              (case_keyword)
+              (test_expression
+                (l_value_expression
+                  (array_access
+                    (array_name
+                      (l_value_expression
+                        (field_access
+                          (object
+                            (l_value_expression
+                              (identifier_expression
+                                (identifier))))
+                          (field_name))))
+                    (open_brackets)
+                    (array_index
+                      (integer_literal))
+                    (close_brackets)))))
+            (choose_case_clause
+              (case_keyword)
+              (choose_case_clause_condition
+                (r_value_expression
+                  (enumetation_datatype
+                    (enum_name))))
+              (choose_case_block
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (method_invocation
+                          (method_name)
+                          (argument_list
+                            (open_parenthesis)
+                            (r_value_expression
+                              (l_value_expression
+                                (identifier_expression
+                                  (identifier))))
+                            (r_value_expression
+                              (integer_literal))
+                            (close_parenthesis)))))))))
+            (choose_case_clause
+              (case_keyword)
+              (choose_case_clause_condition
+                (r_value_expression
+                  (enumetation_datatype
+                    (enum_name))))
+              (choose_case_block
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (method_invocation
+                          (method_name)
+                          (argument_list
+                            (open_parenthesis)
+                            (r_value_expression
+                              (l_value_expression
+                                (identifier_expression
+                                  (identifier))))
+                            (r_value_expression
+                              (integer_literal))
+                            (close_parenthesis)))))))))
+            (choose_statement_end
+              (end_keyword)
+              (choose_keyword))))
+        (statement
+          (sql_statement
+            (close_cursor_procedure_statement
+              (close_keyword)
+              (cursor_procedure_name)
+              (statement_separation))))
+        (statement
+          (local_variable_declaration_statement
+            (local_variable_declaration
+              (variable_type
+                (primitive_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name))))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (binary_expression
+                  (left_expression
+                    (string_literal
+                      (double_quote)
+                      (string_content)
+                      (double_quote)))
+                  (line_continuation)
+                  (operator)
+                  (right_expression
+                    (string_literal
+                      (double_quote)
+                      (string_content)
+                      (double_quote))))))))
+        (statement
+          (sql_statement
+            (prepare_sql_statement
+              (prepare_keyword)
+              (dynamic_staging_area)
+              (from_keyword)
+              (sql_statement
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (describe_sql_statement
+              (describe_keyword)
+              (dynamic_stage_area)
+              (into_keyword)
+              (dynamic_description_area)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (declare_dynamic_statement
+              (declare_keyword)
+              (cursor_procedure_name)
+              (dynamic_keyword)
+              (cursor_keyword)
+              (for_keyword)
+              (dynamic_stage_area)
+              (statement_separation))))
+        (statement
+          (inline_statement
+            (expression_statement
+              (method_invocation
+                (method_name)
+                (argument_list
+                  (open_parenthesis)
+                  (r_value_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (r_value_expression
+                    (integer_literal))
+                  (r_value_expression
+                    (string_literal
+                      (double_quote)
+                      (string_content)
+                      (double_quote)))
+                  (close_parenthesis))))))
+        (statement
+          (sql_statement
+            (open_cursor_statement
+              (open_keyword)
+              (dynamic_keyword)
+              (cursor_name)
+              (using_keyword)
+              (descriptor_keyword)
+              (dynamic_staging_area)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (fetch_statement
+              (fetch_keyword)
+              (cursor_procedure_name)
+              (using_keyword)
+              (descriptor_keyword)
+              (dynamic_stage_area)
+              (statement_separation))))
+        (statement
+          (sql_statement
+            (close_cursor_procedure_statement
+              (close_keyword)
+              (cursor_procedure_name)
+              (statement_separation)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
