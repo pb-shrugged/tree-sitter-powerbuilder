@@ -45,6 +45,7 @@ module.exports = grammar({
     [$.assignment_statement, $.create_statement, $.r_value_expression],
     [$.for_loop_statement, $.r_value_expression],
     [$.return_statement],
+    [$.scriptable_block],
   ],
 
   rules: {
@@ -444,6 +445,7 @@ module.exports = grammar({
     scriptable_block: $ => repeat1($.statement),
 
     statement: $ => choice(
+      $.conditional_compilation_statement,
       $.choose_statement,
       $.do_loop,
       $.for_loop,
@@ -455,6 +457,33 @@ module.exports = grammar({
       $.while_loop,
       seq($.inline_statement, optional($.statement_separation)),
       $.sql_statement,
+    ),
+
+    conditional_compilation_statement: $ => seq(
+      '#',
+      $.if_keyword,
+      optional($.not_keyword),
+      caseInsensitiveAlias('defined'),
+      alias($.identifier, $.predefined_symbol),
+      $.then_keyword,
+      optional(alias($.scriptable_block, $.conditional_compilation_if_block)),
+      optional(seq(
+        '#',
+        $.elseif_keyword,
+        optional($.not_keyword),
+        caseInsensitiveAlias('defined'),
+        alias($.identifier, $.predefined_symbol),
+        $.then_keyword,
+        optional(alias($.scriptable_block, $.conditional_compilation_elseif_block)),
+      )),
+      optional(seq(
+        '#',
+        $.else_keyword,
+        optional(alias($.scriptable_block, $.conditional_compilation_else_block)),
+      )),
+      '#',
+      $.end_keyword,
+      $.if_keyword
     ),
 
     choose_statement: $ => seq(

@@ -1135,6 +1135,102 @@
     }
   },
   {
+    "type": "conditional_compilation_else_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_compilation_elseif_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_compilation_if_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "conditional_compilation_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "conditional_compilation_else_block",
+          "named": true
+        },
+        {
+          "type": "conditional_compilation_elseif_block",
+          "named": true
+        },
+        {
+          "type": "conditional_compilation_if_block",
+          "named": true
+        },
+        {
+          "type": "else_keyword",
+          "named": true
+        },
+        {
+          "type": "elseif_keyword",
+          "named": true
+        },
+        {
+          "type": "end_keyword",
+          "named": true
+        },
+        {
+          "type": "if_keyword",
+          "named": true
+        },
+        {
+          "type": "not_keyword",
+          "named": true
+        },
+        {
+          "type": "predefined_symbol",
+          "named": true
+        },
+        {
+          "type": "then_keyword",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "connect_keyword",
     "named": true,
     "fields": {}
@@ -4215,6 +4311,11 @@
     "fields": {}
   },
   {
+    "type": "not_keyword",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "object",
     "named": true,
     "fields": {},
@@ -5324,6 +5425,10 @@
           "named": true
         },
         {
+          "type": "conditional_compilation_statement",
+          "named": true
+        },
+        {
           "type": "do_loop",
           "named": true
         },
@@ -6364,6 +6469,10 @@
     "named": false
   },
   {
+    "type": "#",
+    "named": false
+  },
+  {
     "type": ",",
     "named": false
   },
@@ -6574,6 +6683,10 @@
   },
   {
     "type": "declare",
+    "named": false
+  },
+  {
+    "type": "defined",
     "named": false
   },
   {
@@ -6872,6 +6985,10 @@
   {
     "type": "post",
     "named": false
+  },
+  {
+    "type": "predefined_symbol",
+    "named": true
   },
   {
     "type": "prepare",
