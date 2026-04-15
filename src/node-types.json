@@ -74,15 +74,71 @@
       "required": true,
       "types": [
         {
-          "type": "array_access",
+          "type": "array_literal",
           "named": true
         },
         {
-          "type": "field_access",
+          "type": "binary_expression",
           "named": true
         },
         {
-          "type": "identifier_expression",
+          "type": "boolean_literal",
+          "named": true
+        },
+        {
+          "type": "date_literal",
+          "named": true
+        },
+        {
+          "type": "decimal_literal",
+          "named": true
+        },
+        {
+          "type": "enumetation_datatype",
+          "named": true
+        },
+        {
+          "type": "integer_literal",
+          "named": true
+        },
+        {
+          "type": "l_value_expression",
+          "named": true
+        },
+        {
+          "type": "method_invocation",
+          "named": true
+        },
+        {
+          "type": "parent_keyword",
+          "named": true
+        },
+        {
+          "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "real_literal",
+          "named": true
+        },
+        {
+          "type": "string_literal",
+          "named": true
+        },
+        {
+          "type": "super_keyword",
+          "named": true
+        },
+        {
+          "type": "this_keyword",
+          "named": true
+        },
+        {
+          "type": "time_literal",
+          "named": true
+        },
+        {
+          "type": "unary_expression",
           "named": true
         }
       ]
@@ -402,6 +458,10 @@
       "types": [
         {
           "type": "l_value",
+          "named": true
+        },
+        {
+          "type": "operator",
           "named": true
         },
         {

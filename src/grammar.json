@@ -3219,8 +3219,38 @@
           "value": "l_value"
         },
         {
-          "type": "STRING",
-          "value": "="
+          "type": "ALIAS",
+          "content": {
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "="
+              },
+              {
+                "type": "STRING",
+                "value": "+="
+              },
+              {
+                "type": "STRING",
+                "value": "-="
+              },
+              {
+                "type": "STRING",
+                "value": "*="
+              },
+              {
+                "type": "STRING",
+                "value": "/="
+              },
+              {
+                "type": "STRING",
+                "value": "^="
+              }
+            ]
+          },
+          "named": true,
+          "value": "operator"
         },
         {
           "type": "ALIAS",
@@ -3244,7 +3274,7 @@
           "type": "ALIAS",
           "content": {
             "type": "SYMBOL",
-            "name": "l_value_expression"
+            "name": "r_value_expression"
           },
           "named": true,
           "value": "ancestor_name"
@@ -3537,44 +3567,41 @@
             "type": "CHOICE",
             "members": [
               {
-                "type": "ALIAS",
-                "content": {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "SYMBOL",
-                      "name": "r_value_expression"
-                    }
-                  ]
-                },
-                "named": true,
-                "value": "method_object"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "ALIAS",
-                "content": {
-                  "type": "CHOICE",
-                  "members": [
-                    {
-                      "type": "STRING",
-                      "value": "."
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "SYMBOL",
+                          "name": "r_value_expression"
+                        }
+                      ]
                     },
-                    {
-                      "type": "STRING",
-                      "value": "::"
-                    }
-                  ]
-                },
-                "named": true,
-                "value": "operator"
+                    "named": true,
+                    "value": "method_object"
+                  },
+                  {
+                    "type": "ALIAS",
+                    "content": {
+                      "type": "CHOICE",
+                      "members": [
+                        {
+                          "type": "STRING",
+                          "value": "."
+                        },
+                        {
+                          "type": "STRING",
+                          "value": "::"
+                        }
+                      ]
+                    },
+                    "named": true,
+                    "value": "operator"
+                  }
+                ]
               },
               {
                 "type": "BLANK"
@@ -8215,10 +8242,6 @@
     [
       "assignment_statement",
       "create_statement",
-      "r_value_expression"
-    ],
-    [
-      "call_statement",
       "r_value_expression"
     ],
     [

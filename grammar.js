@@ -41,7 +41,6 @@ module.exports = grammar({
     [$.parenthesized_expression, $.destroy_statement],
     [$.halt_statement],
     [$.assignment_statement, $.create_statement, $.r_value_expression],
-    [$.call_statement, $.r_value_expression],
     [$.for_loop_statement, $.r_value_expression],
     [$.return_statement],
   ],
@@ -653,13 +652,13 @@ module.exports = grammar({
 
     assignment_statement: $ => seq(
       alias($.l_value_expression, $.l_value),
-      "=",
+      alias(choice("=", "+=", "-=", "*=", "/=", "^="), $.operator),
       alias($.r_value_expression, $.r_value),
     ),
 
     call_statement: $ => seq(
       $.call_keyword,
-      alias($.l_value_expression, $.ancestor_name),
+      alias($.r_value_expression, $.ancestor_name),
       optional(seq('`', alias($.identifier, $.control_name))),
       "::",
       alias($.identifier, $.event_name),
@@ -715,8 +714,10 @@ module.exports = grammar({
     ),
 
     method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
-      optional(alias(choice($.r_value_expression), $.method_object)),
-      optional(alias(choice(".", "::"), $.operator)),
+      optional(seq(
+        alias(choice($.r_value_expression), $.method_object),
+        alias(choice(".", "::"), $.operator))
+      ),
       optional(alias(choice($.function_keyword, $.event_keyword), $.method_type)),
       optional(alias(choice($.static_keyword, $.dynamic_keyword), $.call_type)),
       optional(alias(choice($.trigger_keyword, $.post_keyword), $.when_type)),
