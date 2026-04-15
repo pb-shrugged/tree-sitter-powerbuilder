@@ -23,10 +23,10 @@ const PREC = {
   IMMEDIATE_CASE: 12,
   KEYWORD: 20,
   IDENTIFIER_EXPRESSION: -1,
-}
+};
 
 module.exports = grammar({
-  name: "powerscript",
+  name: 'powerscript',
 
   extras: $ => [
     /\s/,
@@ -48,7 +48,7 @@ module.exports = grammar({
   rules: {
 
     source_file: $ => seq(
-      optional("HA"),
+      optional('HA'),
       optional($.export_header),
       choice(
         $.class_file,
@@ -106,7 +106,7 @@ module.exports = grammar({
         optional(seq(
           $.descriptor_keyword,
           alias($.string_literal, $.descriptor_type),
-          "=",
+          '=',
           alias($.string_literal, $.descriptor_value),
         )),
       )),
@@ -201,12 +201,12 @@ module.exports = grammar({
 
     instance_variables_section_statement_body: $ => repeat1(choice(
       $.access_section,
-      $.instance_variable_declaration
+      $.instance_variable_declaration,
     )),
 
     access_section: $ => seq(
       $.access_modifier,
-      ":",
+      ':',
     ),
 
     instance_variable_declaration: $ => seq(
@@ -252,8 +252,8 @@ module.exports = grammar({
     on_event_definition_statement: $ => seq(
       $.on_keyword,
       alias($.identifier, $.class_name),
-      ".",
-      choice($.create_keyword, $.destroy_keyword)
+      '.',
+      choice($.create_keyword, $.destroy_keyword),
     ),
 
     on_event_definition_statement_end: $ => seq($.end_keyword, $.on_keyword),
@@ -279,7 +279,7 @@ module.exports = grammar({
       $.type_keyword,
       alias($.identifier, $.structure_name),
       $.from_keyword,
-      caseInsensitiveAlias("structure"),
+      caseInsensitiveAlias('structure'),
     ),
 
     structure_definition_body: $ => repeat1($.structure_field),
@@ -288,13 +288,13 @@ module.exports = grammar({
       $.type,
       alias($.identifier, $.field_name),
       optional($.array_suffix),
-      optional($.structure_field_comment)
+      optional($.structure_field_comment),
     ),
 
     structure_field_comment: $ => seq(
       $.descriptor_keyword,
       alias($.string_literal, $.descriptor_type),
-      "=",
+      '=',
       alias($.string_literal, $.descriptor_value),
     ),
 
@@ -306,7 +306,7 @@ module.exports = grammar({
 
     function_type_declaration: $ => seq(
       $.function_type_declaration_statement,
-      $.end_type_declaration_statement
+      $.end_type_declaration_statement,
     ),
 
     function_type_declaration_statement: $ => seq(
@@ -314,7 +314,7 @@ module.exports = grammar({
       $.type_keyword,
       alias($.identifier, $.function_type_name),
       $.from_keyword,
-      alias(caseInsensitiveRegExp("function_object"), $.function_type_ancenstor_name),
+      alias(caseInsensitiveRegExp('function_object'), $.function_type_ancenstor_name),
     ),
 
     end_type_declaration_statement: $ => seq($.end_keyword, $.type_keyword),
@@ -420,7 +420,7 @@ module.exports = grammar({
     variable_declaration: $ => seq(
       alias($.identifier, $.variable_name),
       optional($.array_suffix),
-      optional(seq("=", alias($.r_value_expression, $.initial_value))),
+      optional(seq('=', alias($.r_value_expression, $.initial_value))),
     ),
 
     array_suffix: $ => seq(
@@ -528,7 +528,7 @@ module.exports = grammar({
     for_loop_statement: $ => seq(
       $.for_keyword,
       alias($.l_value_expression, $.iterator_counter),
-      "=",
+      '=',
       alias($.r_value_expression, $.initial_value),
       $.to_keyword,
       alias($.r_value_expression, $.final_value),
@@ -536,7 +536,7 @@ module.exports = grammar({
       optional($.statement_separation),
     ),
 
-    goto_label: $ => seq(alias($.identifier, $.label), ":", optional($.statement_separation)),
+    goto_label: $ => seq(alias($.identifier, $.label), ':', optional($.statement_separation)),
 
     if_statement: $ => seq(
       $.if_then_statement,
@@ -652,7 +652,7 @@ module.exports = grammar({
 
     assignment_statement: $ => seq(
       alias($.l_value_expression, $.l_value),
-      alias(choice("=", "+=", "-=", "*=", "/=", "^="), $.operator),
+      alias(choice('=', '+=', '-=', '*=', '/=', '^='), $.operator),
       alias($.r_value_expression, $.r_value),
     ),
 
@@ -660,7 +660,7 @@ module.exports = grammar({
       $.call_keyword,
       alias($.r_value_expression, $.ancestor_name),
       optional(seq('`', alias($.identifier, $.control_name))),
-      "::",
+      '::',
       alias($.identifier, $.event_name),
     ),
 
@@ -669,13 +669,13 @@ module.exports = grammar({
     create_statement: $ => choice(
       seq(
         alias($.l_value_expression, $.l_value),
-        "=",
+        '=',
         $.create_keyword,
         $.type,
       ),
       seq(
         alias($.l_value_expression, $.l_value),
-        "=",
+        '=',
         $.create_keyword,
         $.using_keyword,
         alias($.r_value_expression, $.dynamic_type),
@@ -716,7 +716,7 @@ module.exports = grammar({
     method_invocation: $ => prec(PREC.METHOD_INVOCATION, seq(
       optional(seq(
         alias(choice($.r_value_expression), $.method_object),
-        alias(choice(".", "::"), $.operator))
+        alias(choice('.', '::'), $.operator)),
       ),
       optional(alias(choice($.function_keyword, $.event_keyword), $.method_type)),
       optional(alias(choice($.static_keyword, $.dynamic_keyword), $.call_type)),
@@ -800,10 +800,10 @@ module.exports = grammar({
       alias($.r_value_expression, $.array_name),
       $.open_brackets,
       alias($.r_value_expression, $.array_index),
-      $.close_brackets
+      $.close_brackets,
     ),
 
-    enumetation_datatype: $ => seq(alias($.identifier, $.enum_name), "!"),
+    enumetation_datatype: $ => seq(alias($.identifier, $.enum_name), '!'),
 
     field_access: $ => prec(PREC.FIELD_ACCESS, seq(
       alias(choice($.r_value_expression), $.object),
@@ -850,147 +850,147 @@ module.exports = grammar({
     ),
 
     primitive_type: _ => choice(
-      caseInsensitiveAlias("blob"),
-      caseInsensitiveAlias("boolean"),
-      caseInsensitiveAlias("byte"),
-      caseInsensitiveAlias("char"),
-      caseInsensitiveAlias("character"),
-      caseInsensitiveAlias("date"),
-      caseInsensitiveAlias("datetime"),
-      caseInsensitiveAlias("decimal"),
-      caseInsensitiveAlias("dec"),
-      caseInsensitiveAlias("double"),
-      caseInsensitiveAlias("integer"),
-      caseInsensitiveAlias("int"),
-      caseInsensitiveAlias("longlong"),
-      caseInsensitiveAlias("long"),
-      caseInsensitiveAlias("real"),
-      caseInsensitiveAlias("string"),
-      caseInsensitiveAlias("time"),
-      caseInsensitiveAlias("unsignedinteger"),
-      caseInsensitiveAlias("unsignedint"),
-      caseInsensitiveAlias("uint"),
-      caseInsensitiveAlias("unsignedlong"),
-      caseInsensitiveAlias("ulong"),
-      caseInsensitiveAlias("any"),
+      caseInsensitiveAlias('blob'),
+      caseInsensitiveAlias('boolean'),
+      caseInsensitiveAlias('byte'),
+      caseInsensitiveAlias('char'),
+      caseInsensitiveAlias('character'),
+      caseInsensitiveAlias('date'),
+      caseInsensitiveAlias('datetime'),
+      caseInsensitiveAlias('decimal'),
+      caseInsensitiveAlias('dec'),
+      caseInsensitiveAlias('double'),
+      caseInsensitiveAlias('integer'),
+      caseInsensitiveAlias('int'),
+      caseInsensitiveAlias('longlong'),
+      caseInsensitiveAlias('long'),
+      caseInsensitiveAlias('real'),
+      caseInsensitiveAlias('string'),
+      caseInsensitiveAlias('time'),
+      caseInsensitiveAlias('unsignedinteger'),
+      caseInsensitiveAlias('unsignedint'),
+      caseInsensitiveAlias('uint'),
+      caseInsensitiveAlias('unsignedlong'),
+      caseInsensitiveAlias('ulong'),
+      caseInsensitiveAlias('any'),
     ),
 
-    open_parenthesis: _ => "(",
-    close_parenthesis: _ => ")",
-    open_brackets: _ => "[",
-    close_brackets: _ => "]",
-    open_curly_brackets: _ => "{",
-    close_curly_brackets: _ => "}",
-    single_quote: _ => "\'",
-    double_quote: _ => "\"",
-    statement_separation: _ => ";",
+    open_parenthesis: _ => '(',
+    close_parenthesis: _ => ')',
+    open_brackets: _ => '[',
+    close_brackets: _ => ']',
+    open_curly_brackets: _ => '{',
+    close_curly_brackets: _ => '}',
+    single_quote: _ => '\'',
+    double_quote: _ => '"',
+    statement_separation: _ => ';',
 
-    public_keyword: _ => reservedWord("public"),
-    private_keyword: _ => reservedWord("private"),
-    protected_keyword: _ => reservedWord("protected"),
-    alias_keyword: _ => reservedWord("alias"),
-    and_keyword: _ => reservedWord("and"),
-    autoinstantiate_keyword: _ => reservedWord("autoinstantiate"),
-    call_keyword: _ => reservedWord("call"),
-    case_keyword: _ => reservedWord("case"),
-    catch_keyword: _ => reservedWord("catch"),
-    choose_keyword: _ => reservedWord("choose"),
-    close_keyword: _ => reservedWord("close"),
-    commit_keyword: _ => reservedWord("commit"),
-    connect_keyword: _ => reservedWord("connect"),
-    constant_keyword: _ => reservedWord("constant"),
-    continue_keyword: _ => reservedWord("continue"),
-    create_keyword: _ => reservedWord("create"),
-    cursor_keyword: _ => reservedWord("cursor"),
-    declare_keyword: _ => reservedWord("declare"),
-    delete_keyword: _ => reservedWord("delete"),
-    describe_keyword: _ => reservedWord("describe"),
-    descriptor_keyword: _ => reservedWord("descriptor"),
-    destroy_keyword: _ => reservedWord("destroy"),
-    disconnect_keyword: _ => reservedWord("disconnect"),
-    do_keyword: _ => reservedWord("do"),
-    dynamic_keyword: _ => reservedWord("dynamic"),
-    else_keyword: _ => reservedWord("else"),
-    elseif_keyword: _ => reservedWord("elseif"),
-    end_keyword: _ => reservedWord("end"),
-    enumerated_keyword: _ => reservedWord("enumerated"),
-    event_keyword: _ => reservedWord("event"),
-    execute_keyword: _ => reservedWord("execute"),
-    exit_keyword: _ => reservedWord("exit"),
-    external_keyword: _ => reservedWord("external"),
-    false_keyword: _ => reservedWord("false"),
-    fetch_keyword: _ => reservedWord("fetch"),
-    finally_keyword: _ => reservedWord("finally"),
-    first_keyword: _ => reservedWord("first"),
-    for_keyword: _ => reservedWord("for"),
-    forward_keyword: _ => reservedWord("forward"),
-    from_keyword: _ => reservedWord("from"),
-    function_keyword: _ => reservedWord("function"),
-    global_keyword: _ => reservedWord("global"),
-    goto_keyword: _ => reservedWord("goto"),
-    halt_keyword: _ => reservedWord("halt"),
-    if_keyword: _ => reservedWord("if"),
-    immediate_keyword: _ => reservedWord("immediate"),
-    indirect_keyword: _ => reservedWord("indirect"),
-    insert_keyword: _ => reservedWord("insert"),
-    into_keyword: _ => reservedWord("into"),
-    intrinsic_keyword: _ => reservedWord("intrinsic"),
-    is_keyword: _ => reservedWord("is"),
-    last_keyword: _ => reservedWord("last"),
-    library_keyword: _ => reservedWord("library"),
-    loop_keyword: _ => reservedWord("loop"),
-    native_keyword: _ => reservedWord("native"),
-    next_keyword: _ => reservedWord("next"),
-    not_keyword: _ => reservedWord("not"),
-    of_keyword: _ => reservedWord("of"),
-    on_keyword: _ => reservedWord("on"),
-    open_keyword: _ => reservedWord("open"),
-    or_keyword: _ => reservedWord("or"),
-    parent_keyword: _ => reservedWord("parent"),
-    post_keyword: _ => reservedWord("post"),
-    prepare_keyword: _ => reservedWord("prepare"),
-    prior_keyword: _ => reservedWord("prior"),
-    privateread_keyword: _ => reservedWord("privateread"),
-    privatewrite_keyword: _ => reservedWord("privatewrite"),
-    procedure_keyword: _ => reservedWord("procedure"),
-    protectedread_keyword: _ => reservedWord("protectedread"),
-    protectedwrite_keyword: _ => reservedWord("protectedwrite"),
-    prototypes_keyword: _ => reservedWord("prototypes"),
-    readonly_keyword: _ => reservedWord("readonly"),
-    ref_keyword: _ => reservedWord("ref"),
-    return_keyword: _ => reservedWord("return"),
-    rollback_keyword: _ => reservedWord("rollback"),
-    rpcfunc_keyword: _ => reservedWord("rpcfunc"),
-    select_keyword: _ => reservedWord("select"),
-    selectblob_keyword: _ => reservedWord("selectblob"),
-    shared_keyword: _ => reservedWord("shared"),
-    static_keyword: _ => reservedWord("static"),
-    step_keyword: _ => reservedWord("step"),
-    subroutine_keyword: _ => reservedWord("subroutine"),
-    super_keyword: _ => reservedWord("super"),
-    system_keyword: _ => reservedWord("system"),
-    systemread_keyword: _ => reservedWord("systemread"),
-    systemwrite_keyword: _ => reservedWord("systemwrite"),
-    then_keyword: _ => reservedWord("then"),
-    this_keyword: _ => reservedWord("this"),
-    throw_keyword: _ => reservedWord("throw"),
-    throws_keyword: _ => reservedWord("throws"),
-    to_keyword: _ => reservedWord("to"),
-    trigger_keyword: _ => reservedWord("trigger"),
-    true_keyword: _ => reservedWord("true"),
-    try_keyword: _ => reservedWord("try"),
-    type_keyword: _ => reservedWord("type"),
-    until_keyword: _ => reservedWord("until"),
-    update_keyword: _ => reservedWord("update"),
-    updateblob_keyword: _ => reservedWord("updateblob"),
-    using_keyword: _ => reservedWord("using"),
-    variables_keyword: _ => reservedWord("variables"),
-    while_keyword: _ => reservedWord("while"),
-    with_keyword: _ => reservedWord("with"),
-    within_keyword: _ => reservedWord("within"),
-    debug_keyword: _ => reservedWord("_debug"),
-    where_keyword: _ => reservedWord("where"),
-    current_keyword: _ => reservedWord("current"),
+    public_keyword: _ => reservedWord('public'),
+    private_keyword: _ => reservedWord('private'),
+    protected_keyword: _ => reservedWord('protected'),
+    alias_keyword: _ => reservedWord('alias'),
+    and_keyword: _ => reservedWord('and'),
+    autoinstantiate_keyword: _ => reservedWord('autoinstantiate'),
+    call_keyword: _ => reservedWord('call'),
+    case_keyword: _ => reservedWord('case'),
+    catch_keyword: _ => reservedWord('catch'),
+    choose_keyword: _ => reservedWord('choose'),
+    close_keyword: _ => reservedWord('close'),
+    commit_keyword: _ => reservedWord('commit'),
+    connect_keyword: _ => reservedWord('connect'),
+    constant_keyword: _ => reservedWord('constant'),
+    continue_keyword: _ => reservedWord('continue'),
+    create_keyword: _ => reservedWord('create'),
+    cursor_keyword: _ => reservedWord('cursor'),
+    declare_keyword: _ => reservedWord('declare'),
+    delete_keyword: _ => reservedWord('delete'),
+    describe_keyword: _ => reservedWord('describe'),
+    descriptor_keyword: _ => reservedWord('descriptor'),
+    destroy_keyword: _ => reservedWord('destroy'),
+    disconnect_keyword: _ => reservedWord('disconnect'),
+    do_keyword: _ => reservedWord('do'),
+    dynamic_keyword: _ => reservedWord('dynamic'),
+    else_keyword: _ => reservedWord('else'),
+    elseif_keyword: _ => reservedWord('elseif'),
+    end_keyword: _ => reservedWord('end'),
+    enumerated_keyword: _ => reservedWord('enumerated'),
+    event_keyword: _ => reservedWord('event'),
+    execute_keyword: _ => reservedWord('execute'),
+    exit_keyword: _ => reservedWord('exit'),
+    external_keyword: _ => reservedWord('external'),
+    false_keyword: _ => reservedWord('false'),
+    fetch_keyword: _ => reservedWord('fetch'),
+    finally_keyword: _ => reservedWord('finally'),
+    first_keyword: _ => reservedWord('first'),
+    for_keyword: _ => reservedWord('for'),
+    forward_keyword: _ => reservedWord('forward'),
+    from_keyword: _ => reservedWord('from'),
+    function_keyword: _ => reservedWord('function'),
+    global_keyword: _ => reservedWord('global'),
+    goto_keyword: _ => reservedWord('goto'),
+    halt_keyword: _ => reservedWord('halt'),
+    if_keyword: _ => reservedWord('if'),
+    immediate_keyword: _ => reservedWord('immediate'),
+    indirect_keyword: _ => reservedWord('indirect'),
+    insert_keyword: _ => reservedWord('insert'),
+    into_keyword: _ => reservedWord('into'),
+    intrinsic_keyword: _ => reservedWord('intrinsic'),
+    is_keyword: _ => reservedWord('is'),
+    last_keyword: _ => reservedWord('last'),
+    library_keyword: _ => reservedWord('library'),
+    loop_keyword: _ => reservedWord('loop'),
+    native_keyword: _ => reservedWord('native'),
+    next_keyword: _ => reservedWord('next'),
+    not_keyword: _ => reservedWord('not'),
+    of_keyword: _ => reservedWord('of'),
+    on_keyword: _ => reservedWord('on'),
+    open_keyword: _ => reservedWord('open'),
+    or_keyword: _ => reservedWord('or'),
+    parent_keyword: _ => reservedWord('parent'),
+    post_keyword: _ => reservedWord('post'),
+    prepare_keyword: _ => reservedWord('prepare'),
+    prior_keyword: _ => reservedWord('prior'),
+    privateread_keyword: _ => reservedWord('privateread'),
+    privatewrite_keyword: _ => reservedWord('privatewrite'),
+    procedure_keyword: _ => reservedWord('procedure'),
+    protectedread_keyword: _ => reservedWord('protectedread'),
+    protectedwrite_keyword: _ => reservedWord('protectedwrite'),
+    prototypes_keyword: _ => reservedWord('prototypes'),
+    readonly_keyword: _ => reservedWord('readonly'),
+    ref_keyword: _ => reservedWord('ref'),
+    return_keyword: _ => reservedWord('return'),
+    rollback_keyword: _ => reservedWord('rollback'),
+    rpcfunc_keyword: _ => reservedWord('rpcfunc'),
+    select_keyword: _ => reservedWord('select'),
+    selectblob_keyword: _ => reservedWord('selectblob'),
+    shared_keyword: _ => reservedWord('shared'),
+    static_keyword: _ => reservedWord('static'),
+    step_keyword: _ => reservedWord('step'),
+    subroutine_keyword: _ => reservedWord('subroutine'),
+    super_keyword: _ => reservedWord('super'),
+    system_keyword: _ => reservedWord('system'),
+    systemread_keyword: _ => reservedWord('systemread'),
+    systemwrite_keyword: _ => reservedWord('systemwrite'),
+    then_keyword: _ => reservedWord('then'),
+    this_keyword: _ => reservedWord('this'),
+    throw_keyword: _ => reservedWord('throw'),
+    throws_keyword: _ => reservedWord('throws'),
+    to_keyword: _ => reservedWord('to'),
+    trigger_keyword: _ => reservedWord('trigger'),
+    true_keyword: _ => reservedWord('true'),
+    try_keyword: _ => reservedWord('try'),
+    type_keyword: _ => reservedWord('type'),
+    until_keyword: _ => reservedWord('until'),
+    update_keyword: _ => reservedWord('update'),
+    updateblob_keyword: _ => reservedWord('updateblob'),
+    using_keyword: _ => reservedWord('using'),
+    variables_keyword: _ => reservedWord('variables'),
+    while_keyword: _ => reservedWord('while'),
+    with_keyword: _ => reservedWord('with'),
+    within_keyword: _ => reservedWord('within'),
+    debug_keyword: _ => reservedWord('_debug'),
+    where_keyword: _ => reservedWord('where'),
+    current_keyword: _ => reservedWord('current'),
 
     export_header: $ => seq(
       $.export_header_identifier,
@@ -998,38 +998,31 @@ module.exports = grammar({
     ),
 
     export_header_identifier: $ => seq(
-      "\$PBExportHeader\$",
+      '\$PBExportHeader\$',
       $.export_header_identifier_content,
     ),
 
-    export_header_identifier_content: $ => seq(alias($.identifier, $.file_name), ".", $.file_extension),
+    export_header_identifier_content: $ => seq(alias($.identifier, $.file_name), '.', $.file_extension),
 
     export_header_comments: $ => seq(
-      "\$PBExportComments\$",
+      '\$PBExportComments\$',
       alias(/[^\r\n]*/, $.export_header_comments_content),
     ),
 
     file_extension: $ => choice(
-      alias("sra", $.application_file_extension),
-      alias("sru", $.user_object_file_extension),
-      alias("srw", $.window_file_extension),
-      alias("srm", $.menu_file_extension),
-      alias("srs", $.structure_file_extension),
-      alias("srf", $.function_file_extension),
+      alias('sra', $.application_file_extension),
+      alias('sru', $.user_object_file_extension),
+      alias('srw', $.window_file_extension),
+      alias('srm', $.menu_file_extension),
+      alias('srs', $.structure_file_extension),
+      alias('srf', $.function_file_extension),
     ),
 
     identifier: _ => /[a-zA-Z_][a-zA-Z0-9\-_$#%]*/,
 
-    line_comment: _ => seq("//", token.immediate(prec(1, /.*/))),
-    block_comment: _ => token(seq("/*", /[^*]*\*+([^/*][^*]*\*+)*/, "/")),
-    line_continuation: _ => "&",
-
-
-
-
-
-
-
+    line_comment: _ => seq('//', token.immediate(prec(1, /.*/))),
+    block_comment: _ => token(seq('/*', /[^*]*\*+([^/*][^*]*\*+)*/, '/')),
+    line_continuation: _ => '&',
 
 
     sql_statement: $ => choice(
@@ -1056,7 +1049,7 @@ module.exports = grammar({
       $.prepare_sql_statement,
 
       /*
-      
+
       */
     ),
 
@@ -1126,15 +1119,15 @@ module.exports = grammar({
     ),
 
     stored_procedure_param_ase: $ => seq(
-      "@",
+      '@',
       alias($.identifier, $.param_name),
-      "=",
-      optional(":"),
+      '=',
+      optional(':'),
       alias($.r_value_expression, $.variable_name),
     ),
 
     stored_procedure_param_oracle: $ => seq(
-      optional(":"),
+      optional(':'),
       alias($.r_value_expression, $.variable_name),
     ),
 
@@ -1169,12 +1162,40 @@ module.exports = grammar({
     execute_statement: $ => choice(
       seq($.execute_keyword, alias($.identifier, $.procedure_name), $.statement_separation),
       $.execute_statement_immediate_case,
-      seq($.execute_keyword, alias($.identifier, $.dynamic_stage_area), $.using_keyword, commaSep1($.stored_procedure_param_oracle), $.statement_separation),
-      seq($.execute_keyword, $.dynamic_keyword, alias($.identifier, $.procedure_name), optional(seq($.using_keyword, commaSep1($.stored_procedure_param_oracle))), $.statement_separation),
-      seq($.execute_keyword, $.dynamic_keyword, alias($.identifier, $.procedure_name), $.using_keyword, $.descriptor_keyword, alias($.identifier, $.dynamic_description_area), $.statement_separation),
+      seq(
+        $.execute_keyword,
+        alias($.identifier, $.dynamic_stage_area),
+        $.using_keyword,
+        commaSep1($.stored_procedure_param_oracle),
+        $.statement_separation,
+      ),
+      seq(
+        $.execute_keyword,
+        $.dynamic_keyword,
+        alias($.identifier, $.procedure_name),
+        optional(seq(
+          $.using_keyword,
+          commaSep1($.stored_procedure_param_oracle),
+        )),
+        $.statement_separation,
+      ),
+      seq(
+        $.execute_keyword,
+        $.dynamic_keyword,
+        alias($.identifier, $.procedure_name),
+        $.using_keyword,
+        $.descriptor_keyword,
+        alias($.identifier, $.dynamic_description_area),
+        $.statement_separation),
     ),
 
-    execute_statement_immediate_case: $ => prec(PREC.IMMEDIATE_CASE, seq($.execute_keyword, $.immediate_keyword, choice($.stored_procedure_param_oracle, $.string_literal), optional($.using_transaction_statement), $.statement_separation)),
+    execute_statement_immediate_case: $ => prec(PREC.IMMEDIATE_CASE, seq(
+      $.execute_keyword,
+      $.immediate_keyword,
+      choice($.stored_procedure_param_oracle, $.string_literal),
+      optional($.using_transaction_statement),
+      $.statement_separation,
+    )),
 
     fetch_statement: $ => choice(
       seq(
@@ -1195,12 +1216,12 @@ module.exports = grammar({
     ),
 
     fetch_variable_list: $ => commaSep1(seq(
-      ":",
+      ':',
       alias($.identifier, $.variable_name),
       optional(seq(
-        ":",
-        alias($.identifier, $.indicator_var)
-      ))
+        ':',
+        alias($.identifier, $.indicator_var),
+      )),
     )),
 
     insert_statement: $ => seq(
@@ -1261,7 +1282,7 @@ module.exports = grammar({
       $.from_keyword,
       choice(
         alias($.string_literal, $.sql_statement),
-        seq(":", alias($.r_value_expression, $.sql_statement),),
+        seq(':', alias($.r_value_expression, $.sql_statement)),
       ),
       $.statement_separation,
     ),
@@ -1281,7 +1302,7 @@ module.exports = grammar({
  * @returns {AliasRule}
  */
 function reservedWord(word) {
-  return alias(reserved(caseInsensitiveRegExp(word)), word)
+  return alias(reserved(caseInsensitiveRegExp(word)), word);
 }
 
 /**
@@ -1292,7 +1313,7 @@ function reservedWord(word) {
  * @returns {TokenRule}
  */
 function reserved(regex) {
-  return token(prec(PREC.KEYWORD, regex))
+  return token(prec(PREC.KEYWORD, regex));
 }
 
 /**
@@ -1303,10 +1324,10 @@ function reserved(regex) {
  * @returns {RegExp}
  */
 function caseInsensitiveRegExp(word) {
-  return new RegExp(word.split("")
+  return new RegExp(word.split('')
     .map(letter => `[${letter}${letter.toUpperCase()}]`)
-    .join("")
-  )
+    .join(''),
+  );
 }
 
 /**
@@ -1317,7 +1338,7 @@ function caseInsensitiveRegExp(word) {
  * @returns {AliasRule}
  */
 function caseInsensitiveAlias(word) {
-  return alias(caseInsensitiveRegExp(word), word)
+  return alias(caseInsensitiveRegExp(word), word);
 }
 
 /**
@@ -1339,5 +1360,5 @@ function commaSep(rule) {
  * @returns {SeqRule}
  */
 function commaSep1(rule) {
-  return seq(rule, repeat(seq(",", rule)));
+  return seq(rule, repeat(seq(',', rule)));
 }
