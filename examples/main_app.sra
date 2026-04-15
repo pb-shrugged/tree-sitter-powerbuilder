@@ -46,8 +46,7 @@ end type
 global main_app main_app
 
 type prototypes
-
-FUNCTION int GetSystemMetrics (int index) LIBRARY "USER32.DLL" // Global
+FUNCTION int GetSystemMetrics (int index) LIBRARY "USER32.DLL"
 end prototypes
 
 type variables

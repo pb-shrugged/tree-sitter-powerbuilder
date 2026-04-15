@@ -1,0 +1,735 @@
+===
+FORWARD declaration
+===
+
+forward
+global type w_cad_usuario from w_ancestor
+end type
+type tab_funcionario from tab within w_cad_usuario
+end type
+type tab_funcionario from tab within w_cad_usuario
+tabpage_pesquisa tabpage_pesquisa
+tabpage_cadastro tabpage_cadastro
+end type
+end forward
+
+---
+
+(source_file
+  (class_file
+    (forward_declaration_section
+      (forward_declaration_statement)
+      (forward_declaration_statement_body
+        (class_type_definition
+          (class_type_definition_statement
+            (global_keyword)
+            (type_keyword)
+            (class_type_name)
+            (from_keyword)
+            (ancenstor_type_name))
+          (end_type_declaration_statement
+            (end_keyword)
+            (type_keyword)))
+        (class_type_definition
+          (class_type_definition_statement
+            (type_keyword)
+            (class_type_name)
+            (from_keyword)
+            (ancenstor_type_name)
+            (within_keyword)
+            (parent_class))
+          (end_type_declaration_statement
+            (end_keyword)
+            (type_keyword)))
+        (class_type_definition
+          (class_type_definition_statement
+            (type_keyword)
+            (class_type_name)
+            (from_keyword)
+            (ancenstor_type_name)
+            (within_keyword)
+            (parent_class))
+          (class_type_definition_statement_body
+            (inner_class_variable_declaration
+              (variable_type
+                (custom_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name))))
+            (inner_class_variable_declaration
+              (variable_type
+                (custom_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name)))))
+          (end_type_declaration_statement
+            (end_keyword)
+            (type_keyword))))
+      (forward_declaration_statement_end
+        (end_keyword)
+        (forward_keyword)))))
+
+===
+STRUCTURE definition
+===
+
+type local_st_test from structure
+	string		test
+end type
+
+---
+
+(source_file
+  (class_file
+    (structure_definition
+      (structure_definition_statement
+        (type_keyword)
+        (structure_name)
+        (from_keyword))
+      (structure_definition_body
+        (structure_field
+          (type
+            (primitive_type))
+          (field_name)))
+      (end_type_declaration_statement
+        (end_keyword)
+        (type_keyword)))))
+
+===
+GLOBAL, SHARED and INSTANCE VARIABLES sections
+===
+
+global variables
+Integer gi_MyGlobalIntegerVar = 0, teste = 1, op_teste
+end variables
+
+shared variables
+Integer si_MySharedIntegerVar = 0
+end variables
+
+type variables
+Private:
+	Private CONSTANT Integer ii_MyInstanceIntegerVar = 0
+    // TODO: CONSTANT Private Integer ii_MyInstanceIntegerVar = 0
+end variables
+
+---
+
+(source_file
+  (class_file
+    (global_variables_section
+      (global_variables_section_statement
+        (global_keyword)
+        (variables_keyword))
+      (global_variables_section_body
+        (local_variable_declaration
+          (variable_type
+            (primitive_type))
+          (variable_declaration_list
+            (variable_declaration
+              (variable_name)
+              (initial_value
+                (integer_literal)))
+            (variable_declaration
+              (variable_name)
+              (initial_value
+                (integer_literal)))
+            (variable_declaration
+              (variable_name)))))
+      (end_variables_section
+        (end_keyword)
+        (variables_keyword)))
+    (shared_variables_section
+      (shared_variables_section_statement
+        (shared_keyword)
+        (variables_keyword))
+      (shared_variables_section_body
+        (local_variable_declaration
+          (variable_type
+            (primitive_type))
+          (variable_declaration_list
+            (variable_declaration
+              (variable_name)
+              (initial_value
+                (integer_literal))))))
+      (end_variables_section
+        (end_keyword)
+        (variables_keyword)))
+    (instance_variables_section
+      (instance_variables_section_statement
+        (type_keyword)
+        (variables_keyword))
+      (instance_variables_section_statement_body
+        (access_section
+          (access_modifier
+            (private_keyword)))
+        (instance_variable_declaration
+          (access_modifier
+            (private_keyword))
+          (local_variable_declaration
+            (constant_keyword)
+            (variable_type
+              (primitive_type))
+            (variable_declaration_list
+              (variable_declaration
+                (variable_name)
+                (initial_value
+                  (integer_literal)))))))
+      (line_comment)
+      (end_variables_section
+        (end_keyword)
+        (variables_keyword)))))
+
+===
+CLASS TYPE definition
+===
+
+global type main_app from application
+integer ddetimeout = 4
+string displayname = "my_display_name"
+boolean righttoleft = true
+event ue_custom_event_no_return_parm ( integer ai_value,  ref integer ai_ref,  readonly integer ai_readonly )
+event ue_custom_event_throws ( ) throws exception
+event ue_event_id_activate pbm_activate
+ds_non_visual_object ds_non_visual_object
+end type
+
+---
+
+(source_file
+  (class_file
+    (class_type_definition
+      (class_type_definition_statement
+        (global_keyword)
+        (type_keyword)
+        (class_type_name)
+        (from_keyword)
+        (ancenstor_type_name))
+      (class_type_definition_statement_body
+        (inner_class_variable_declaration
+          (variable_type
+            (primitive_type))
+          (variable_declaration_list
+            (variable_declaration
+              (variable_name)
+              (initial_value
+                (integer_literal)))))
+        (inner_class_variable_declaration
+          (variable_type
+            (primitive_type))
+          (variable_declaration_list
+            (variable_declaration
+              (variable_name)
+              (initial_value
+                (string_literal
+                  (double_quote)
+                  (string_content)
+                  (double_quote))))))
+        (inner_class_variable_declaration
+          (variable_type
+            (primitive_type))
+          (variable_declaration_list
+            (variable_declaration
+              (variable_name)
+              (initial_value
+                (boolean_literal
+                  (true_keyword))))))
+        (event_declaration
+          (event_keyword)
+          (event_name)
+          (parameter_list
+            (open_parenthesis)
+            (parameter
+              (type
+                (primitive_type))
+              (parameter_name))
+            (parameter
+              (parameter_pass_by_type)
+              (type
+                (primitive_type))
+              (parameter_name))
+            (parameter
+              (parameter_pass_by_type)
+              (type
+                (primitive_type))
+              (parameter_name))
+            (close_parenthesis)))
+        (event_declaration
+          (event_keyword)
+          (event_name)
+          (parameter_list
+            (open_parenthesis)
+            (close_parenthesis))
+          (throws_clause
+            (throws_keyword)
+            (throwable_name)))
+        (event_declaration
+          (event_keyword)
+          (event_name)
+          (event_id))
+        (inner_class_variable_declaration
+          (variable_type
+            (custom_type))
+          (variable_declaration_list
+            (variable_declaration
+              (variable_name)))))
+      (end_type_declaration_statement
+        (end_keyword)
+        (type_keyword)))))
+
+===
+GLOBAL VARIABLE declaration
+===
+
+global main_app main_app
+
+---
+
+(source_file
+  (class_file
+    (global_var_declaration
+      (global_keyword)
+      (type
+        (custom_type))
+      (global_variable_name))))
+
+===
+EXTERNAL FUNCTION declaration
+===
+
+type prototypes
+FUNCTION int GetSystemMetrics (int index) LIBRARY "USER32.DLL" // Global
+end prototypes
+
+---
+
+(source_file
+  (class_file
+    (external_function_prototypes
+      (external_function_prototypes_statement
+        (type_keyword)
+        (prototypes_keyword))
+      (external_function_prototype
+        (function_prototype
+          (function_keyword)
+          (return_type
+            (primitive_type))
+          (function_name)
+          (parameter_list
+            (open_parenthesis)
+            (parameter
+              (type
+                (primitive_type))
+              (parameter_name))
+            (close_parenthesis)))
+        (library_keyword)
+        (library_name
+          (double_quote)
+          (string_content)
+          (double_quote)))
+      (line_comment)
+      (end_function_prototypes_statement
+        (end_keyword)
+        (prototypes_keyword)))))
+
+===
+FORWARD FUNCTION PROTOTYPES section
+===
+
+forward prototypes
+public function boolean postevent (string e)
+public subroutine of_object_function_no_return ()
+public function integer of_object_function_return () throws exception,excep_test
+end prototypes
+
+---
+
+(source_file
+  (class_file
+    (forward_function_prototypes
+      (forward_function_prototypes_statement
+        (forward_keyword)
+        (prototypes_keyword))
+      (function_prototype
+        (access_modifier
+          (public_keyword))
+        (function_keyword)
+        (return_type
+          (primitive_type))
+        (function_name)
+        (parameter_list
+          (open_parenthesis)
+          (parameter
+            (type
+              (primitive_type))
+            (parameter_name))
+          (close_parenthesis)))
+      (function_prototype
+        (access_modifier
+          (public_keyword))
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis)))
+      (function_prototype
+        (access_modifier
+          (public_keyword))
+        (function_keyword)
+        (return_type
+          (primitive_type))
+        (function_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (throws_clause
+          (throws_keyword)
+          (throwable_name)
+          (throwable_name)))
+      (end_function_prototypes_statement
+        (end_keyword)
+        (prototypes_keyword)))))
+
+===
+EVENT definition
+===
+
+event ue_custom_event_no_return_no_parm();
+return 
+end event
+
+event type integer ue_custom_event_return();
+return 1
+end event
+
+event ue_event_id_activate;
+return 1
+end event
+
+---
+
+(source_file
+  (class_file
+    (event_definition
+      (event_definition_statement
+        (event_declaration
+          (event_keyword)
+          (event_name)
+          (parameter_list
+            (open_parenthesis)
+            (close_parenthesis)))
+        (statement_separation))
+      (event_definition_block
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)))))
+      (event_definition_statement_end
+        (end_keyword)
+        (event_keyword)))
+    (event_definition
+      (event_definition_statement
+        (event_declaration
+          (event_keyword)
+          (type_keyword)
+          (return_type
+            (primitive_type))
+          (event_name)
+          (parameter_list
+            (open_parenthesis)
+            (close_parenthesis)))
+        (statement_separation))
+      (event_definition_block
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)
+              (return_value
+                (integer_literal))))))
+      (event_definition_statement_end
+        (end_keyword)
+        (event_keyword)))
+    (event_definition
+      (event_definition_statement
+        (event_declaration
+          (event_keyword)
+          (event_name))
+        (statement_separation))
+      (event_definition_block
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)
+              (return_value
+                (integer_literal))))))
+      (event_definition_statement_end
+        (end_keyword)
+        (event_keyword)))))
+
+===
+FUNCTION and SUBROUTINE definition
+===
+
+public function boolean postevent (string e);
+return true
+end function
+
+public subroutine of_object_function_no_return ();
+return
+end subroutine
+
+public function integer of_object_function_return () throws exception,excep_test;
+return 1 
+end function
+
+---
+
+(source_file
+  (class_file
+    (function_definition
+      (function_definition_statement
+        (access_modifier
+          (public_keyword))
+        (function_keyword)
+        (return_type
+          (primitive_type))
+        (function_name)
+        (parameter_list
+          (open_parenthesis)
+          (parameter
+            (type
+              (primitive_type))
+            (parameter_name))
+          (close_parenthesis))
+        (statement_separation))
+      (function_definition_block
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)
+              (return_value
+                (boolean_literal
+                  (true_keyword)))))))
+      (function_definition_statement_end
+        (end_keyword)
+        (function_keyword)))
+    (function_definition
+      (subroutine_definition_statement
+        (access_modifier
+          (public_keyword))
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))
+    (function_definition
+      (function_definition_statement
+        (access_modifier
+          (public_keyword))
+        (function_keyword)
+        (return_type
+          (primitive_type))
+        (function_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (throws_clause
+          (throws_keyword)
+          (throwable_name)
+          (throwable_name))
+        (statement_separation))
+      (function_definition_block
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)
+              (return_value
+                (integer_literal))))))
+      (function_definition_statement_end
+        (end_keyword)
+        (function_keyword)))))
+
+===
+ON EVENT definition
+===
+
+on main_app.create
+appname="main_app"
+message=create message
+sqlca=create transaction
+sqlda=create dynamicdescriptionarea
+sqlsa=create dynamicstagingarea
+error=create error
+this.ds_non_visual_object=create ds_non_visual_object
+end on
+
+on main_app.destroy
+destroy(sqlca)
+destroy(sqlda)
+destroy(sqlsa)
+destroy(error)
+destroy(message)
+destroy(this.ds_non_visual_object)
+end on
+
+---
+
+(source_file
+  (class_file
+    (on_event_definition
+      (on_event_definition_statement
+        (on_keyword)
+        (class_name)
+        (create_keyword))
+      (on_event_definition_block
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (double_quote)
+                  (string_content)
+                  (double_quote))))))
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (create_keyword)
+              (type
+                (custom_type)))))
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (create_keyword)
+              (type
+                (custom_type)))))
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (create_keyword)
+              (type
+                (custom_type)))))
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (create_keyword)
+              (type
+                (custom_type)))))
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (create_keyword)
+              (type
+                (custom_type)))))
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (field_access
+                  (object
+                    (this_keyword))
+                  (field_name)))
+              (create_keyword)
+              (type
+                (custom_type))))))
+      (on_event_definition_statement_end
+        (end_keyword)
+        (on_keyword)))
+    (on_event_definition
+      (on_event_definition_statement
+        (on_keyword)
+        (class_name)
+        (destroy_keyword))
+      (on_event_definition_block
+        (statement
+          (inline_statement
+            (destroy_statement
+              (destroy_keyword)
+              (open_parenthesis)
+              (variable_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (close_parenthesis))))
+        (statement
+          (inline_statement
+            (destroy_statement
+              (destroy_keyword)
+              (open_parenthesis)
+              (variable_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (close_parenthesis))))
+        (statement
+          (inline_statement
+            (destroy_statement
+              (destroy_keyword)
+              (open_parenthesis)
+              (variable_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (close_parenthesis))))
+        (statement
+          (inline_statement
+            (destroy_statement
+              (destroy_keyword)
+              (open_parenthesis)
+              (variable_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (close_parenthesis))))
+        (statement
+          (inline_statement
+            (destroy_statement
+              (destroy_keyword)
+              (open_parenthesis)
+              (variable_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (close_parenthesis))))
+        (statement
+          (inline_statement
+            (destroy_statement
+              (destroy_keyword)
+              (open_parenthesis)
+              (variable_name
+                (l_value_expression
+                  (field_access
+                    (object
+                      (this_keyword))
+                    (field_name))))
+              (close_parenthesis)))))
+      (on_event_definition_statement_end
+        (end_keyword)
+        (on_keyword)))))
