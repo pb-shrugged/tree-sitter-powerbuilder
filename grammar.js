@@ -52,30 +52,24 @@ module.exports = grammar({
 
     source_file: $ => seq(
       optional($.export_header),
-      choice(
-        $.class_file,
-        $.function_file,
-        $.structure_file,
-      ),
+      $.class_file,
     ),
 
-    class_file: $ => seq(
+    class_file: $ => repeat1(choice(
       $.forward_declaration_section,
-      repeat($.structure_definition),
-      optional($.shared_variables_section),
-      optional($.global_variables_section),
+      $.structure_definition,
+      $.shared_variables_section,
+      $.global_variables_section,
       $.class_type_definition,
-      optional($.global_var_declaration),
-      optional($.external_function_prototypes),
-      optional($.instance_variables_section),
-      optional($.forward_function_prototypes),
-      repeat(choice(
-        $.event_definition,
-        $.function_definition,
-        $.on_event_definition,
-      )),
-      repeat($.inner_class_type_definition),
-    ),
+      $.global_var_declaration,
+      $.external_function_prototypes,
+      $.instance_variables_section,
+      $.forward_function_prototypes,
+      $.event_definition,
+      $.function_definition,
+      $.on_event_definition,
+      // $.inner_class_type_definition,
+    )),
 
     forward_declaration_section: $ => seq(
       alias($.forward_keyword, $.forward_declaration_statement),
@@ -260,15 +254,13 @@ module.exports = grammar({
 
     on_event_definition_statement_end: $ => seq($.end_keyword, $.on_keyword),
 
-    inner_class_type_definition: $ => seq(
-      $.class_type_definition,
-      repeat(choice(
-        $.event_definition,
-        $.on_event_definition,
-      )),
-    ),
-
-    structure_file: $ => $.structure_definition,
+    // inner_class_type_definition: $ => seq(
+    //   $.class_type_definition,
+    //   repeat(choice(
+    //     $.event_definition,
+    //     $.on_event_definition,
+    //   )),
+    // ),
 
     structure_definition: $ => seq(
       $.structure_definition_statement,
@@ -298,12 +290,6 @@ module.exports = grammar({
       alias($.string_literal, $.descriptor_type),
       '=',
       alias($.string_literal, $.descriptor_value),
-    ),
-
-    function_file: $ => seq(
-      $.function_type_declaration,
-      $.forward_function_prototypes,
-      repeat1($.function_definition),
     ),
 
     function_type_declaration: $ => seq(
@@ -483,7 +469,7 @@ module.exports = grammar({
       )),
       '#',
       $.end_keyword,
-      $.if_keyword
+      $.if_keyword,
     ),
 
     choose_statement: $ => seq(

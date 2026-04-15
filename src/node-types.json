@@ -868,10 +868,6 @@
           "named": true
         },
         {
-          "type": "inner_class_type_definition",
-          "named": true
-        },
-        {
           "type": "instance_variables_section",
           "named": true
         },
@@ -3041,29 +3037,6 @@
     }
   },
   {
-    "type": "function_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "forward_function_prototypes",
-          "named": true
-        },
-        {
-          "type": "function_definition",
-          "named": true
-        },
-        {
-          "type": "function_type_declaration",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "function_keyword",
     "named": true,
     "fields": {}
@@ -3110,52 +3083,6 @@
         },
         {
           "type": "throws_clause",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "function_type_declaration",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "end_type_declaration_statement",
-          "named": true
-        },
-        {
-          "type": "function_type_declaration_statement",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "function_type_declaration_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "from_keyword",
-          "named": true
-        },
-        {
-          "type": "function_type_name",
-          "named": true
-        },
-        {
-          "type": "global_keyword",
-          "named": true
-        },
-        {
-          "type": "type_keyword",
           "named": true
         }
       ]
@@ -3763,29 +3690,6 @@
         },
         {
           "type": "throw_statement",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "inner_class_type_definition",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "class_type_definition",
-          "named": true
-        },
-        {
-          "type": "event_definition",
-          "named": true
-        },
-        {
-          "type": "on_event_definition",
           "named": true
         }
       ]
@@ -5241,14 +5145,6 @@
         {
           "type": "export_header",
           "named": true
-        },
-        {
-          "type": "function_file",
-          "named": true
-        },
-        {
-          "type": "structure_file",
-          "named": true
         }
       ]
     }
@@ -5679,21 +5575,6 @@
         },
         {
           "type": "descriptor_value",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "structure_file",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "structure_definition",
           "named": true
         }
       ]
@@ -6827,14 +6708,6 @@
   },
   {
     "type": "function_name",
-    "named": true
-  },
-  {
-    "type": "function_object",
-    "named": false
-  },
-  {
-    "type": "function_type_name",
     "named": true
   },
   {
