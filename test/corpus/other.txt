@@ -2,46 +2,103 @@
 STRING LITERAL
 ===
 
-#!
-test = 'string ~' string'
+global subroutine test ();
+test = 'string ~' " string'
 test = 'string // string string'
 test = 'string /* string */ string'
+
+test = "string ~" ' string"
+test = "string // string string"
+test = "string /* string */ string"
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (inline_statement
-        (assignment_statement
-          (identifier)
-          (assignment_operator)
-          (expression
-            (primary_expression
-              (string_literal
-                (single_quote)
-                (string_content)
-                (single_quote)))))))
-    (statement
-      (inline_statement
-        (assignment_statement
-          (identifier)
-          (assignment_operator)
-          (expression
-            (primary_expression
-              (string_literal
-                (single_quote)
-                (string_content)
-                (single_quote)))))))
-    (statement
-      (inline_statement
-        (assignment_statement
-          (identifier)
-          (assignment_operator)
-          (expression
-            (primary_expression
-              (string_literal
-                (single_quote)
-                (string_content)
-                (single_quote)))))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (single_quote)
+                  (string_content)
+                  (single_quote))))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (single_quote)
+                  (string_content)
+                  (single_quote))))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (single_quote)
+                  (string_content)
+                  (single_quote))))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (double_quote)
+                  (string_content)
+                  (double_quote))))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (double_quote)
+                  (string_content)
+                  (double_quote))))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (double_quote)
+                  (string_content)
+                  (double_quote)))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
