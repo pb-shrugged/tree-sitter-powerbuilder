@@ -10,18 +10,6 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "STRING",
-              "value": "HA"
-            },
-            {
-              "type": "BLANK"
-            }
-          ]
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
               "type": "SYMBOL",
               "name": "export_header"
             },
@@ -6726,8 +6714,13 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "$PBExportHeader$"
+          "type": "ALIAS",
+          "content": {
+            "type": "PATTERN",
+            "value": "(HA)?(\\s)?\\$PBExportHeader\\$"
+          },
+          "named": true,
+          "value": "export_header_identifier_text"
         },
         {
           "type": "SYMBOL",
@@ -6761,8 +6754,13 @@
       "type": "SEQ",
       "members": [
         {
-          "type": "STRING",
-          "value": "$PBExportComments$"
+          "type": "ALIAS",
+          "content": {
+            "type": "STRING",
+            "value": "$PBExportComments$"
+          },
+          "named": true,
+          "value": "export_header_comments_text"
         },
         {
           "type": "ALIAS",

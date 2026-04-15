@@ -2224,11 +2224,15 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "export_header_comments_content",
+          "named": true
+        },
+        {
+          "type": "export_header_comments_text",
           "named": true
         }
       ]
@@ -2239,11 +2243,15 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "export_header_identifier_content",
+          "named": true
+        },
+        {
+          "type": "export_header_identifier_text",
           "named": true
         }
       ]
@@ -6360,14 +6368,6 @@
     "named": false
   },
   {
-    "type": "$PBExportComments$",
-    "named": false
-  },
-  {
-    "type": "$PBExportHeader$",
-    "named": false
-  },
-  {
     "type": ",",
     "named": false
   },
@@ -6409,10 +6409,6 @@
   },
   {
     "type": "@",
-    "named": false
-  },
-  {
-    "type": "HA",
     "named": false
   },
   {
@@ -6670,6 +6666,14 @@
   },
   {
     "type": "export_header_comments_content",
+    "named": true
+  },
+  {
+    "type": "export_header_comments_text",
+    "named": true
+  },
+  {
+    "type": "export_header_identifier_text",
     "named": true
   },
   {

@@ -28,6 +28,8 @@ const PREC = {
 module.exports = grammar({
   name: 'powerscript',
 
+  word: $ => $.identifier,
+
   extras: $ => [
     /\s/,
     $.line_comment,
@@ -48,7 +50,6 @@ module.exports = grammar({
   rules: {
 
     source_file: $ => seq(
-      optional('HA'),
       optional($.export_header),
       choice(
         $.class_file,
@@ -998,14 +999,14 @@ module.exports = grammar({
     ),
 
     export_header_identifier: $ => seq(
-      '\$PBExportHeader\$',
+      alias(/(HA)?(\s)?\$PBExportHeader\$/, $.export_header_identifier_text),
       $.export_header_identifier_content,
     ),
 
     export_header_identifier_content: $ => seq(alias($.identifier, $.file_name), '.', $.file_extension),
 
     export_header_comments: $ => seq(
-      '\$PBExportComments\$',
+      alias('$PBExportComments$', $.export_header_comments_text),
       alias(/[^\r\n]*/, $.export_header_comments_content),
     ),
 
