@@ -39,11 +39,15 @@
           },
           {
             "type": "SYMBOL",
+            "name": "global_variables_section"
+          },
+          {
+            "type": "SYMBOL",
             "name": "shared_variables_section"
           },
           {
             "type": "SYMBOL",
-            "name": "global_variables_section"
+            "name": "instance_variables_section"
           },
           {
             "type": "SYMBOL",
@@ -56,10 +60,6 @@
           {
             "type": "SYMBOL",
             "name": "external_function_prototypes"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "instance_variables_section"
           },
           {
             "type": "SYMBOL",
