@@ -1,4 +1,166 @@
 ===
+CONDITIONAL COMPILATION statement
+===
+
+global subroutine test ();
+
+#IF DEFINED debug THEN
+Messagebox('', 'debug')
+#ELSEIF DEFINED pbnative THEN
+Messagebox('', 'pbnative')
+#ELSE
+Messagebox('', 'else')
+#END IF
+
+end subroutine
+
+---
+
+(source_file
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (conditional_compilation_statement
+            (if_keyword)
+            (predefined_symbol)
+            (then_keyword)
+            (conditional_compilation_if_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (r_value_expression
+                          (string_literal
+                            (single_quote)
+                            (single_quote)))
+                        (r_value_expression
+                          (string_literal
+                            (single_quote)
+                            (string_content)
+                            (single_quote)))
+                        (close_parenthesis)))))))
+            (elseif_keyword)
+            (predefined_symbol)
+            (then_keyword)
+            (conditional_compilation_elseif_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (r_value_expression
+                          (string_literal
+                            (single_quote)
+                            (single_quote)))
+                        (r_value_expression
+                          (string_literal
+                            (single_quote)
+                            (string_content)
+                            (single_quote)))
+                        (close_parenthesis)))))))
+            (else_keyword)
+            (conditional_compilation_else_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (r_value_expression
+                          (string_literal
+                            (single_quote)
+                            (single_quote)))
+                        (r_value_expression
+                          (string_literal
+                            (single_quote)
+                            (string_content)
+                            (single_quote)))
+                        (close_parenthesis)))))))
+            (end_keyword)
+            (if_keyword))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
+
+===
+ASSIGMENT statement
+===
+
+global subroutine test ();
+
+li_test = 0
+li_test = ''
+li_test = test()
+
+end subroutine
+
+---
+
+(source_file
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (integer_literal)))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (string_literal
+                  (single_quote)
+                  (single_quote))))))
+        (statement
+          (inline_statement
+            (assignment_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (operator)
+              (r_value
+                (method_invocation
+                  (method_name)
+                  (argument_list
+                    (open_parenthesis)
+                    (close_parenthesis))))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
+
+===
 CALL statement
 ===
 
@@ -1237,6 +1399,244 @@ end subroutine
             (try_catch_statement_end
               (end_keyword)
               (try_keyword)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
+
+===
+LOCAL VARIABLE DECLARATION statement
+===
+
+global subroutine test ();
+
+int li_test
+
+int li_test = 0
+
+int li_test = test()
+
+int li_test = test(), li_test2
+
+constant int li_test = test(), li_test2
+
+end subroutine
+
+---
+
+(source_file
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (local_variable_declaration_statement
+            (local_variable_declaration
+              (variable_type
+                (primitive_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name))))))
+        (statement
+          (local_variable_declaration_statement
+            (local_variable_declaration
+              (variable_type
+                (primitive_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name)
+                  (initial_value
+                    (integer_literal)))))))
+        (statement
+          (local_variable_declaration_statement
+            (local_variable_declaration
+              (variable_type
+                (primitive_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name)
+                  (initial_value
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (close_parenthesis)))))))))
+        (statement
+          (local_variable_declaration_statement
+            (local_variable_declaration
+              (variable_type
+                (primitive_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name)
+                  (initial_value
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (close_parenthesis)))))
+                (variable_declaration
+                  (variable_name))))))
+        (statement
+          (local_variable_declaration_statement
+            (local_variable_declaration
+              (constant_keyword)
+              (variable_type
+                (primitive_type))
+              (variable_declaration_list
+                (variable_declaration
+                  (variable_name)
+                  (initial_value
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (close_parenthesis)))))
+                (variable_declaration
+                  (variable_name)))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
+
+===
+METHOD INVOCATION statement
+===
+
+global subroutine test ();
+
+object.test()
+object.function static trigger method_name(arg1, arg2)
+object.event dynamic post method_name(arg1, arg2)
+
+end subroutine
+
+---
+
+(source_file
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (expression_statement
+              (method_invocation
+                (method_object
+                  (l_value_expression
+                    (identifier_expression
+                      (identifier))))
+                (operator)
+                (method_name)
+                (argument_list
+                  (open_parenthesis)
+                  (close_parenthesis))))))
+        (statement
+          (inline_statement
+            (expression_statement
+              (method_invocation
+                (method_object
+                  (l_value_expression
+                    (identifier_expression
+                      (identifier))))
+                (operator)
+                (method_type)
+                (call_type)
+                (when_type)
+                (method_name)
+                (argument_list
+                  (open_parenthesis)
+                  (r_value_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (r_value_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (close_parenthesis))))))
+        (statement
+          (inline_statement
+            (expression_statement
+              (method_invocation
+                (method_object
+                  (l_value_expression
+                    (identifier_expression
+                      (identifier))))
+                (operator)
+                (method_type)
+                (call_type)
+                (when_type)
+                (method_name)
+                (argument_list
+                  (open_parenthesis)
+                  (r_value_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (r_value_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (close_parenthesis)))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
+
+===
+UPDATE EXPRESSION statement
+===
+
+global subroutine test ();
+
+li++
+li -- // because powerbuilder allow dash `-` in names there must be a space between
+
+end subroutine
+
+---
+
+(source_file
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (expression_statement
+              (update_expression
+                (argument
+                  (identifier_expression
+                    (identifier)))
+                (operator)))))
+        (statement
+          (inline_statement
+            (expression_statement
+              (update_expression
+                (argument
+                  (identifier_expression
+                    (identifier)))
+                (operator))))))
+      (line_comment)
       (subroutine_definition_statement_end
         (end_keyword)
         (subroutine_keyword)))))
