@@ -1,0 +1,196 @@
+===
+PowerBuilder extesion with dll
+===
+
+forward
+global type unpot_fp_function from nonvisualobject
+end type
+end forward
+
+global type unpot_fp_function from nonvisualobject native "unpot_fp.dll"
+public function  unpot_fp_function of_bind(powerobject a_obj, string as_method)
+public function  unpot_fp_function of_bind_global(string as_function)
+public function  unpot_fp_function of_apply(any a_args[])
+public function  unpot_fp_result of_invoke(any a_args[])
+end type
+global unpot_fp_function unpot_fp_function
+
+on unpot_fp_function.create
+call super::create
+TriggerEvent( this, "constructor" )
+end on
+
+on unpot_fp_function.destroy
+TriggerEvent( this, "destructor" )
+call super::destroy
+end on
+
+---
+
+(source_file
+  (class_file
+    (forward_declaration_section
+      (forward_declaration_statement)
+      (forward_declaration_statement_body
+        (class_type_definition
+          (class_type_definition_statement
+            (global_keyword)
+            (type_keyword)
+            (class_type_name)
+            (from_keyword)
+            (ancenstor_type_name))
+          (end_type_declaration_statement
+            (end_keyword)
+            (type_keyword))))
+      (forward_declaration_statement_end
+        (end_keyword)
+        (forward_keyword)))
+    (class_type_definition
+      (class_type_definition_statement
+        (global_keyword)
+        (type_keyword)
+        (class_type_name)
+        (from_keyword)
+        (ancenstor_type_name)
+        (native_keyword)
+        (dll_path
+          (double_quote)
+          (string_content)
+          (double_quote)))
+      (class_type_definition_statement_body
+        (function_prototype
+          (access_modifier
+            (public_keyword))
+          (function_keyword)
+          (return_type
+            (custom_type))
+          (function_name)
+          (parameter_list
+            (open_parenthesis)
+            (parameter
+              (type
+                (custom_type))
+              (parameter_name))
+            (parameter
+              (type
+                (primitive_type))
+              (parameter_name))
+            (close_parenthesis)))
+        (function_prototype
+          (access_modifier
+            (public_keyword))
+          (function_keyword)
+          (return_type
+            (custom_type))
+          (function_name)
+          (parameter_list
+            (open_parenthesis)
+            (parameter
+              (type
+                (primitive_type))
+              (parameter_name))
+            (close_parenthesis)))
+        (function_prototype
+          (access_modifier
+            (public_keyword))
+          (function_keyword)
+          (return_type
+            (custom_type))
+          (function_name)
+          (parameter_list
+            (open_parenthesis)
+            (parameter
+              (type
+                (primitive_type))
+              (parameter_name)
+              (array_parameter_declaration_suffix
+                (open_brackets)
+                (close_brackets)))
+            (close_parenthesis)))
+        (function_prototype
+          (access_modifier
+            (public_keyword))
+          (function_keyword)
+          (return_type
+            (custom_type))
+          (function_name)
+          (parameter_list
+            (open_parenthesis)
+            (parameter
+              (type
+                (primitive_type))
+              (parameter_name)
+              (array_parameter_declaration_suffix
+                (open_brackets)
+                (close_brackets)))
+            (close_parenthesis))))
+      (end_type_declaration_statement
+        (end_keyword)
+        (type_keyword)))
+    (global_var_declaration
+      (global_keyword)
+      (type
+        (custom_type))
+      (global_variable_name))
+    (on_event_definition
+      (on_event_definition_statement
+        (on_keyword)
+        (class_name)
+        (create_keyword))
+      (on_event_definition_block
+        (statement
+          (inline_statement
+            (call_statement
+              (call_keyword)
+              (ancestor_name
+                (super_keyword))
+              (event_name))))
+        (statement
+          (inline_statement
+            (expression_statement
+              (method_invocation
+                (method_name)
+                (argument_list
+                  (open_parenthesis)
+                  (r_value_expression
+                    (this_keyword))
+                  (r_value_expression
+                    (string_literal
+                      (double_quote)
+                      (string_content)
+                      (double_quote)))
+                  (close_parenthesis)))))))
+      (on_event_definition_statement_end
+        (end_keyword)
+        (on_keyword)))
+    (on_event_definition
+      (on_event_definition_statement
+        (on_keyword)
+        (class_name)
+        (destroy_keyword))
+      (on_event_definition_block
+        (statement
+          (inline_statement
+            (expression_statement
+              (method_invocation
+                (method_name)
+                (argument_list
+                  (open_parenthesis)
+                  (r_value_expression
+                    (this_keyword))
+                  (r_value_expression
+                    (string_literal
+                      (double_quote)
+                      (string_content)
+                      (double_quote)))
+                  (close_parenthesis))))))
+        (statement
+          (inline_statement
+            (call_statement
+              (call_keyword)
+              (ancestor_name
+                (super_keyword))
+              (event_name)))))
+      (on_event_definition_statement_end
+        (end_keyword)
+        (on_keyword)))))
