@@ -2,36 +2,56 @@
 CALL statement
 ===
 
-#!
+global subroutine test ();
+
 CALL w_emp`cb_close::Clicked
 CALL w_emp::Open
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (inline_statement
-        (call_statement
-          (call_keyword)
-          (identifier)
-          (identifier)
-          (double_colon_char)
-          (identifier))))
-    (statement
-      (inline_statement
-        (call_statement
-          (call_keyword)
-          (identifier)
-          (double_colon_char)
-          (identifier))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (call_statement
+              (call_keyword)
+              (ancestor_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (control_name)
+              (event_name))))
+        (statement
+          (inline_statement
+            (call_statement
+              (call_keyword)
+              (ancestor_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (event_name)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 CHOOSE CASE statement
 ===
 
-#!
+global subroutine test ();
+
 CHOOSE CASE Weight
   CASE IS<16
     ai_Postage=Weight*0.30
@@ -47,230 +67,281 @@ CHOOSE CASE Weight
     as_Method="FedEx"
 END CHOOSE
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (choose_statement
-        (choose_statement_init
-          (choose_keyword)
-          (case_keyword)
-          (expression
-            (primary_expression
-              (identifier_expression
-                (identifier)))))
-        (case_clause
-          (case_keyword)
-          (case_is_relational_expression
-            (is_keyword)
-            (relational_operator)
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal)))))
-          (scriptable_block
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (binary_expression
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (expression
-                        (primary_expression
-                          (number_literal
-                            (decimal_literal)))))))))
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (primary_expression
-                      (string_literal
-                        (double_quote)
-                        (string_content)
-                        (double_quote)))))))))
-        (case_clause
-          (case_keyword)
-          (case_to_expression
-            (expression
-              (unary_expression
-                (expression
-                  (primary_expression
-                    (number_literal
-                      (integer_literal))))))
-            (to_keyword)
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal)))))
-          (scriptable_block
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (primary_expression
-                      (number_literal
-                        (decimal_literal)))))))
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (primary_expression
-                      (string_literal
-                        (double_quote)
-                        (string_content)
-                        (double_quote)))))))))
-        (case_clause
-          (case_keyword)
-          (case_condition_expression
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal))))
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal))))
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal)))))
-          (scriptable_block
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (primary_expression
-                      (number_literal
-                        (decimal_literal)))))))
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (primary_expression
-                      (string_literal
-                        (double_quote)
-                        (string_content)
-                        (double_quote)))))))))
-        (case_else_clause
-          (case_keyword)
-          (else_keyword)
-          (scriptable_block
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (primary_expression
-                      (number_literal
-                        (decimal_literal)))))))
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (primary_expression
-                      (string_literal
-                        (double_quote)
-                        (string_content)
-                        (double_quote)))))))))
-        (end_choose_statement
-          (end_keyword)
-          (choose_keyword))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (choose_statement
+            (choose_case_statement
+              (choose_keyword)
+              (case_keyword)
+              (test_expression
+                (l_value_expression
+                  (identifier_expression
+                    (identifier)))))
+            (choose_case_clause
+              (case_keyword)
+              (choose_case_clause_condition
+                (is_keyword)
+                (relational_operator)
+                (r_value_expression
+                  (integer_literal)))
+              (choose_case_block
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (binary_expression
+                          (left_expression
+                            (l_value_expression
+                              (identifier_expression
+                                (identifier))))
+                          (operator)
+                          (right_expression
+                            (decimal_literal)))))))
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (string_literal
+                          (double_quote)
+                          (string_content)
+                          (double_quote))))))))
+            (choose_case_clause
+              (case_keyword)
+              (choose_case_clause_condition
+                (r_value_expression
+                  (unary_expression
+                    (operator)
+                    (r_value_expression
+                      (integer_literal))))
+                (to_keyword)
+                (r_value_expression
+                  (integer_literal)))
+              (choose_case_block
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (decimal_literal)))))
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (string_literal
+                          (double_quote)
+                          (string_content)
+                          (double_quote))))))))
+            (choose_case_clause
+              (case_keyword)
+              (choose_case_clause_condition
+                (r_value_expression
+                  (integer_literal))
+                (r_value_expression
+                  (integer_literal))
+                (r_value_expression
+                  (integer_literal)))
+              (choose_case_block
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (decimal_literal)))))
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (string_literal
+                          (double_quote)
+                          (string_content)
+                          (double_quote))))))))
+            (choose_case_else_clause
+              (case_keyword)
+              (else_keyword)
+              (choose_case_else_block
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (decimal_literal)))))
+                (statement
+                  (inline_statement
+                    (assignment_statement
+                      (l_value
+                        (identifier_expression
+                          (identifier)))
+                      (operator)
+                      (r_value
+                        (string_literal
+                          (double_quote)
+                          (string_content)
+                          (double_quote))))))))
+            (choose_statement_end
+              (end_keyword)
+              (choose_keyword)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 CREATE statement
 ===
 
-#!
+global subroutine test ();
+
 DBTrans = CREATE transaction
 lnv_fileservice = CREATE USING ls_objectname;
 lnv_fileservice = CREATE USING 'u_teste'
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (inline_statement
-        (create_statement
-          (identifier)
-          (equals_operator)
-          (create_keyword)
-          (datatype
-            (custom_datatype
-              (identifier))))))
-    (statement
-      (inline_statement
-        (create_statement
-          (identifier)
-          (equals_operator)
-          (create_keyword)
-          (using_keyword)
-          (identifier)))
-      (semi_colon_char))
-    (statement
-      (inline_statement
-        (create_statement
-          (identifier)
-          (equals_operator)
-          (create_keyword)
-          (using_keyword)
-          (string_literal
-            (single_quote)
-            (string_content)
-            (single_quote)))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (create_keyword)
+              (type
+                (custom_type)))))
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (create_keyword)
+              (using_keyword)
+              (dynamic_type
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))))
+          (statement_separation))
+        (statement
+          (inline_statement
+            (create_statement
+              (l_value
+                (identifier_expression
+                  (identifier)))
+              (create_keyword)
+              (using_keyword)
+              (dynamic_type
+                (string_literal
+                  (single_quote)
+                  (string_content)
+                  (single_quote)))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 DESTROY statement
 ===
 
-#!
+global subroutine test ();
+
 DESTROY DBTrans
 DESTROY (DBTrans)
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (inline_statement
-        (destroy_statement
-          (destroy_keyword)
-          (identifier))))
-    (statement
-      (inline_statement
-        (destroy_statement
-          (destroy_keyword)
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
           (open_parenthesis)
-          (identifier)
-          (close_parenthesis))))))
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (destroy_statement
+              (destroy_keyword)
+              (variable_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier)))))))
+        (statement
+          (inline_statement
+            (destroy_statement
+              (destroy_keyword)
+              (open_parenthesis)
+              (variable_name
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))
+              (close_parenthesis)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 DO LOOP statement
 ===
 
-#!
+global subroutine test ();
+
 DO UNTIL A > 15
   Beep(A)
   A = (A + 1) * B
@@ -291,241 +362,252 @@ DO
   A = (A + 1) * B
 LOOP WHILE A <= 15
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (loop_statement
-        (while_loop
-          (while_loop_init
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (while_loop
+            (while_loop_statement
+              (do_keyword)
+              (until_keyword)
+              (condition
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (integer_literal)))))
+            (while_loop_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (r_value_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))
+                        (close_parenthesis))))))
+              (statement
+                (inline_statement
+                  (assignment_statement
+                    (l_value
+                      (identifier_expression
+                        (identifier)))
+                    (operator)
+                    (r_value
+                      (binary_expression
+                        (left_expression
+                          (parenthesized_expression
+                            (open_parenthesis)
+                            (r_value_expression
+                              (binary_expression
+                                (left_expression
+                                  (l_value_expression
+                                    (identifier_expression
+                                      (identifier))))
+                                (operator)
+                                (right_expression
+                                  (integer_literal))))
+                            (close_parenthesis)))
+                        (operator)
+                        (right_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))))))))
+            (loop_keyword)))
+        (statement
+          (while_loop
+            (while_loop_statement
+              (do_keyword)
+              (while_keyword)
+              (condition
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (integer_literal)))))
+            (while_loop_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (r_value_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))
+                        (close_parenthesis))))))
+              (statement
+                (inline_statement
+                  (assignment_statement
+                    (l_value
+                      (identifier_expression
+                        (identifier)))
+                    (operator)
+                    (r_value
+                      (binary_expression
+                        (left_expression
+                          (parenthesized_expression
+                            (open_parenthesis)
+                            (r_value_expression
+                              (binary_expression
+                                (left_expression
+                                  (l_value_expression
+                                    (identifier_expression
+                                      (identifier))))
+                                (operator)
+                                (right_expression
+                                  (integer_literal))))
+                            (close_parenthesis)))
+                        (operator)
+                        (right_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))))))))
+            (loop_keyword)))
+        (statement
+          (do_loop
             (do_keyword)
-            (until_keyword)
-            (expression
-              (binary_expression
-                (expression
-                  (primary_expression
-                    (identifier_expression
-                      (identifier))))
-                (expression
-                  (primary_expression
-                    (number_literal
-                      (integer_literal)))))))
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (close_parenthesis))))))
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (binary_expression
-                      (expression
-                        (primary_expression
+            (do_loop_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (r_value_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))
+                        (close_parenthesis))))))
+              (statement
+                (inline_statement
+                  (assignment_statement
+                    (l_value
+                      (identifier_expression
+                        (identifier)))
+                    (operator)
+                    (r_value
+                      (binary_expression
+                        (left_expression
                           (parenthesized_expression
                             (open_parenthesis)
-                            (expression
+                            (r_value_expression
                               (binary_expression
-                                (expression
-                                  (primary_expression
+                                (left_expression
+                                  (l_value_expression
                                     (identifier_expression
                                       (identifier))))
-                                (expression
-                                  (primary_expression
-                                    (number_literal
-                                      (integer_literal))))))
-                            (close_parenthesis))))
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))))))))
-          (loop_keyword))))
-    (statement
-      (loop_statement
-        (while_loop
-          (while_loop_init
+                                (operator)
+                                (right_expression
+                                  (integer_literal))))
+                            (close_parenthesis)))
+                        (operator)
+                        (right_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))))))))
+            (do_loop_end
+              (loop_keyword)
+              (until_keyword)
+              (condition
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (integer_literal)))))))
+        (statement
+          (do_loop
             (do_keyword)
-            (while_keyword)
-            (expression
-              (binary_expression
-                (expression
-                  (primary_expression
-                    (identifier_expression
-                      (identifier))))
-                (expression
-                  (primary_expression
-                    (number_literal
-                      (integer_literal)))))))
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (close_parenthesis))))))
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (binary_expression
-                      (expression
-                        (primary_expression
+            (do_loop_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (r_value_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))
+                        (close_parenthesis))))))
+              (statement
+                (inline_statement
+                  (assignment_statement
+                    (l_value
+                      (identifier_expression
+                        (identifier)))
+                    (operator)
+                    (r_value
+                      (binary_expression
+                        (left_expression
                           (parenthesized_expression
                             (open_parenthesis)
-                            (expression
+                            (r_value_expression
                               (binary_expression
-                                (expression
-                                  (primary_expression
+                                (left_expression
+                                  (l_value_expression
                                     (identifier_expression
                                       (identifier))))
-                                (expression
-                                  (primary_expression
-                                    (number_literal
-                                      (integer_literal))))))
-                            (close_parenthesis))))
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))))))))
-          (loop_keyword))))
-    (statement
-      (loop_statement
-        (do_loop
-          (do_keyword)
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (close_parenthesis))))))
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (binary_expression
-                      (expression
-                        (primary_expression
-                          (parenthesized_expression
-                            (open_parenthesis)
-                            (expression
-                              (binary_expression
-                                (expression
-                                  (primary_expression
-                                    (identifier_expression
-                                      (identifier))))
-                                (expression
-                                  (primary_expression
-                                    (number_literal
-                                      (integer_literal))))))
-                            (close_parenthesis))))
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))))))))
-          (end_do_loop
-            (loop_keyword)
-            (until_keyword)
-            (expression
-              (binary_expression
-                (expression
-                  (primary_expression
-                    (identifier_expression
-                      (identifier))))
-                (expression
-                  (primary_expression
-                    (number_literal
-                      (integer_literal))))))))))
-    (statement
-      (loop_statement
-        (do_loop
-          (do_keyword)
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (close_parenthesis))))))
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (binary_expression
-                      (expression
-                        (primary_expression
-                          (parenthesized_expression
-                            (open_parenthesis)
-                            (expression
-                              (binary_expression
-                                (expression
-                                  (primary_expression
-                                    (identifier_expression
-                                      (identifier))))
-                                (expression
-                                  (primary_expression
-                                    (number_literal
-                                      (integer_literal))))))
-                            (close_parenthesis))))
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))))))))
-          (end_do_loop
-            (loop_keyword)
-            (while_keyword)
-            (expression
-              (binary_expression
-                (expression
-                  (primary_expression
-                    (identifier_expression
-                      (identifier))))
-                (expression
-                  (primary_expression
-                    (number_literal
-                      (integer_literal))))))))))))
+                                (operator)
+                                (right_expression
+                                  (integer_literal))))
+                            (close_parenthesis)))
+                        (operator)
+                        (right_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))))))))
+            (do_loop_end
+              (loop_keyword)
+              (while_keyword)
+              (condition
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (integer_literal))))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 EXIT and CONTINUE statement
 ===
 
-#!
+global subroutine test ();
+
 DO
   If A = 8 Then
     Exit
@@ -534,169 +616,220 @@ DO
   End If
 LOOP WHILE A <= 15
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (loop_statement
-        (do_loop
-          (do_keyword)
-          (scriptable_block
-            (statement
-              (if_statement
-                (if_statement_init
-                  (if_keyword)
-                  (expression
-                    (binary_expression
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (expression
-                        (primary_expression
-                          (number_literal
-                            (integer_literal))))))
-                  (then_keyword))
-                (scriptable_block
-                  (statement
-                    (inline_statement
-                      (exit_statement
-                        (exit_keyword)))))
-                (else_clause
-                  (else_keyword)
-                  (scriptable_block
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (do_loop
+            (do_keyword)
+            (do_loop_block
+              (statement
+                (if_statement
+                  (if_then_statement
+                    (if_keyword)
+                    (condition
+                      (binary_expression
+                        (left_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))
+                        (operator)
+                        (right_expression
+                          (integer_literal))))
+                    (then_keyword))
+                  (if_block
                     (statement
                       (inline_statement
-                        (continue_statement
-                          (continue_keyword))))))
-                (end_if_statement
-                  (end_keyword)
-                  (if_keyword)))))
-          (end_do_loop
-            (loop_keyword)
-            (while_keyword)
-            (expression
-              (binary_expression
-                (expression
-                  (primary_expression
-                    (identifier_expression
-                      (identifier))))
-                (expression
-                  (primary_expression
-                    (number_literal
-                      (integer_literal))))))))))))
+                        (exit_statement
+                          (exit_keyword)))))
+                  (else_clause
+                    (else_keyword)
+                    (else_block
+                      (statement
+                        (inline_statement
+                          (continue_statement
+                            (continue_keyword))))))
+                  (if_then_statement_end
+                    (end_keyword)
+                    (if_keyword)))))
+            (do_loop_end
+              (loop_keyword)
+              (while_keyword)
+              (condition
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (integer_literal))))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 FOR statement
 ===
 
-#!
+global subroutine test ();
+
 FOR N = 5 TO 25 STEP 5
   A = A+10
 NEXT
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (loop_statement
-        (for_loop
-          (for_loop_init
-            (for_keyword)
-            (identifier)
-            (equals_operator)
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal))))
-            (to_keyword)
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal))))
-            (step_keyword)
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal)))))
-          (scriptable_block
-            (statement
-              (inline_statement
-                (assignment_statement
-                  (identifier)
-                  (assignment_operator)
-                  (expression
-                    (binary_expression
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (expression
-                        (primary_expression
-                          (number_literal
-                            (integer_literal))))))))))
-          (next_keyword))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (for_loop
+            (for_loop_statement
+              (for_keyword)
+              (iterator_counter
+                (identifier_expression
+                  (identifier)))
+              (initial_value
+                (integer_literal))
+              (to_keyword)
+              (final_value
+                (integer_literal))
+              (step_keyword)
+              (increment_value
+                (integer_literal)))
+            (for_loop_block
+              (statement
+                (inline_statement
+                  (assignment_statement
+                    (l_value
+                      (identifier_expression
+                        (identifier)))
+                    (operator)
+                    (r_value
+                      (binary_expression
+                        (left_expression
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))
+                        (operator)
+                        (right_expression
+                          (integer_literal))))))))
+            (next_keyword))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 GOTO statement
 ===
 
-#!
+global subroutine test ();
+
 GOTO OK
 
 GO:
   teste()
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (inline_statement
-        (goto_statement
-          (goto_keyword)
-          (identifier))))
-    (statement
-      (goto_label
-        (identifier)
-        (colon_char)))
-    (statement
-      (inline_statement
-        (expression_statement
-          (method_invocation
-            (identifier)
-            (argument_list
-              (open_parenthesis)
-              (close_parenthesis))))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (goto_statement
+              (goto_keyword)
+              (label))))
+        (statement
+          (goto_label
+            (label)))
+        (statement
+          (inline_statement
+            (expression_statement
+              (method_invocation
+                (method_name)
+                (argument_list
+                  (open_parenthesis)
+                  (close_parenthesis)))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 HALT statement
 ===
 
-#!
+global subroutine test ();
+
 HALT CLOSE
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (inline_statement
-        (halt_statement
-          (halt_keyword)
-          (close_keyword))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (halt_statement
+              (halt_keyword)
+              (close_keyword)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 IF statement
 ===
 
-#!
+global subroutine test ();
+
 IF X=Y THEN
 	Beep(2)
 ELSEIF X=Z THEN
@@ -712,276 +845,312 @@ If 1=1 Then teste()
 
 If 1=1 Then teste() else teste_2()
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (if_statement
-        (if_statement_init
-          (if_keyword)
-          (expression
-            (binary_expression
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier))))
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier))))))
-          (then_keyword))
-        (scriptable_block
-          (statement
-            (inline_statement
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (if_statement
+            (if_then_statement
+              (if_keyword)
+              (condition
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))))
+              (then_keyword))
+            (if_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (r_value_expression
+                          (integer_literal))
+                        (close_parenthesis)))))))
+            (elseif_clause
+              (elseif_keyword)
+              (condition
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))))
+              (then_keyword)
+              (elseif_block
+                (statement
+                  (inline_statement
+                    (expression_statement
+                      (method_invocation
+                        (method_name)
+                        (argument_list
+                          (open_parenthesis)
+                          (r_value_expression
+                            (l_value_expression
+                              (identifier_expression
+                                (identifier))))
+                          (close_parenthesis)))))
+                  (statement_separation))
+                (statement
+                  (inline_statement
+                    (expression_statement
+                      (method_invocation
+                        (method_object
+                          (l_value_expression
+                            (identifier_expression
+                              (identifier))))
+                        (operator)
+                        (method_name)
+                        (argument_list
+                          (open_parenthesis)
+                          (r_value_expression
+                            (integer_literal))
+                          (r_value_expression
+                            (boolean_literal
+                              (true_keyword)))
+                          (close_parenthesis))))))))
+            (elseif_clause
+              (elseif_keyword)
+              (condition
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (string_literal
+                      (double_quote)
+                      (string_content)
+                      (double_quote)))))
+              (then_keyword)
+              (elseif_block
+                (statement
+                  (inline_statement
+                    (expression_statement
+                      (method_invocation
+                        (method_name)
+                        (argument_list
+                          (open_parenthesis)
+                          (r_value_expression
+                            (l_value_expression
+                              (identifier_expression
+                                (identifier))))
+                          (close_parenthesis))))))))
+            (else_clause
+              (else_keyword)
+              (else_block
+                (statement
+                  (inline_statement
+                    (expression_statement
+                      (method_invocation
+                        (method_name)
+                        (argument_list
+                          (open_parenthesis)
+                          (r_value_expression
+                            (l_value_expression
+                              (identifier_expression
+                                (identifier))))
+                          (close_parenthesis))))))
+                (statement
+                  (inline_statement
+                    (expression_statement
+                      (method_invocation
+                        (method_name)
+                        (argument_list
+                          (open_parenthesis)
+                          (r_value_expression
+                            (l_value_expression
+                              (identifier_expression
+                                (identifier))))
+                          (close_parenthesis))))))))
+            (if_then_statement_end
+              (end_keyword)
+              (if_keyword))))
+        (statement
+          (inline_if_statement
+            (if_keyword)
+            (condition
+              (binary_expression
+                (left_expression
+                  (integer_literal))
+                (operator)
+                (right_expression
+                  (integer_literal))))
+            (then_keyword)
+            (if_case_statement
               (expression_statement
                 (method_invocation
-                  (identifier)
+                  (method_name)
                   (argument_list
                     (open_parenthesis)
-                    (expression
-                      (primary_expression
-                        (number_literal
-                          (integer_literal))))
                     (close_parenthesis)))))))
-        (elseif_clause
-          (elseif_keyword)
-          (expression
-            (binary_expression
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier))))
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier))))))
-          (then_keyword)
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (close_parenthesis)))))
-              (semi_colon_char))
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (primary_expression
-                      (identifier_expression
-                        (identifier)))
-                    (dot_char)
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (number_literal
-                            (integer_literal))))
-                      (expression
-                        (primary_expression
-                          (boolean_literal
-                            (true_keyword))))
-                      (close_parenthesis))))))))
-        (elseif_clause
-          (elseif_keyword)
-          (expression
-            (binary_expression
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier))))
-              (expression
-                (primary_expression
-                  (string_literal
-                    (double_quote)
-                    (string_content)
-                    (double_quote))))))
-          (then_keyword)
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (close_parenthesis))))))))
-        (else_clause
-          (else_keyword)
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (close_parenthesis))))))
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (expression
-                        (primary_expression
-                          (identifier_expression
-                            (identifier))))
-                      (close_parenthesis))))))))
-        (end_if_statement
-          (end_keyword)
-          (if_keyword))))
-    (statement
-      (inline_if_statement
-        (if_keyword)
-        (expression
-          (binary_expression
-            (expression
-              (primary_expression
-                (number_literal
+        (statement
+          (inline_if_statement
+            (if_keyword)
+            (condition
+              (binary_expression
+                (left_expression
+                  (integer_literal))
+                (operator)
+                (right_expression
                   (integer_literal))))
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal))))))
-        (then_keyword)
-        (inline_statement
-          (expression_statement
-            (method_invocation
-              (identifier)
-              (argument_list
-                (open_parenthesis)
-                (close_parenthesis)))))))
-    (statement
-      (inline_if_statement
-        (if_keyword)
-        (expression
-          (binary_expression
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal))))
-            (expression
-              (primary_expression
-                (number_literal
-                  (integer_literal))))))
-        (then_keyword)
-        (inline_statement
-          (expression_statement
-            (method_invocation
-              (identifier)
-              (argument_list
-                (open_parenthesis)
-                (close_parenthesis)))))
-        (else_keyword)
-        (inline_statement
-          (expression_statement
-            (method_invocation
-              (identifier)
-              (argument_list
-                (open_parenthesis)
-                (close_parenthesis)))))))))
+            (then_keyword)
+            (if_case_statement
+              (expression_statement
+                (method_invocation
+                  (method_name)
+                  (argument_list
+                    (open_parenthesis)
+                    (close_parenthesis)))))
+            (else_keyword)
+            (else_case_statement
+              (expression_statement
+                (method_invocation
+                  (method_name)
+                  (argument_list
+                    (open_parenthesis)
+                    (close_parenthesis))))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 RETURN statement
 ===
 
-#!
+global subroutine test ();
+
 RETURN Arg1/Arg2
 
 RETURN -1
 
-return
+RETURN
+
+end subroutine
 
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (inline_statement
-        (return_statement
-          (return_keyword)
-          (expression
-            (binary_expression
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier))))
-              (expression
-                (primary_expression
-                  (identifier_expression
-                    (identifier)))))))))
-    (statement
-      (inline_statement
-        (return_statement
-          (return_keyword)
-          (expression
-            (unary_expression
-              (expression
-                (primary_expression
-                  (number_literal
-                    (integer_literal)))))))))
-    (statement
-      (inline_statement
-        (return_statement
-          (return_keyword))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)
+              (return_value
+                (binary_expression
+                  (left_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier))))
+                  (operator)
+                  (right_expression
+                    (l_value_expression
+                      (identifier_expression
+                        (identifier)))))))))
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)
+              (return_value
+                (unary_expression
+                  (operator)
+                  (r_value_expression
+                    (integer_literal)))))))
+        (statement
+          (inline_statement
+            (return_statement
+              (return_keyword)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 THROW statement
 ===
 
-#!
+global subroutine test ();
+
 THROW create ExceptionType
 
 THROW ex
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (inline_statement
-        (throw_statement
-          (throw_keyword)
-          (create_keyword)
-          (datatype
-            (custom_datatype
-              (identifier))))))
-    (statement
-      (inline_statement
-        (throw_statement
-          (throw_keyword)
-          (expression
-            (primary_expression
-              (identifier_expression
-                (identifier)))))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (inline_statement
+            (throw_statement
+              (throw_keyword)
+              (create_keyword)
+              (type
+                (custom_type)))))
+        (statement
+          (inline_statement
+            (throw_statement
+              (throw_keyword)
+              (r_value_expression
+                (l_value_expression
+                  (identifier_expression
+                    (identifier))))))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
 
 ===
 TRY statement
 ===
 
-#!
+global subroutine test ();
+
 TRY
 	teste()
 CATCH ( ThrowableType1 exIdentifier1 )
@@ -992,70 +1161,82 @@ FINALLY
 	teste()
 END TRY
 
+end subroutine
+
 ---
 
 (source_file
-  (script_file
-    (hashbang_script_notation)
-    (statement
-      (try_catch_statement
-        (try_keyword)
-        (scriptable_block
-          (statement
-            (inline_statement
-              (expression_statement
-                (method_invocation
-                  (identifier)
-                  (argument_list
-                    (open_parenthesis)
-                    (close_parenthesis)))))))
-        (catch_clause
-          (catch_clause_init
-            (catch_keyword)
-            (open_parenthesis)
-            (datatype
-              (custom_datatype
-                (identifier)))
-            (identifier)
-            (close_parenthesis))
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (close_parenthesis))))))))
-        (catch_clause
-          (catch_clause_init
-            (catch_keyword)
-            (open_parenthesis)
-            (datatype
-              (custom_datatype
-                (identifier)))
-            (identifier)
-            (close_parenthesis))
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (close_parenthesis))))))))
-        (finally_clause
-          (finally_keyword)
-          (scriptable_block
-            (statement
-              (inline_statement
-                (expression_statement
-                  (method_invocation
-                    (identifier)
-                    (argument_list
-                      (open_parenthesis)
-                      (close_parenthesis))))))))
-        (end_try_statement
-          (end_keyword)
-          (try_keyword))))))
+  (class_file
+    (function_definition
+      (subroutine_definition_statement
+        (global_keyword)
+        (subroutine_keyword)
+        (subroutine_name)
+        (parameter_list
+          (open_parenthesis)
+          (close_parenthesis))
+        (statement_separation))
+      (subroutine_definition_block
+        (statement
+          (try_catch_statement
+            (try_keyword)
+            (try_block
+              (statement
+                (inline_statement
+                  (expression_statement
+                    (method_invocation
+                      (method_name)
+                      (argument_list
+                        (open_parenthesis)
+                        (close_parenthesis)))))))
+            (catch_clause
+              (catch_clause_statement
+                (catch_keyword)
+                (open_parenthesis)
+                (throwable_type
+                  (custom_type))
+                (throwable_name)
+                (close_parenthesis))
+              (catch_block
+                (statement
+                  (inline_statement
+                    (expression_statement
+                      (method_invocation
+                        (method_name)
+                        (argument_list
+                          (open_parenthesis)
+                          (close_parenthesis))))))))
+            (catch_clause
+              (catch_clause_statement
+                (catch_keyword)
+                (open_parenthesis)
+                (throwable_type
+                  (custom_type))
+                (throwable_name)
+                (close_parenthesis))
+              (catch_block
+                (statement
+                  (inline_statement
+                    (expression_statement
+                      (method_invocation
+                        (method_name)
+                        (argument_list
+                          (open_parenthesis)
+                          (close_parenthesis))))))))
+            (finally_clause
+              (finally_keyword)
+              (finally_block
+                (statement
+                  (inline_statement
+                    (expression_statement
+                      (method_invocation
+                        (method_name)
+                        (argument_list
+                          (open_parenthesis)
+                          (close_parenthesis))))))))
+            (try_catch_statement_end
+              (end_keyword)
+              (try_keyword)))))
+      (subroutine_definition_statement_end
+        (end_keyword)
+        (subroutine_keyword)))))
