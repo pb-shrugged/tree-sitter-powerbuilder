@@ -1,5 +1,9 @@
 # tree-sitter-powerbuilder
 
+[ARCHIVED]
+
+I'm changing the organizational structure so the new repo for the grammar is [tree-sitter-powerscript](https://github.com/pb-shrugged/tree-sitter-powerscript)
+
 A [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for PowerBuilder.
 
 ## Supported File Types
