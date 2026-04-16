@@ -39,8 +39,6 @@ jobs:
       uses: tree-sitter/parser-test-action@v3
       with:
         test-node: true
-        test-rust: false
-        test-python: false
     - name: Parse examples
       uses: tree-sitter/parse-action@v4
       with:
