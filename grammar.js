@@ -26,7 +26,7 @@ const PREC = {
 };
 
 module.exports = grammar({
-  name: 'powerscript',
+  name: 'powerbuilder',
 
   word: $ => $.identifier,
 
