@@ -25,6 +25,7 @@ const PREC = {
   IDENTIFIER_EXPRESSION: -1,
 };
 
+
 module.exports = grammar({
   name: 'powerbuilder',
 
