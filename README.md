@@ -1,15 +1,6 @@
 # tree-sitter-powerbuilder
 
-A [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for PowerBuilder, providing syntax highlighting, code navigation, and parsing capabilities for PowerBuilder source files.
-
-## Features
-
-- 🎯 **Complete PowerBuilder Grammar**: Supports PowerBuilder syntax including objects, functions, events, and data types
-- 🌐 **Multi-Platform**: Works on Linux, Windows, and macOS
-- 📦 **Multiple Bindings**: Available for Node.js, Python, Rust, Go, Swift, and C
-- 🚀 **WebAssembly Support**: Can be used in web browsers
-- 🔧 **IDE Integration**: Compatible with editors that support Tree-sitter
-- ⚡ **Fast Parsing**: Incremental parsing for efficient code analysis
+A [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for PowerBuilder.
 
 ## Supported File Types
 
@@ -19,11 +10,10 @@ A [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for PowerBui
 - `.sru` - User Object
 - `.sra` - Application
 - `.srm` - Menu
-- `.srd` - DataWindow Syntax
 
 ## Installation
 
-### NPM (Node.js)
+### As a npm package on your project
 
 ```bash
 npm install tree-sitter-powerbuilder
@@ -77,8 +67,8 @@ console.log(tree.rootNode.toString());
 
 ### Prerequisites
 
-- Node.js 18+
-- tree-sitter CLI: `npm install -g tree-sitter-cli`
+- Node.js
+- tree-sitter CLI
 
 ### Setup
 
@@ -111,22 +101,20 @@ npm test
 
 This project uses GitHub Actions for continuous integration and deployment:
 
-- **CI Workflow**: Runs tests on every push and pull request across multiple platforms
-- **Release Workflow**: Automatically creates GitHub releases when tags are pushed
-- **Publish Workflow**: Automatically publishes to NPM when releases are created
-- **Security Workflow**: Regular security audits and dependency reviews
+- [**Lint**](/.github/workflows/lint.yml): Runs lint on push and pull request
+- [**CI Workflow**](/.github/workflows/ci.yml): Runs tests on every push and pull request
+- [**Publish Workflow**](/.github/workflows/publish.yml): Automatically creates GitHub releases and publishes to NPM when tags are pushed
 
 ### Automated Releases
 
 To create a new release:
 
-1. Use the "Update Version" workflow in GitHub Actions, or
-2. Manually create a tag: `git tag v1.0.0 && git push origin v1.0.0`
+1. Manually update the tree-sitter version with `tree-sitter version <VERSION>` then create the git tag: `git tag v<VERSION> && git push origin v<VERSION>`
 
 The release process will automatically:
+- Generate cross-platform binaries
 - Create a GitHub release with assets
 - Publish the package to NPM
-- Generate cross-platform binaries
 
 ## Contributing
 
@@ -137,7 +125,7 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
 3. Make your changes and add tests
-4. Run tests: `npm run ts:test`
+4. Run tests: `npm run ts:test` for the test/corpus files and  `npm run test` for the bindings/node files
 5. Commit your changes: `git commit -m 'Add amazing feature'`
 6. Push to the branch: `git push origin feature/amazing-feature`
 7. Open a Pull Request
@@ -148,12 +136,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgments
 
-- [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) for the parsing framework
-- PowerBuilder community for language insights and feedback
+- Tree-sitter for the parsing framework
+- PowerBuilder community for language insights
 
 ## Links
 
-- [NPM Package](https://www.npmjs.com/package/tree-sitter-powerbuilder)
+- [NPM Package](https://www.npmjs.com/package/@pb-shrugged/tree-sitter-powerbuilder)
 - [GitHub Repository](https://github.com/pb-shrugged/tree-sitter-powerbuilder)
 - [Tree-sitter Documentation](https://tree-sitter.github.io/tree-sitter/)
 - [PowerBuilder Documentation](https://docs.appeon.com/#pb)
