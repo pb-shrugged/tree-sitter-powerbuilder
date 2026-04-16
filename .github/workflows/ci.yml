@@ -39,6 +39,7 @@ jobs:
       uses: tree-sitter/parser-test-action@v3
       with:
         test-node: true
+        node-version: 22
     - name: Parse examples
       uses: tree-sitter/parse-action@v4
       with:
